@@ -11,6 +11,12 @@ public class Account {
     private AccountStatus status;
     private double money;
 
+    public Account(String number, AccountStatus status, double money) {
+        this.number = number;
+        this.status = status;
+        this.money = money;
+    }
+
     public String getNumber() {
         return number;
     }

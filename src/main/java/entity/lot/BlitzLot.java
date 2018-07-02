@@ -1,7 +1,7 @@
 package entity.lot;
 
 /**
- * Concrete implementation of lot. Blitz auction is one of the
+ * Concrete impl of lot. Blitz auction is one of the
  * auction types.
  *
  * @author Listratsenka Stanislau

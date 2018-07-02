@@ -12,6 +12,8 @@ import java.util.List;
 public class User {
     private long id;
     private String email;
+    private String password;
+    private String salt;
     private UserStatus status;
     private List<Role> roles;
     private String name;
@@ -36,6 +38,22 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
     public UserStatus getStatus() {
@@ -96,20 +114,26 @@ public class User {
         User user = (User) o;
 
         if (id != user.id) return false;
-        if (email != null ? !email.equals(user.email) : user.email != null) return false;
+        if (!email.equals(user.email)) return false;
+        if (!password.equals(user.password)) return false;
+        if (!salt.equals(user.salt)) return false;
         if (status != user.status) return false;
-        if (name != null ? !name.equals(user.name) : user.name != null) return false;
-        if (surname != null ? !surname.equals(user.surname) : user.surname != null) return false;
+        if (roles != null ? !roles.equals(user.roles) : user.roles != null) return false;
+        if (!name.equals(user.name)) return false;
+        if (!surname.equals(user.surname)) return false;
         return account != null ? account.equals(user.account) : user.account == null;
     }
 
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (surname != null ? surname.hashCode() : 0);
+        result = 31 * result + email.hashCode();
+        result = 31 * result + password.hashCode();
+        result = 31 * result + salt.hashCode();
+        result = 31 * result + status.hashCode();
+        result = 31 * result + (roles != null ? roles.hashCode() : 0);
+        result = 31 * result + name.hashCode();
+        result = 31 * result + surname.hashCode();
         result = 31 * result + (account != null ? account.hashCode() : 0);
         return result;
     }

@@ -16,7 +16,7 @@ public interface DataBaseDAO<T> {
      * @return T found entity
      * @throws EntityNotFoundException if entity did not found
      */
-    T find(int id) throws EntityNotFoundException;
+    T find(long id) throws EntityNotFoundException;
 
     /**
      * @return List the list of found entities
