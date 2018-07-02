@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
  * @author Listratsenka Stanislau
  * @version 1.0
  */
-public class QueryBundle {
+public abstract class QueryBundle {
     /**
      * This class don't have default constructor.
      */
