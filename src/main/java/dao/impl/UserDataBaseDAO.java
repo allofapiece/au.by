@@ -4,7 +4,9 @@ import bundle.exception.IllegalQueryBundleException;
 import bundle.QueryBundle;
 import bundle.QueryBundleFactory;
 import dao.DataBaseDAO;
+import dao.exception.DAOException;
 import dao.exception.EntityNotFoundException;
+import dao.exception.UnsupportedDAOMethodException;
 import entity.*;
 import org.apache.log4j.Logger;
 import service.pool.ConnectionPool;
@@ -45,8 +47,8 @@ public class UserDataBaseDAO implements DataBaseDAO {
      * {@inheritDoc}
      */
     @Override
-    public User find(long id) throws EntityNotFoundException {
-        User user = null;
+    public User find(long id) throws DAOException {
+        User user = new User();
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -100,8 +102,8 @@ public class UserDataBaseDAO implements DataBaseDAO {
      * {@inheritDoc}
      */
     @Override
-    public List findAll() {
-        return null;
+    public List findAll() throws DAOException {
+        throw new UnsupportedDAOMethodException();
     }
 
     /**
@@ -109,23 +111,67 @@ public class UserDataBaseDAO implements DataBaseDAO {
      */
     @Override
     public void create(Object entity) {
+        User user = (User) entity;
+        long generatedId = 0;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
 
+        try {
+            conn = connectionPool.takeConnection();
+            stmt = conn.prepareStatement(
+                    queryBundle.getQuery("insert.one.main_info"),
+                    stmt.RETURN_GENERATED_KEYS
+            );
+
+            stmt.setString(1, user.getEmail());
+            stmt.setString(2, user.getStatus().toString().toLowerCase());
+            stmt.setString(3, user.getName());
+            stmt.setString(4, user.getSurname());
+
+            stmt.executeUpdate();
+            rs = stmt.getGeneratedKeys();
+            if (rs != null && rs.next()) {
+                generatedId = rs.getLong(1);
+            }
+
+            stmt = conn.prepareStatement(queryBundle.getQuery("insert.one.credentials"));
+            stmt.setLong(1, generatedId);
+            stmt.setString(2, user.getPassword());
+            stmt.setString(3, user.getSalt());
+            stmt.executeUpdate();
+
+            stmt = conn.prepareStatement(queryBundle.getQuery("insert.one.role"));
+            for (Role role : user.getRoles()) {
+                stmt.setLong(1, generatedId);
+                stmt.setString(2, role.toString().toLowerCase());
+                stmt.executeUpdate();
+            }
+
+            LOG.info("New user add with email = " + user.getEmail());
+        } catch (ConnectionPoolException e) {
+            LOG.error("Connection pool error", e);
+        } catch (SQLException e) {
+            LOG.error("SQL error", e);
+        } finally {
+            connectionPool.closeConnection(conn, stmt, rs);
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void delete(Object entity) throws EntityNotFoundException {
-
+    public void delete(Object entity) throws DAOException {
+        throw new UnsupportedDAOMethodException();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void update(Object entity) throws EntityNotFoundException {
-
+    public void update(Object entity) throws DAOException {
+        throw new UnsupportedDAOMethodException();
     }
 
     public List<Role> findRolesByUser(User user) {
@@ -157,5 +203,79 @@ public class UserDataBaseDAO implements DataBaseDAO {
         }
 
         return roles;
+    }
+
+    public User findCredentialsByEmail(String email) {
+        User user = new User();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = connectionPool.takeConnection();
+            stmt = conn.prepareStatement(queryBundle.getQuery("select.any.by_email.credentials"));
+            stmt.setString(1, email);
+
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                user.setId(rs.getInt("id"));
+                user.setEmail(email);
+                user.setPassword(rs.getString("password"));
+                user.setSalt(rs.getString("salt"));
+            }
+        } catch (ConnectionPoolException e) {
+            LOG.error("Connection pool error", e);
+        } catch (SQLException e) {
+            LOG.error("SQL error", e);
+        } finally {
+            connectionPool.closeConnection(conn, stmt, rs);
+        }
+
+        return user;
+    }
+
+    public User findByEmail(String email) {
+        User user = new User();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = connectionPool.takeConnection();
+            stmt = conn.prepareStatement(queryBundle.getQuery("select.any.by_email.all_info"));
+            stmt.setString(1, email);
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                user.setId(rs.getInt("id"));
+                user.setEmail(rs.getString("email"));
+                user.setStatus(UserStatus.valueOf(rs.getString("users.status").toUpperCase()));
+                user.setName(rs.getString("name"));
+                user.setSurname(rs.getString("surname"));
+                user.setPassword(rs.getString("password"));
+                user.setSalt(rs.getString("salt"));
+                String accountNumber = rs.getString("account.number");
+
+                if (accountNumber != null) {
+                    Account account = new Account(
+                            accountNumber,
+                            AccountStatus.valueOf(rs.getString("account.status").toUpperCase()),
+                            rs.getDouble("money")
+                    );
+                    user.setAccount(account);
+                }
+            }
+        } catch (ConnectionPoolException e) {
+            LOG.error("Connection pool error", e);
+        } catch (SQLException e) {
+            LOG.error("SQL error", e);
+        } finally {
+            connectionPool.closeConnection(conn, stmt, rs);
+        }
+
+        user.setRoles(findRolesByUser(user));
+
+        return user;
     }
 }

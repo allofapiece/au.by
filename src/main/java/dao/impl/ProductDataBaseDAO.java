@@ -25,7 +25,7 @@ public class ProductDataBaseDAO implements DataBaseDAO {
      * {@inheritDoc}
      */
     @Override
-    public Object find(int id) throws EntityNotFoundException {
+    public Object find(long id) throws EntityNotFoundException {
         return null;
     }
 
