@@ -13,6 +13,7 @@ public class User {
     private long id;
     private String email;
     private String password;
+    private String confirmedPassword;
     private String salt;
     private UserStatus status;
     private List<Role> roles;
@@ -46,6 +47,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getConfirmedPassword() {
+        return confirmedPassword;
+    }
+
+    public void setConfirmedPassword(String confirmedPassword) {
+        this.confirmedPassword = confirmedPassword;
     }
 
     public String getSalt() {
