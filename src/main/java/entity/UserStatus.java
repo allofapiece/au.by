@@ -16,5 +16,5 @@ public enum UserStatus {
      * Not active user can't use all necessary parts of service. Usually
      * inactive user, that did not confirm registration.
      */
-    INACITVE,
+    DISABLED,
 }

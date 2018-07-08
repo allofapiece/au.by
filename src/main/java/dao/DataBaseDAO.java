@@ -1,5 +1,6 @@
 package dao;
 
+import dao.exception.DAOException;
 import dao.exception.EntityNotFoundException;
 
 import java.util.List;
@@ -16,12 +17,12 @@ public interface DataBaseDAO<T> {
      * @return T found entity
      * @throws EntityNotFoundException if entity did not found
      */
-    T find(int id) throws EntityNotFoundException;
+    T find(long id) throws DAOException;
 
     /**
      * @return List the list of found entities
      */
-    List<T> findAll();
+    List<T> findAll() throws DAOException;
 
     /**
      * @param entity object of entity, that need to save in database
@@ -30,14 +31,14 @@ public interface DataBaseDAO<T> {
 
     /**
      * @param entity object of entity, that need to delete from database
-     * @throws EntityNotFoundException if entity did not found
+     * @throws DAOException if entity did not found
      */
-    void delete(T entity) throws EntityNotFoundException;
+    void delete(T entity) throws DAOException;
 
     /**
      * @param entity object of entity, that need to update in database. New
      *               object will be inserted in database instead of old
-     * @throws EntityNotFoundException if entity did not found.
+     * @throws DAOException if entity did not found.
      */
-    void update(T entity) throws EntityNotFoundException;
+    void update(T entity) throws DAOException;
 }

@@ -6,15 +6,16 @@ package dao.exception;
  * @author Listratsenka Stanislau
  * @version 1.0
  */
-public class EntityNotFoundException extends DAOException {
+public class UnsupportedDAOMethodException extends DAOException {
 
-    public EntityNotFoundException() {
+    public UnsupportedDAOMethodException() {
+        super("Unsupported method of DAO");
     }
 
     /**
      * @param message
      */
-    public EntityNotFoundException(String message) {
+    public UnsupportedDAOMethodException(String message) {
         super(message);
     }
 }
