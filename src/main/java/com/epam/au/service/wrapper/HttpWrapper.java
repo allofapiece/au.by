@@ -1,7 +1,8 @@
 package com.epam.au.service.wrapper;
 
-import com.sun.deploy.net.HttpRequest;
+import com.epam.au.controller.Page;
 import com.epam.au.controller.ResponseInfo;
+import com.epam.au.controller.Router;
 import com.epam.au.service.validator.Errors;
 
 import javax.servlet.RequestDispatcher;
@@ -24,6 +25,7 @@ public class HttpWrapper {
     private Map<String, String> reqParams;
     private Map<String, Object> sessionAttrs;
     private Errors errors;
+    private Router router;
 
     public HttpWrapper() {
         responseInfo = new ResponseInfo();
@@ -31,6 +33,7 @@ public class HttpWrapper {
         reqParams = new HashMap<>();
         sessionAttrs = new HashMap<>();
         errors = new Errors();
+        router = Router.getInstance();
     }
 
     public HttpWrapper(HttpServletRequest request) {
@@ -65,14 +68,14 @@ public class HttpWrapper {
         }
 
         if (responseInfo.isUpdated()) {
-            response.sendRedirect(responseInfo.getPage());
+            response.sendRedirect(responseInfo.getPage().getPath());
         } else {
             requestDispatcher.forward(request, response);
         }
     }
 
     public void go() throws ServletException, IOException {
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher(responseInfo.getPage());
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher(responseInfo.getPage().getPath());
         go(requestDispatcher);
     }
 
@@ -260,11 +263,11 @@ public class HttpWrapper {
         return false;
     }
 
-    public void setPage(String page) {
-        responseInfo.setPage(page);
+    public void setPage(String route) {
+        responseInfo.setPage(router.getPage(route));
     }
 
-    public String getPage() {
+    public Page getPage() {
         return responseInfo.getPage();
     }
 

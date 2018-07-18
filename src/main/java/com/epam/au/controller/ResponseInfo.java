@@ -1,16 +1,15 @@
 package com.epam.au.controller;
 
 public class ResponseInfo {
-    private String page;
+    private Page page;
     private boolean isUpdated;
-    private String title;
     private int httpError;
 
-    public String getPage() {
+    public Page getPage() {
         return page;
     }
 
-    public void setPage(String page) {
+    public void setPage(Page page) {
         this.page = page;
     }
 
@@ -23,11 +22,19 @@ public class ResponseInfo {
     }
 
     public String getTitle() {
-        return title;
+        return page.getTitle();
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.page.setTitle(title);
+    }
+
+    public String getPath() {
+        return page.getPath();
+    }
+
+    public void setPath(String path) {
+        page.setPath(path);
     }
 
     public int getHttpError() {

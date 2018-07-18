@@ -13,7 +13,7 @@
     <head>
         <link rel="stylesheet" href="${context}/vendor/bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="${context}/css/style.css">
-        <title>efs</title>
+        <title><fmt:message key="${not empty title ? title : 'title.default.home'}" /></title>
     </head>
     <body>
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">

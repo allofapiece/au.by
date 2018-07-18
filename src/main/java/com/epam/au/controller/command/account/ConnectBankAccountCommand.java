@@ -25,7 +25,7 @@ public class ConnectBankAccountCommand implements Command {
         }
 
         if (wrapper.getMethod().equals("GET")) {
-            wrapper.setPage("jsp/account/connect.jsp");
+            wrapper.setPage("account.connect");
             wrapper.setTitle("title.account.connect");
         } else {
             if (formHandler.handle(wrapper)) {
@@ -33,7 +33,7 @@ public class ConnectBankAccountCommand implements Command {
                 wrapper.setPage("jsp/account/account.jsp");
                 wrapper.setTitle("title.account.info");
             } else {
-                wrapper.setPage("jsp/account/connect.jsp");
+                wrapper.setPage("account.connect");
                 wrapper.setTitle("title.account.connect");
             }
         }
