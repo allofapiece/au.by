@@ -1,5 +1,6 @@
 package service.validator;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,14 @@ public class Errors {
 
     public void addFieldError(String field, String message) {
         if (message != null) {
-            getFieldErrors(field).add(message);
+            List<String> fieldErrors = getFieldErrors(field);
+            if (fieldErrors == null) {
+                fieldErrors = new ArrayList<>();
+                fieldErrors.add(message);
+                setFieldErrors(field, fieldErrors);
+            } else {
+                getFieldErrors(field).add(message);
+            }
         }
     }
 }

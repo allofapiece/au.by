@@ -19,5 +19,13 @@
         <servlet-name>FrontController</servlet-name>
         <url-pattern>/fc</url-pattern>
     </servlet-mapping>
-
+    
+    <filter>
+        <filter-name>SecurityFilter</filter-name>
+        <filter-class>service.filter.SecurityFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>SecurityFilter</filter-name>
+        <url-pattern>/restricted/*</url-pattern>
+    </filter-mapping>
 </web-app>

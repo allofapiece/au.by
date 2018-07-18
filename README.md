@@ -1,6 +1,6 @@
 
 
-For connection to database, create "db.properties" file in resources directory of your project.
+For connection to database, create "db.properties" file in resources directory of the project.
 Insert in it the following connection properties:
 
 db.driver = oracle.jdbc.driver.YOUR_DRIVER\

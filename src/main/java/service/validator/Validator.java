@@ -24,9 +24,51 @@ public abstract class Validator {
 
     abstract boolean validate(Object object);
 
-    boolean validate(Object object, Errors errors) {
+    public boolean validate(Object object, Errors errors) {
         this.errors = errors;
         return validate(object);
+    }
+
+    boolean emptyValidate(Object obj, String field, boolean isStacked) {
+        List<String> messages = errors.getFieldErrors(field);
+
+        if (!isStacked && messages != null) {
+            return false;
+        }
+
+        if (messages == null) {
+            messages = new ArrayList<>();
+        }
+
+        if (obj == null) {
+            messages.add("error.empty");
+            isValid = false;
+        }
+
+        errors.setFieldErrors(field, messages);
+
+        return isValid;
+    }
+
+    boolean emptyValidate(String string, String field, boolean isStacked) {
+        List<String> messages = errors.getFieldErrors(field);
+
+        if (!isStacked && messages != null) {
+            return false;
+        }
+
+        if (messages == null) {
+            messages = new ArrayList<>();
+        }
+
+        if (string == null || string.trim().equals("")) {
+            messages.add("error.empty");
+            isValid = false;
+        }
+
+        errors.setFieldErrors(field, messages);
+
+        return isValid;
     }
 
     boolean stringSizeValidate(
@@ -47,7 +89,7 @@ public abstract class Validator {
         }
 
         if (value.length() < min || value.length() > max) {
-            messages.add("min = " + min + " max = " + max);
+            messages.add("error.length");
             isValid = false;
         }
 
@@ -76,7 +118,7 @@ public abstract class Validator {
         Matcher matcher = pattern.matcher(value);
 
         if (!matcher.matches()) {
-            messages.add("Incorrect value");
+            messages.add("error.pattern");
             isValid = false;
         }
 
@@ -89,7 +131,8 @@ public abstract class Validator {
             String email,
             String field
     ) {
-        stringSizeValidate(email, 4, 50, field, true);
+        emptyValidate(email, field, true);
+        stringSizeValidate(email, 4, 50, field, false);
         stringPatternMatchingValidate(
                 email,
                 regexps.getString("validation.email"),
@@ -104,7 +147,8 @@ public abstract class Validator {
             String password,
             String field
     ) {
-        stringSizeValidate(password, 6, 18, field, true);
+        emptyValidate(password, field, true);
+        stringSizeValidate(password, 6, 18, field, false);
         stringPatternMatchingValidate(
                 password,
                 regexps.getString("validation.user.password"),
@@ -120,6 +164,7 @@ public abstract class Validator {
             String confirmedPassword,
             String field
     ) {
+        emptyValidate(confirmedPassword, field, true);
         List<String> messages = errors.getFieldErrors(field);
 
         if (messages == null) {
@@ -127,7 +172,7 @@ public abstract class Validator {
         }
 
         if (!password.equals(confirmedPassword)) {
-            messages.add("Does not matches");
+            messages.add("error.confirmation");
             isValid = false;
         }
 

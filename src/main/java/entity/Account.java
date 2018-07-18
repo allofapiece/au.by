@@ -11,6 +11,9 @@ public class Account {
     private AccountStatus status;
     private double money;
 
+    public Account() {
+    }
+
     public Account(String number, AccountStatus status, double money) {
         this.number = number;
         this.status = status;

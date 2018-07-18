@@ -3,6 +3,8 @@ package controller;
 import controller.command.Command;
 import controller.command.CommandProvider;
 import controller.command.IllegalCommandException;
+import org.apache.log4j.Logger;
+import service.wrapper.HttpWrapper;
 //import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
@@ -13,28 +15,21 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class FrontController extends HttpServlet {
-    //private static final Logger LOG = Logger.getLogger(FrontController.class);
+    private static final Logger LOG = Logger.getLogger(FrontController.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         CommandProvider commandProvider = new CommandProvider();
-        ResponseInfo responseInfo = new ResponseInfo();
         String requestedCommand = req.getParameter("command");
-
+        req.removeAttribute("command");
+        HttpWrapper wrapper = new HttpWrapper(req, resp);
         try {
             Command command = commandProvider.getCommand(requestedCommand);
-            responseInfo = command.execute(req, resp);
+            command.execute(wrapper);
         } catch (IllegalCommandException e) {
-            //LOG.error("Requested command is not defined", e);
+            LOG.error("Requested command is not defined", e);
         }
-
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher(responseInfo.getPage());
-
-        if (responseInfo.isUpdated()) {
-            resp.sendRedirect(responseInfo.getPage());
-        } else {
-            requestDispatcher.forward(req, resp);
-        }
+        wrapper.go();
     }
 
     @Override

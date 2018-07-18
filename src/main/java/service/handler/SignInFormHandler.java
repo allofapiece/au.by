@@ -12,6 +12,7 @@ import service.util.PasswordReformer;
 import service.validator.Errors;
 import service.validator.SignInUserValidator;
 import service.validator.SignupUserValidator;
+import service.wrapper.HttpWrapper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,15 +37,15 @@ public class SignInFormHandler implements FormHandler {
     }
 
     @Override
-    public boolean handle(HttpServletRequest req, HttpServletResponse resp) {
+    public boolean handle(HttpWrapper wrapper) {
         User user = new User();
 
-        user.setEmail(req.getParameter("email"));
-        user.setPassword(req.getParameter("password"));
+        user.setEmail(wrapper.getRequestParameter("email"));
+        user.setPassword(wrapper.getRequestParameter("password"));
 
         if (validator.validate(user)) {
             user = dao.findByEmail(user.getEmail());
-            req.setAttribute("user", user);
+            wrapper.addRequestAttribute("user", user);
 
             return true;
         } else {

@@ -1,5 +1,6 @@
 package dao;
 
+import dao.impl.BankAccountDataBaseDAO;
 import dao.impl.ProductDataBaseDAO;
 import dao.impl.UserDataBaseDAO;
 import dao.exception.IllegalDataBaseDAOException;
@@ -21,6 +22,9 @@ public class DataBaseDAOFactory implements Factory {
 
             case "product":
                 return new ProductDataBaseDAO();
+
+            case "account":
+                return new BankAccountDataBaseDAO();
 
             default:
                 throw new IllegalDataBaseDAOException();

@@ -4,6 +4,7 @@ import controller.ResponseInfo;
 import controller.command.Command;
 import entity.User;
 import service.handler.SignupFormHandler;
+import service.wrapper.HttpWrapper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,29 +18,34 @@ public class SignUpUserCommand implements Command {
     }
 
     @Override
-    public ResponseInfo execute(HttpServletRequest req, HttpServletResponse resp) {
-        HttpSession session = req.getSession();
-        ResponseInfo responseInfo = new ResponseInfo();
+    public HttpWrapper execute(HttpWrapper wrapper) {
         User user = new User();
 
-        if (null != session.getAttribute("user")) {
-            responseInfo.setPage("jsp/main.jsp");
-            return responseInfo;
-        }
+        /*if (wrapper.getSessionAttribute("user") != null) {
+            wrapper.setIsUpdated(true);
+            wrapper.setPage("jsp/main.jsp");
+            return wrapper;
+        }*/
 
-        if (req.getMethod().equals("GET")) {
-            responseInfo.setPage("jsp/user/signup.jsp");
+        if (wrapper.getMethod().equals("GET")) {
+            wrapper.setPage("jsp/user/signup.jsp");
         } else {
-            if (formHandler.handle(req, resp)) {
-                session.setAttribute("user", user);
-                responseInfo.setIsUpdated(true);
-                responseInfo.setPage("jsp/main.jsp");
+            if (formHandler.handle(wrapper)) {
+                wrapper.setIsUpdated(true);
+
+
+
+                if (wrapper.getErrors().hasErrors()) {
+                    wrapper.setPage("jsp/account/connect.jsp");
+                    wrapper.addError("account.page", "warning.signup_error");
+                } else {
+                    wrapper.setPage("jsp/main.jsp");
+                }
             } else {
-                req.setAttribute("errors", formHandler.getErrors().getAllErrors());
-                responseInfo.setPage("jsp/user/signup.jsp");
+                wrapper.setPage("jsp/user/signup.jsp");
             }
         }
 
-        return responseInfo;
+        return wrapper;
     }
 }
