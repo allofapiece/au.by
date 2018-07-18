@@ -12,6 +12,9 @@ public class QueryBundleFactory {
             case "product":
                 return ProductQueryBundle.getInstance();
 
+            case "account":
+                return AccountQueryBundle.getInstance();
+
             default:
                 throw new IllegalQueryBundleException();
         }

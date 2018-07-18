@@ -1,0 +1,18 @@
+#content {
+    width: 80%;
+    margin: auto;
+}
+#content .alert-dismissible {
+    margin-top: 15px;
+}
+#content .alert-dismissible p {
+    margin-bottom: 0;
+}
+.navbar .nav-user-info {
+    margin-right: 10px;
+}
+.navbar .nav-user-info .user-name {
+    font-weight: bold;
+    text-transform: capitalize;
+    display: inline;
+}

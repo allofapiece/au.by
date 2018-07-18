@@ -7,6 +7,7 @@ package entity;
  * @version 1.0
  */
 public enum Role {
+    ANONYMOUS,
     USER,
     ADMIN,
     SOLVENT,

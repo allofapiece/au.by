@@ -114,7 +114,7 @@ public class UserDataBaseDAO implements DataBaseDAO {
         User user = (User) entity;
         long generatedId = 0;
         Connection conn = null;
-        PreparedStatement stmt = null;
+         PreparedStatement stmt = null;
         ResultSet rs = null;
 
         try {
@@ -171,7 +171,29 @@ public class UserDataBaseDAO implements DataBaseDAO {
      */
     @Override
     public void update(Object entity) throws DAOException {
-        throw new UnsupportedDAOMethodException();
+        User user = (User) entity;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = connectionPool.takeConnection();
+            stmt = conn.prepareStatement(queryBundle.getQuery("update.one"));
+            stmt.setString(1, user.getEmail());
+            stmt.setString(2, user.getStatus().toString().toLowerCase());
+            stmt.setString(3, user.getName());
+            stmt.setString(4, user.getSurname());
+            stmt.setString(5, user.getAccount().getNumber());
+            stmt.setLong(6, user.getId());
+
+            stmt.executeUpdate();
+        } catch (ConnectionPoolException e) {
+            LOG.error("Connection pool error", e);
+        } catch (SQLException e) {
+            LOG.error("SQL error", e);
+        } finally {
+            connectionPool.closeConnection(conn, stmt);
+        }
     }
 
     public List<Role> findRolesByUser(User user) {
@@ -255,12 +277,12 @@ public class UserDataBaseDAO implements DataBaseDAO {
                 user.setSurname(rs.getString("surname"));
                 user.setPassword(rs.getString("password"));
                 user.setSalt(rs.getString("salt"));
-                String accountNumber = rs.getString("account.number");
+                String accountNumber = rs.getString("accounts.number");
 
                 if (accountNumber != null) {
                     Account account = new Account(
                             accountNumber,
-                            AccountStatus.valueOf(rs.getString("account.status").toUpperCase()),
+                            AccountStatus.valueOf(rs.getString("accounts.status").toUpperCase()),
                             rs.getDouble("money")
                     );
                     user.setAccount(account);
@@ -277,5 +299,31 @@ public class UserDataBaseDAO implements DataBaseDAO {
         user.setRoles(findRolesByUser(user));
 
         return user;
+    }
+
+    public int amountByEmail(String email) {
+        int amount = 0;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = connectionPool.takeConnection();
+            stmt = conn.prepareStatement(queryBundle.getQuery("select.count.by_email"));
+            stmt.setString(1, email);
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                amount = rs.getInt("amount");
+            }
+        } catch (ConnectionPoolException e) {
+            LOG.error("Connection pool error", e);
+        } catch (SQLException e) {
+            LOG.error("SQL error", e);
+        } finally {
+            connectionPool.closeConnection(conn, stmt, rs);
+        }
+
+        return amount;
     }
 }
