@@ -5,15 +5,15 @@
          version="3.1">
 
     <listener>
-        <listener-class>service.listener.ServletContextInitializer</listener-class>
+        <listener-class>com.epam.au.service.listener.ServletContextInitializer</listener-class>
     </listener>
     <!--<listener>
-        <listener-class>service.LocalInitializer</listener-class>
+        <listener-class>com.epam.au.service.LocalInitializer</listener-class>
     </listener>-->
 
     <servlet>
         <servlet-name>FrontController</servlet-name>
-        <servlet-class>controller.FrontController</servlet-class>
+        <servlet-class>com.epam.au.controller.FrontController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>FrontController</servlet-name>
@@ -22,7 +22,7 @@
     
     <filter>
         <filter-name>SecurityFilter</filter-name>
-        <filter-class>service.filter.SecurityFilter</filter-class>
+        <filter-class>com.epam.au.service.filter.SecurityFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>SecurityFilter</filter-name>
