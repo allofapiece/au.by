@@ -5,23 +5,7 @@
 
 <c:import url="/jsp/template/header.jsp"/>
 
-<div class="row">
-    <div class="col-12">
-        <c:forEach items="${errors}" var="field">
-            <c:if test="${field.key == 'signin.page'}">
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <c:forEach items="${field.value}" var="warn">
-                        <p><fmt:message key='${field.key}.${warn}.message' /></p>
-                    </c:forEach>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <c:set target="${errors}" property="signup.page" value="${null}"/>
-            </c:if>
-        </c:forEach>
-    </div>
-</div>
+
 <div id="content-title" style="margin-top: 15px;">
     <h2><fmt:message key='${not empty title ? title : "title.default.home"}' /></h2>
     <hr>
@@ -35,7 +19,7 @@
                     <c:forEach items="${errors}" var="field">
                         <h6 class="alert-heading"><fmt:message key='${field.key}.label' /></h6>
                         <c:forEach items="${field.value}" var="error">
-                            <p>${error}</p>
+                            <p><fmt:message key="${field.key}.${error}.message" /></p>
                         </c:forEach>
                     </c:forEach>
                 </div>

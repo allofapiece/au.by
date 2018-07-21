@@ -1,16 +1,16 @@
-package com.epam.au.controller.command.account;
+package com.epam.au.controller.command.product;
 
 import com.epam.au.controller.command.Command;
 import com.epam.au.entity.User;
-import com.epam.au.service.handler.ConnectBankAccountFormHandler;
+import com.epam.au.service.handler.AddProductFormHandler;
 import com.epam.au.service.handler.SignInFormHandler;
 import com.epam.au.service.wrapper.HttpWrapper;
 
-public class ConnectBankAccountCommand implements Command {
-    private ConnectBankAccountFormHandler formHandler;
+public class AddProductCommand implements Command {
+    private AddProductFormHandler formHandler;
 
-    public ConnectBankAccountCommand() {
-        formHandler = new ConnectBankAccountFormHandler();
+    public AddProductCommand() {
+        formHandler = new AddProductFormHandler();
     }
 
     @Override
@@ -25,16 +25,13 @@ public class ConnectBankAccountCommand implements Command {
         }
 
         if (wrapper.getMethod().equals("GET")) {
-            wrapper.setPage("account.connect");
-            wrapper.setTitle("title.account.connect");
+            wrapper.setPage("product.add");
         } else {
             if (formHandler.handle(wrapper)) {
                 wrapper.setIsUpdated(true);
-                wrapper.setPage("jsp/account/account.jsp");
-                wrapper.setTitle("title.account.info");
+                wrapper.setPage("product.show.mine");
             } else {
-                wrapper.setPage("account.connect");
-                wrapper.setTitle("title.account.connect");
+                wrapper.setPage("product.add");
             }
         }
 

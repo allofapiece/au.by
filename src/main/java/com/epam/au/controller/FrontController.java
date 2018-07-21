@@ -22,6 +22,8 @@ public class FrontController extends HttpServlet {
         CommandProvider commandProvider = new CommandProvider();
         String requestedCommand = req.getParameter("command");
         req.removeAttribute("command");
+        req.removeAttribute("errors");
+        req.getSession().removeAttribute("errors");
         HttpWrapper wrapper = new HttpWrapper(req, resp);
         try {
             Command command = commandProvider.getCommand(requestedCommand);

@@ -9,6 +9,7 @@ package com.epam.au.entity;
  */
 public class Product {
     protected long id;
+    protected long userId;
     protected String name;
     protected String description;
     protected int amount;
@@ -52,6 +53,14 @@ public class Product {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     @Override

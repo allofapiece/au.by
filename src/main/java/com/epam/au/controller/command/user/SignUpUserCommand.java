@@ -33,11 +33,9 @@ public class SignUpUserCommand implements Command {
             if (formHandler.handle(wrapper)) {
                 wrapper.setIsUpdated(true);
 
-
-
                 if (wrapper.getErrors().hasErrors()) {
                     wrapper.setPage("account.connect");
-                    wrapper.addError("account.page", "warning.signup_error");
+                    wrapper.addError("account.page", "warning.account.signup_error");
                 } else {
                     wrapper.setPage("other.main");
                 }

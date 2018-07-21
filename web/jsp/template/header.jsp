@@ -30,7 +30,7 @@
                     </li>
                     <c:if test="${user ne null}">
                         <li class="nav-item">
-                            <a class="nav-link" href="#"><fmt:message key="nav.bar.my.products" /></a>
+                            <a class="nav-link" href="<c:url value="/fc?command=product-show"/>"><fmt:message key="nav.bar.my.products" /></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#"><fmt:message key="nav.bar.my.lots" /></a>
@@ -55,13 +55,25 @@
                         </a>
                     </c:otherwise>
                 </c:choose>
-
-                <%--<form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" placeholder="<fmt:message key="summary.search"/>" aria-label="Search">
-                    <button class="btn btn-outline-primary my-2 my-sm-0" type="submit"><fmt:message key="summary.search"/></button>
-                </form>--%>
             </div>
         </div>
 
     </nav>
     <div class="container" id="content">
+        <div class="row">
+            <div class="col-12">
+                <c:forEach items="${errors}" var="field">
+                    <c:if test="${field.key == 'page'}">
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            <c:forEach items="${field.value}" var="warn">
+                                <p><fmt:message key='${field.key}.${warn}.message' /></p>
+                            </c:forEach>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <c:set target="${errors}" property="page" value="${null}"/>
+                    </c:if>
+                </c:forEach>
+            </div>
+        </div>

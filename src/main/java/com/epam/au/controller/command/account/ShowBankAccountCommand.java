@@ -19,14 +19,14 @@ public class ShowBankAccountCommand implements Command {
             wrapper.setPage("user.login");
             wrapper.setTitle("Sign in");
             wrapper.setIsUpdated(true);
-            wrapper.addError("signin.page", "warning.permission");
+            wrapper.addError("page", "warning.permission");
             return wrapper;
         }
 
         if (user.getAccount() == null) {
             wrapper.setPage("account.connect");
             wrapper.setIsUpdated(true);
-            wrapper.addError("account.page", "warning.connection");
+            wrapper.addError("account.page", "warning.account.connection");
             return wrapper;
         }
 

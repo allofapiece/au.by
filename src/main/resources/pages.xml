@@ -32,28 +32,28 @@
         <path>jsp/main.jsp</path>
     </page>
     <page>
-        <route>lots.show.mine</route>
+        <route>lot.show.mine</route>
         <title>title.lot.show.mine</title>
-        <path>jsp/lots/showmine.jsp</path>
+        <path>jsp/lot/showmine.jsp</path>
     </page>
     <page>
-        <route>lots.show.all</route>
+        <route>lot.show.all</route>
         <title>title.lot.show.all</title>
-        <path>jsp/lots/showall.jsp</path>
+        <path>jsp/lot/showall.jsp</path>
     </page>
     <page>
-        <route>lots.add</route>
+        <route>lot.add</route>
         <title>title.lot.add</title>
-        <path>jsp/lots/add.jsp</path>
+        <path>jsp/lot/add.jsp</path>
     </page>
     <page>
-        <route>products.add</route>
+        <route>product.add</route>
         <title>title.product.add</title>
-        <path>jsp/products/add.jsp</path>
+        <path>jsp/product/add.jsp</path>
     </page>
     <page>
-        <route>products.show.mine</route>
+        <route>product.show.mine</route>
         <title>title.product.show.mine</title>
-        <path>jsp/products/showmine.jsp</path>
+        <path>jsp/product/showmine.jsp</path>
     </page>
 </pages>
