@@ -15,6 +15,8 @@ public class QueryBundleFactory {
             case "account":
                 return AccountQueryBundle.getInstance();
 
+            case "product-image":
+                return ProductImageQueryBundle.getInstance();
             default:
                 throw new IllegalQueryBundleException();
         }

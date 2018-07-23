@@ -28,4 +28,5 @@
         <filter-name>SecurityFilter</filter-name>
         <url-pattern>/restricted/*</url-pattern>
     </filter-mapping>
+
 </web-app>

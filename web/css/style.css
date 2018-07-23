@@ -2,7 +2,9 @@
     width: 80%;
     margin: auto;
 }
-#content .alert-dismissible {
+#content .alert-dismissible,
+#tab-products,
+.tab-content {
     margin-top: 15px;
 }
 #content .alert-dismissible p {
@@ -16,3 +18,32 @@
     text-transform: capitalize;
     display: inline;
 }
+.product {
+    width: 30%;
+    margin: 0 10px 10px 0;
+    display: inline-block !important;
+    text-align: center;
+}
+@media (max-width: 559px) {
+    .product {
+        width: 100%;
+        margin-right: 0;
+    }
+}
+@media (min-width: 560px) {
+    .product {
+        width: 45%;
+    } }
+@media (min-width: 768px) {
+    .product {
+        width: 46%;
+
+    } }
+@media (min-width: 992px) {
+    .product {
+        width: 23%;
+    } }
+@media (min-width: 1200px) {
+    .product {
+        width: 18%;
+    } }

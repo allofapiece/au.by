@@ -68,12 +68,12 @@ public class UserDataBaseDAO implements DataBaseDAO {
                 user.setSurname(rs.getString("surname"));
                 user.setPassword(rs.getString("password"));
                 user.setSalt(rs.getString("salt"));
-                String accountNumber = rs.getString("account.number");
+                String accountNumber = rs.getString("accounts.number");
 
                 if (accountNumber != null) {
                     Account account = new Account(
                             accountNumber,
-                            AccountStatus.valueOf(rs.getString("account.status").toUpperCase()),
+                            AccountStatus.valueOf(rs.getString("accounts.status").toUpperCase()),
                             rs.getDouble("money")
                     );
                     user.setAccount(account);

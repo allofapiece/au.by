@@ -4,6 +4,7 @@ import com.epam.au.controller.Page;
 import com.epam.au.controller.ResponseInfo;
 import com.epam.au.controller.Router;
 import com.epam.au.service.validator.Errors;
+import com.google.gson.Gson;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -20,6 +21,7 @@ public class HttpWrapper {
     private ResponseInfo responseInfo;
     private HttpServletRequest request;
     private HttpServletResponse response;
+    private Map<String, Object> jsonResponse;
     private HttpSession session;
     private Map<String, Object> reqAttrs;
     private Map<String, String> reqParams;
@@ -61,6 +63,15 @@ public class HttpWrapper {
 
     public void go(RequestDispatcher requestDispatcher)
             throws ServletException, IOException {
+        if (responseInfo.isAjax()) {
+            jsonResponse = new HashMap<>();
+            jsonResponse = ejectJson();
+            String json = new Gson().toJson(jsonResponse);
+            response.setContentType("application/json");
+            response.getWriter().write(json);
+            return;
+        }
+
         eject();
 
         if (getHttpError() != 0) {
@@ -168,12 +179,28 @@ public class HttpWrapper {
         if (getErrors().hasErrors()) {
             if (isUpdated()) {
                 this.session.setAttribute("errors", getAllErrors());
+                sessionAttrs.put("errors", getAllErrors());
             } else {
                 this.request.setAttribute("errors", getAllErrors());
+                reqAttrs.put("errors", getAllErrors());
             }
         }
 
         return this.request;
+    }
+
+    public Map<String, Object> ejectJson() {
+        if (getErrors().hasErrors()) {
+            jsonResponse.put("errors", getAllErrors());
+        }
+        if (getPage() != null) {
+            jsonResponse.put("page", getPage());
+        }
+        if (reqAttrs.size() != 0) {
+            jsonResponse.put("reqAttrs", reqAttrs);
+        }
+
+        return jsonResponse;
     }
 
     public String getMethod() {
@@ -321,6 +348,14 @@ public class HttpWrapper {
 
     public void setHttpError(int httpError) {
         responseInfo.setHttpError(httpError);
+    }
+
+    public void setAjax(boolean isAjax) {
+        this.responseInfo.setAjax(isAjax);
+    }
+
+    public boolean isAjax() {
+        return this.responseInfo.isAjax();
     }
 
     public boolean getBoolean(String name) {

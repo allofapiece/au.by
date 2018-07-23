@@ -52,8 +52,8 @@
         <path>jsp/product/add.jsp</path>
     </page>
     <page>
-        <route>product.show.mine</route>
-        <title>title.product.show.mine</title>
-        <path>jsp/product/showmine.jsp</path>
+        <route>product.show</route>
+        <title>title.product.show</title>
+        <path>jsp/product/show.jsp</path>
     </page>
 </pages>

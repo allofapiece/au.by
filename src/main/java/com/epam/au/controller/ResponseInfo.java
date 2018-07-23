@@ -4,6 +4,7 @@ public class ResponseInfo {
     private Page page;
     private boolean isUpdated;
     private int httpError;
+    private boolean isAjax;
 
     public Page getPage() {
         return page;
@@ -43,5 +44,13 @@ public class ResponseInfo {
 
     public void setHttpError(int httpError) {
         this.httpError = httpError;
+    }
+
+    public boolean isAjax() {
+        return isAjax;
+    }
+
+    public void setAjax(boolean ajax) {
+        isAjax = ajax;
     }
 }

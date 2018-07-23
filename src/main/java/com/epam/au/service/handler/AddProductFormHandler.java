@@ -14,6 +14,17 @@ import com.epam.au.service.validator.ConnectBankAccountValidator;
 import com.epam.au.service.wrapper.HttpWrapper;
 import com.sun.deploy.util.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.Part;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Paths;
+import java.util.List;
 
 public class AddProductFormHandler implements FormHandler {
     private final Logger LOG = Logger.getLogger(AddProductFormHandler.class);
@@ -39,6 +50,7 @@ public class AddProductFormHandler implements FormHandler {
 
         product.setName(wrapper.getRequestParameter("name"));
         product.setDescription(wrapper.getRequestParameter("description"));
+
         try {
             product.setAmount(Integer.parseInt(wrapper.getRequestParameter("amount")));
         } catch (NumberFormatException e) {

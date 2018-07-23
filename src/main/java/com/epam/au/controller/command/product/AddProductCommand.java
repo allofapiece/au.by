@@ -29,7 +29,8 @@ public class AddProductCommand implements Command {
         } else {
             if (formHandler.handle(wrapper)) {
                 wrapper.setIsUpdated(true);
-                wrapper.setPage("product.show.mine");
+                wrapper.setPage("product.show");
+                wrapper.getPage().setPath("/fc?command=product-show");
             } else {
                 wrapper.setPage("product.add");
             }

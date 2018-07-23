@@ -1,5 +1,8 @@
 package com.epam.au.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Class describes product, that can be created by users for using it in
  * auctions.
@@ -14,6 +17,11 @@ public class Product {
     protected String description;
     protected int amount;
     protected double price;
+    List<ProductImage> images;
+
+    public Product() {
+        images = new ArrayList<>();
+    }
 
     public long getId() {
         return id;
@@ -61,6 +69,22 @@ public class Product {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    public List<ProductImage> getImages() {
+        return images;
+    }
+
+    public void setImages(List<ProductImage> images) {
+        this.images = images;
+    }
+
+    public void addImage(ProductImage image) {
+        images.add(image);
+    }
+
+    public void removeImage(ProductImage image) {
+        images.remove(image);
     }
 
     @Override

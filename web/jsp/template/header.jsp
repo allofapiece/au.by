@@ -13,6 +13,8 @@
     <head>
         <link rel="stylesheet" href="${context}/vendor/bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="${context}/css/style.css">
+        <link rel="stylesheet" href="${context}/css/adaptivity.css">
+        <link rel="stylesheet" href="${context}/css/product.css">
         <title><fmt:message key="${not empty title ? title : 'title.default.home'}" /></title>
     </head>
     <body>
@@ -59,7 +61,7 @@
         </div>
 
     </nav>
-    <div class="container" id="content">
+    <div class="container" id="content" style="margin-top: 15px;">
         <div class="row">
             <div class="col-12">
                 <c:forEach items="${errors}" var="field">

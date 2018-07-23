@@ -11,7 +11,7 @@
 </div>
 <div class="row">
     <div class="col-6">
-        <form action="<c:url value="/fc?command=product-add"/>" id="add-product-form" method="post">
+        <form action="<c:url value="/fc?command=product-add"/>" id="add-product-form" method="post" enctype="multipart/form-data">
             <c:if test="${errors ne null and not empty errors}">
                 <div class="alert alert-danger" role="alert">
                     <h5 class="alert-heading"><fmt:message key="signup.error.form.summary.title" /></h5>
@@ -40,12 +40,13 @@
                 <label for="price-field"><fmt:message key="product.field.price.label" /></label>
                 <input type="number" name="price" class="form-control" id="price-field" aria-describedby="price" placeholder="<fmt:message key="product.field.price.placeholder" />">
             </div>
-            <button type="submit" class="btn btn-primary"><fmt:message key="signup.submit.label" /></button>
+            <button type="submit" class="btn btn-primary"><fmt:message key="product.submit.add.label" /></button>
         </form>
     </div>
-    <div class="col-6">
+    <%--<div class="col-6">
         <h4><fmt:message key="product.field.image.title"/></h4>
-    </div>
+        <input type="file" form="add-product-form" name="image" accept="image/jpeg,image/png,image/gif">
+    </div>--%>
 </div>
 
 <c:import url="/jsp/template/footer.jsp"/>

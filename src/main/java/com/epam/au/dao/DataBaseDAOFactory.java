@@ -2,6 +2,7 @@ package com.epam.au.dao;
 
 import com.epam.au.dao.impl.BankAccountDataBaseDAO;
 import com.epam.au.dao.impl.ProductDataBaseDAO;
+import com.epam.au.dao.impl.ProductImageDataBaseDAO;
 import com.epam.au.dao.impl.UserDataBaseDAO;
 import com.epam.au.dao.exception.IllegalDataBaseDAOException;
 
@@ -25,6 +26,9 @@ public class DataBaseDAOFactory implements Factory {
 
             case "account":
                 return new BankAccountDataBaseDAO();
+
+            case "product-image":
+                return new ProductImageDataBaseDAO();
 
             default:
                 throw new IllegalDataBaseDAOException();

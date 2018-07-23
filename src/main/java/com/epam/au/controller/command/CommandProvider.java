@@ -3,6 +3,7 @@ package com.epam.au.controller.command;
 import com.epam.au.controller.command.account.ConnectBankAccountCommand;
 import com.epam.au.controller.command.account.ShowBankAccountCommand;
 import com.epam.au.controller.command.product.AddProductCommand;
+import com.epam.au.controller.command.product.DeleteProductCommand;
 import com.epam.au.controller.command.product.ShowProductsCommand;
 import com.epam.au.controller.command.user.LogOutCommand;
 import com.epam.au.controller.command.user.SignInUserCommand;
@@ -31,6 +32,10 @@ public class CommandProvider {
 
             case "product-show":
                 return new ShowProductsCommand();
+
+            case "product-delete":
+                return new DeleteProductCommand();
+
             default:
                 throw new IllegalCommandException();
         }

@@ -52,7 +52,6 @@
                 <label for="confirmation-field"><fmt:message key="user.field.confirmation.label" /></label>
                 <input type="password" name="confirm-password" class="form-control" id="confirmation-field" aria-describedby="confirmationHelp" placeholder="Confirm your password">
             </div>
-            <button type="submit" class="btn btn-primary"><fmt:message key="signup.submit.label" /></button>
         </form>
     </div>
     <div class="col-6">
@@ -68,6 +67,7 @@
             <small id="accountHelp" class="form-text text-muted"><fmt:message key="user.field.name.help" /></small>
         </div>
     </div>
+    <button type="submit" form="signup-form" class="btn btn-primary" style="margin-left: 15px;"><fmt:message key="signup.submit.label" /></button>
 </div>
 
 <c:import url="/jsp/template/footer.jsp"/>
