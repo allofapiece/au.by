@@ -10,6 +10,7 @@ import com.epam.au.dao.exception.DAOException;
 import com.epam.au.dao.exception.EntityNotFoundException;
 import com.epam.au.entity.Product;
 import com.epam.au.entity.ProductImage;
+import com.epam.au.entity.ProductStatus;
 import com.epam.au.entity.User;
 import com.epam.au.service.pool.ConnectionPool;
 import com.epam.au.service.pool.ConnectionPoolException;
@@ -78,6 +79,7 @@ public class ProductDataBaseDAO implements DataBaseDAO {
                 product.setDescription(rs.getString("description"));
                 product.setAmount(rs.getInt("amount"));
                 product.setPrice(rs.getDouble("price"));
+                product.setStatus(ProductStatus.valueOf(rs.getString("users.status").toUpperCase()));
             }
 
             product.setImages(imageDAO.findByProductId(id));
@@ -124,6 +126,7 @@ public class ProductDataBaseDAO implements DataBaseDAO {
                 product.setDescription(rs.getString("description"));
                 product.setAmount(rs.getInt("amount"));
                 product.setPrice(rs.getDouble("price"));
+                product.setStatus(ProductStatus.valueOf(rs.getString("status").toUpperCase()));
                 //product.setImages(imageDAO.findByProductId(product.getId()));
                 products.add(product);
             }
@@ -159,6 +162,7 @@ public class ProductDataBaseDAO implements DataBaseDAO {
             stmt.setString(3, product.getDescription());
             stmt.setInt(4, product.getAmount());
             stmt.setDouble(5, product.getPrice());
+            stmt.setString(6, product.getStatus().toString().toLowerCase());
             stmt.executeUpdate();
             rs = stmt.getGeneratedKeys();
 

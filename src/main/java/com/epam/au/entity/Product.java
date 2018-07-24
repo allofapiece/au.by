@@ -17,6 +17,7 @@ public class Product {
     protected String description;
     protected int amount;
     protected double price;
+    protected ProductStatus status;
     List<ProductImage> images;
 
     public Product() {
@@ -69,6 +70,14 @@ public class Product {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    public ProductStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProductStatus status) {
+        this.status = status;
     }
 
     public List<ProductImage> getImages() {

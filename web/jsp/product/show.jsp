@@ -32,12 +32,55 @@
                     <c:param name="price" value="${product.price}"/>
                     <c:param name="image" value="${product.images[0]}"/>
                     <c:param name="id" value="${product.id}"/>
+                    <c:param name="status" value="${product.status}"/>
                 </c:import>
             </c:forEach>
         </div>
-        <div class="tab-pane fade" id="in-bag" role="tabpanel" aria-labelledby="in-bag-tab">In bag</div>
-        <div class="tab-pane fade" id="in-lots" role="tabpanel" aria-labelledby="in-lots-tab">In lots</div>
-        <div class="tab-pane fade" id="sold" role="tabpanel" aria-labelledby="sold-tab">Sold</div>
+        <div class="tab-pane fade" id="in-bag" role="tabpanel" aria-labelledby="in-bag-tab">
+            <c:forEach items="${products}" var="product">
+                <c:if test="${product.status == 'AVAILABLE'}">
+                    <c:import url="/jsp/template/product.jsp">
+                        <c:param name="name" value="${product.name}"/>
+                        <c:param name="description" value="${product.description}"/>
+                        <c:param name="amount" value="${product.amount}"/>
+                        <c:param name="price" value="${product.price}"/>
+                        <c:param name="image" value="${product.images[0]}"/>
+                        <c:param name="id" value="${product.id}"/>
+                        <c:param name="status" value="${product.status}"/>
+                    </c:import>
+                </c:if>
+            </c:forEach>
+        </div>
+        <div class="tab-pane fade" id="in-lots" role="tabpanel" aria-labelledby="in-lots-tab">
+            <c:forEach items="${products}" var="product">
+                <c:if test="${product.status == 'IN_LOT'}">
+                    <c:import url="/jsp/template/product.jsp">
+                        <c:param name="name" value="${product.name}"/>
+                        <c:param name="description" value="${product.description}"/>
+                        <c:param name="amount" value="${product.amount}"/>
+                        <c:param name="price" value="${product.price}"/>
+                        <c:param name="image" value="${product.images[0]}"/>
+                        <c:param name="id" value="${product.id}"/>
+                        <c:param name="status" value="${product.status}"/>
+                    </c:import>
+                </c:if>
+            </c:forEach>
+        </div>
+        <div class="tab-pane fade" id="sold" role="tabpanel" aria-labelledby="sold-tab">
+            <c:forEach items="${products}" var="product">
+                <c:if test="${product.status == 'SOLD'}">
+                    <c:import url="/jsp/template/product.jsp">
+                        <c:param name="name" value="${product.name}"/>
+                        <c:param name="description" value="${product.description}"/>
+                        <c:param name="amount" value="${product.amount}"/>
+                        <c:param name="price" value="${product.price}"/>
+                        <c:param name="image" value="${product.images[0]}"/>
+                        <c:param name="id" value="${product.id}"/>
+                        <c:param name="status" value="${product.status}"/>
+                    </c:import>
+                </c:if>
+            </c:forEach>
+        </div>
     </div>
 </div>
 

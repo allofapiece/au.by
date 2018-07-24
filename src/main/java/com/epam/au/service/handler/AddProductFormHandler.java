@@ -8,6 +8,7 @@ import com.epam.au.dao.impl.ProductDataBaseDAO;
 import com.epam.au.dao.impl.UserDataBaseDAO;
 import com.epam.au.entity.Account;
 import com.epam.au.entity.Product;
+import com.epam.au.entity.ProductStatus;
 import com.epam.au.entity.User;
 import com.epam.au.service.validator.AddProductValidator;
 import com.epam.au.service.validator.ConnectBankAccountValidator;
@@ -71,6 +72,7 @@ public class AddProductFormHandler implements FormHandler {
         if (validator.validate(product)) {
             User user = (User) wrapper.getSessionAttribute("user");
             product.setUserId(user.getId());
+            product.setStatus(ProductStatus.AVAILABLE);
             dao.create(product);
 
             return true;
