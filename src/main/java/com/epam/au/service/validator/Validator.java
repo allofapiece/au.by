@@ -4,11 +4,13 @@ import com.epam.au.bundle.BundleNamesStore;
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+//TODO create the validation for type of value(int, string, double, etc.)
 public abstract class Validator {
     private Errors errors;
     private boolean isValid = true;
@@ -22,14 +24,14 @@ public abstract class Validator {
         this.errors = errors;
     }
 
-    abstract boolean validate(Object object);
+    public abstract boolean validate(Object object);
 
     public boolean validate(Object object, Errors errors) {
         this.errors = errors;
         return validate(object);
     }
 
-    boolean emptyValidate(Object obj, String field, boolean isStacked) {
+    public boolean emptyValidate(Object obj, String field, boolean isStacked) {
         List<String> messages = errors.getFieldErrors(field);
 
         if (!isStacked && messages != null) {
@@ -50,7 +52,7 @@ public abstract class Validator {
         return isValid;
     }
 
-    boolean emptyValidate(String string, String field, boolean isStacked) {
+    public boolean emptyValidate(String string, String field, boolean isStacked) {
         List<String> messages = errors.getFieldErrors(field);
 
         if (!isStacked && messages != null) {
@@ -71,7 +73,39 @@ public abstract class Validator {
         return isValid;
     }
 
-    boolean stringSizeValidate(
+    public boolean emptyValidate(double value, String field, boolean isStacked, double[] ... conditions) {
+        List<String> messages = errors.getFieldErrors(field);
+
+        if (!isStacked && messages != null) {
+            return false;
+        }
+
+        if (messages == null) {
+            messages = new ArrayList<>();
+        }
+
+        if (conditions.length == 0) {
+            if (value == 0) {
+                messages.add("error.empty");
+                isValid = false;
+            } else {
+                return true;
+            }
+        } else {
+             if (Arrays.asList(conditions).contains(value)) {
+                 messages.add("error.empty");
+                 isValid = false;
+             } else {
+                 return true;
+             }
+        }
+
+        errors.setFieldErrors(field, messages);
+
+        return isValid;
+    }
+
+    public boolean stringSizeValidate(
             String value,
             int min,
             int max,
@@ -98,7 +132,43 @@ public abstract class Validator {
         return isValid;
     }
 
-    boolean stringPatternMatchingValidate(
+    public boolean numberSizeValidate(
+            double value,
+            double max,
+            String field,
+            boolean isStacked
+    ) {
+        return numberSizeValidate(value, 0, max, field, isStacked);
+    }
+
+    public boolean numberSizeValidate(
+            double value,
+            double min,
+            double max,
+            String field,
+            boolean isStacked
+    ) {
+        List<String> messages = errors.getFieldErrors(field);
+
+        if (!isStacked && messages != null) {
+            return false;
+        }
+
+        if (messages == null) {
+            messages = new ArrayList<>();
+        }
+
+        if (value < min || value > max) {
+            messages.add("error.length");
+            isValid = false;
+        }
+
+        errors.setFieldErrors(field, messages);
+
+        return isValid;
+    }
+
+    public boolean stringPatternMatchingValidate(
             String value,
             String patternString,
             String field,
@@ -127,7 +197,7 @@ public abstract class Validator {
         return isValid;
     }
 
-    boolean emailValidate(
+    public boolean emailValidate(
             String email,
             String field
     ) {
@@ -143,7 +213,7 @@ public abstract class Validator {
         return isValid;
     }
 
-    boolean passwordValidate(
+    public boolean passwordValidate(
             String password,
             String field
     ) {
@@ -159,7 +229,7 @@ public abstract class Validator {
         return isValid;
     }
 
-    boolean passwordConfirmationValidate(
+    public boolean passwordConfirmationValidate(
             String password,
             String confirmedPassword,
             String field

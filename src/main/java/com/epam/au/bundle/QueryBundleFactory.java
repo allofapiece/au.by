@@ -15,6 +15,12 @@ public class QueryBundleFactory {
             case "account":
                 return AccountQueryBundle.getInstance();
 
+            case "product-image":
+                return ProductImageQueryBundle.getInstance();
+
+            case "lot":
+                return LotQueryBundle.getInstance();
+
             default:
                 throw new IllegalQueryBundleException();
         }

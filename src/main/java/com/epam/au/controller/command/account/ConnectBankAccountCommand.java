@@ -18,14 +18,14 @@ public class ConnectBankAccountCommand implements Command {
         User user = (User) wrapper.getSessionAttribute("user");
 
         if (user == null) {
-            wrapper.setPage("fc?command=signin");
+            wrapper.setPage("user.login");
             wrapper.setIsUpdated(true);
-            wrapper.addError("signup.page", "warning.permission");
+            wrapper.addError("page", "warning.permission");
             return wrapper;
         }
 
         if (wrapper.getMethod().equals("GET")) {
-            wrapper.setPage("jsp/account/connect.jsp");
+            wrapper.setPage("account.connect");
             wrapper.setTitle("title.account.connect");
         } else {
             if (formHandler.handle(wrapper)) {
@@ -33,7 +33,7 @@ public class ConnectBankAccountCommand implements Command {
                 wrapper.setPage("jsp/account/account.jsp");
                 wrapper.setTitle("title.account.info");
             } else {
-                wrapper.setPage("jsp/account/connect.jsp");
+                wrapper.setPage("account.connect");
                 wrapper.setTitle("title.account.connect");
             }
         }

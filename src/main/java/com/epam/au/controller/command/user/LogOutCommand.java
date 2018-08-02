@@ -1,12 +1,7 @@
 package com.epam.au.controller.command.user;
 
-import com.epam.au.controller.ResponseInfo;
 import com.epam.au.controller.command.Command;
 import com.epam.au.service.wrapper.HttpWrapper;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 public class LogOutCommand implements Command {
 
@@ -14,9 +9,9 @@ public class LogOutCommand implements Command {
     public HttpWrapper execute(HttpWrapper wrapper) {
         if (wrapper.getSessionAttribute("user") != null) {
             wrapper.removeSessionAttribute("user");
-            wrapper.setPage("fc?command=signin");
+            wrapper.setPage("user.login");
         } else {
-            wrapper.setPage("fc?command=signin");
+            wrapper.setPage("user.login");
         }
 
         return wrapper;

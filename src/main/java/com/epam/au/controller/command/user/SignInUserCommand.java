@@ -1,6 +1,7 @@
 package com.epam.au.controller.command.user;
 
 import com.epam.au.controller.ResponseInfo;
+import com.epam.au.controller.Router;
 import com.epam.au.controller.command.Command;
 import com.epam.au.entity.User;
 import com.epam.au.service.handler.SignInFormHandler;
@@ -20,7 +21,7 @@ public class SignInUserCommand implements Command {
     @Override
     public HttpWrapper execute(HttpWrapper wrapper) {
         if (wrapper.getSessionAttribute("user") != null) {
-            wrapper.setPage("jsp/main.jsp");
+            wrapper.setPage("other.main");
             wrapper.setIsUpdated(true);
             return wrapper;
         }
@@ -28,17 +29,15 @@ public class SignInUserCommand implements Command {
         User user = new User();
 
         if (wrapper.getMethod().equals("GET")) {
-            wrapper.setPage("jsp/user/signin.jsp");
-            wrapper.setTitle("title.user.signin");
+            wrapper.setPage("user.login");
         } else {
             if (formHandler.handle(wrapper)) {
                 //session.setAttribute("isRemembered", req.getParameter("rememberme"));
                 wrapper.setIsUpdated(true);
-                wrapper.setPage("jsp/main.jsp");
+                wrapper.setPage("other.main");
             } else {
                 wrapper.addRequestAttribute("errors", formHandler.getErrors().getAllErrors());
-                wrapper.setPage("jsp/user/signin.jsp");
-                wrapper.setTitle("title.user.signin");
+                wrapper.setPage("user.login");
             }
         }
 

@@ -2,6 +2,7 @@ package com.epam.au.entity.lot;
 
 import com.epam.au.entity.AuctionType;
 import com.epam.au.entity.Product;
+import com.epam.au.entity.User;
 
 import java.util.Date;
 
@@ -14,6 +15,8 @@ import java.util.Date;
  */
 public abstract class Lot {
     protected long id;
+    protected long sellerId;
+    protected long mediatorId;
     protected String name;
     protected String description;
     protected LotStatus status;
@@ -102,6 +105,22 @@ public abstract class Lot {
 
     public void setBeginPrice(double beginPrice) {
         this.beginPrice = beginPrice;
+    }
+
+    public long getSellerId() {
+        return sellerId;
+    }
+
+    public void setSellerId(long sellerId) {
+        this.sellerId = sellerId;
+    }
+
+    public long getMediatorId() {
+        return mediatorId;
+    }
+
+    public void setMediatorId(long mediatorId) {
+        this.mediatorId = mediatorId;
     }
 
     @Override

@@ -16,22 +16,22 @@ public class ShowBankAccountCommand implements Command {
         User user = (User) wrapper.getSessionAttribute("user");
 
         if (user == null) {
-            wrapper.setPage("jsp/user/signin.jsp");
+            wrapper.setPage("user.login");
             wrapper.setTitle("Sign in");
             wrapper.setIsUpdated(true);
-            wrapper.addError("signin.page", "warning.permission");
+            wrapper.addError("page", "warning.permission");
             return wrapper;
         }
 
         if (user.getAccount() == null) {
-            wrapper.setPage("jsp/account/connect.jsp");
+            wrapper.setPage("account.connect");
             wrapper.setIsUpdated(true);
-            wrapper.addError("account.page", "warning.connection");
+            wrapper.addError("account.page", "warning.account.connection");
             return wrapper;
         }
 
         if (wrapper.getMethod().equals("GET")) {
-            wrapper.setPage("jsp/account/show.jsp");
+            wrapper.setPage("account.show");
             wrapper.setTitle("title.account.show");
         } else {
             wrapper.setHttpError(HttpServletResponse.SC_NOT_FOUND);

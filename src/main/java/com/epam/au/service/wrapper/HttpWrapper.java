@@ -1,8 +1,11 @@
 package com.epam.au.service.wrapper;
 
-import com.sun.deploy.net.HttpRequest;
+import com.epam.au.controller.Page;
 import com.epam.au.controller.ResponseInfo;
+import com.epam.au.controller.Router;
 import com.epam.au.service.validator.Errors;
+import com.google.gson.Gson;
+import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -16,14 +19,17 @@ import java.util.List;
 import java.util.Map;
 
 public class HttpWrapper {
+    private static final Logger LOG = Logger.getLogger(HttpWrapper.class);
     private ResponseInfo responseInfo;
     private HttpServletRequest request;
     private HttpServletResponse response;
+    private Map<String, Object> jsonResponse;
     private HttpSession session;
     private Map<String, Object> reqAttrs;
     private Map<String, String> reqParams;
     private Map<String, Object> sessionAttrs;
     private Errors errors;
+    private Router router;
 
     public HttpWrapper() {
         responseInfo = new ResponseInfo();
@@ -31,6 +37,7 @@ public class HttpWrapper {
         reqParams = new HashMap<>();
         sessionAttrs = new HashMap<>();
         errors = new Errors();
+        router = Router.getInstance();
     }
 
     public HttpWrapper(HttpServletRequest request) {
@@ -58,6 +65,16 @@ public class HttpWrapper {
 
     public void go(RequestDispatcher requestDispatcher)
             throws ServletException, IOException {
+        if (responseInfo.isAjax()) {
+            jsonResponse = new HashMap<>();
+            jsonResponse = ejectJson();
+            String json = new Gson().toJson(jsonResponse);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(json);
+            return;
+        }
+
         eject();
 
         if (getHttpError() != 0) {
@@ -65,14 +82,14 @@ public class HttpWrapper {
         }
 
         if (responseInfo.isUpdated()) {
-            response.sendRedirect(responseInfo.getPage());
+            response.sendRedirect(responseInfo.getPage().getPath());
         } else {
             requestDispatcher.forward(request, response);
         }
     }
 
     public void go() throws ServletException, IOException {
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher(responseInfo.getPage());
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher(responseInfo.getPage().getPath());
         go(requestDispatcher);
     }
 
@@ -165,12 +182,28 @@ public class HttpWrapper {
         if (getErrors().hasErrors()) {
             if (isUpdated()) {
                 this.session.setAttribute("errors", getAllErrors());
+                sessionAttrs.put("errors", getAllErrors());
             } else {
                 this.request.setAttribute("errors", getAllErrors());
+                reqAttrs.put("errors", getAllErrors());
             }
         }
 
         return this.request;
+    }
+
+    public Map<String, Object> ejectJson() {
+        if (getErrors().hasErrors()) {
+            jsonResponse.put("errors", getAllErrors());
+        }
+        if (getPage() != null) {
+            jsonResponse.put("page", getPage());
+        }
+        if (reqAttrs.size() != 0) {
+            jsonResponse.put("reqAttrs", reqAttrs);
+        }
+
+        return jsonResponse;
     }
 
     public String getMethod() {
@@ -260,11 +293,11 @@ public class HttpWrapper {
         return false;
     }
 
-    public void setPage(String page) {
-        responseInfo.setPage(page);
+    public void setPage(String route) {
+        responseInfo.setPage(router.getPage(route));
     }
 
-    public String getPage() {
+    public Page getPage() {
         return responseInfo.getPage();
     }
 
@@ -320,7 +353,63 @@ public class HttpWrapper {
         responseInfo.setHttpError(httpError);
     }
 
+    public void setAjax(boolean isAjax) {
+        this.responseInfo.setAjax(isAjax);
+    }
+
+    public boolean isAjax() {
+        return this.responseInfo.isAjax();
+    }
+
     public boolean getBoolean(String name) {
         return reqParams.get(name).equals("on");
+    }
+
+    public long getLong(String field, String parameter) {
+        long value = 0;
+        try {
+            value = Long.parseLong(reqParams.get(parameter));
+        } catch (NumberFormatException e) {
+            LOG.error("Not a number", e);
+            this.addError(field, "error.nan");
+        }
+        return value;
+    }
+
+    public long getLong(String field) {
+        String parameter = field.substring(field.lastIndexOf("field.") + 6);
+        return getLong(field, parameter);
+    }
+
+    public int getInt(String field, String parameter) {
+        int value = 0;
+        try {
+            value = Integer.parseInt(reqParams.get(parameter));
+        } catch (NumberFormatException e) {
+            LOG.error("Not a number", e);
+            this.addError(field, "error.nan");
+        }
+        return value;
+    }
+
+    public int getInt(String field) {
+        String parameter = field.substring(field.lastIndexOf("field.") + 6);
+        return getInt(field, parameter);
+    }
+
+    public double getDouble(String field, String parameter) {
+        double value = 0;
+        try {
+            value = Double.parseDouble(reqParams.get(parameter));
+        } catch (NumberFormatException e) {
+            LOG.error("Not a number", e);
+            this.addError(field, "error.nan");
+        }
+        return value;
+    }
+
+    public double getDouble(String field) {
+        String parameter = field.substring(field.lastIndexOf("field.") + 6);
+        return getDouble(field, parameter);
     }
 }

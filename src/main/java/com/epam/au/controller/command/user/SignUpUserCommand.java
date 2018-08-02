@@ -23,26 +23,24 @@ public class SignUpUserCommand implements Command {
 
         /*if (wrapper.getSessionAttribute("user") != null) {
             wrapper.setIsUpdated(true);
-            wrapper.setPage("jsp/main.jsp");
+            wrapper.setPage("other.main");
             return wrapper;
         }*/
 
         if (wrapper.getMethod().equals("GET")) {
-            wrapper.setPage("jsp/user/signup.jsp");
+            wrapper.setPage("user.signup");
         } else {
             if (formHandler.handle(wrapper)) {
                 wrapper.setIsUpdated(true);
 
-
-
                 if (wrapper.getErrors().hasErrors()) {
-                    wrapper.setPage("jsp/account/connect.jsp");
-                    wrapper.addError("account.page", "warning.signup_error");
+                    wrapper.setPage("account.connect");
+                    wrapper.addError("account.page", "warning.account.signup_error");
                 } else {
-                    wrapper.setPage("jsp/main.jsp");
+                    wrapper.setPage("other.main");
                 }
             } else {
-                wrapper.setPage("jsp/user/signup.jsp");
+                wrapper.setPage("user.signup");
             }
         }
 
