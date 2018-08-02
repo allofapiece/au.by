@@ -94,6 +94,15 @@ public class ProductDataBaseDAO implements DataBaseDAO {
         return product;
     }
 
+    public Product findForUser(long id, User user) throws EntityNotFoundException {
+        return findForUserId(id, user.getId());
+    }
+
+    public Product findForUserId(long id, long userId) throws EntityNotFoundException {
+        Product product = (Product) find(id);
+        return product.getUserId() == userId ? product : null;
+    }
+
     /**
      * {@inheritDoc}
      */

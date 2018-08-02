@@ -1,8 +1,8 @@
 function deleteProductAjax(id, product, success) {
-    ajaxAction('/fc?command=product-delete', {id: id}, 'post', success);
+    ajaxAction('/fc?command=product-delete', success, {id: id}, 'post');
 }
 
-function ajaxAction(url, data, method, success) {
+function ajaxAction(url, success, data = null, method = 'POST', dataType = 'html') {
     $.ajax({
         method: method,
         url: url,

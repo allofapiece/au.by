@@ -2,6 +2,8 @@ package com.epam.au.controller.command;
 
 import com.epam.au.controller.command.account.ConnectBankAccountCommand;
 import com.epam.au.controller.command.account.ShowBankAccountCommand;
+import com.epam.au.controller.command.lot.AddLotCommand;
+import com.epam.au.controller.command.lot.ShowLotsCommand;
 import com.epam.au.controller.command.product.AddProductCommand;
 import com.epam.au.controller.command.product.DeleteProductCommand;
 import com.epam.au.controller.command.product.ShowProductsCommand;
@@ -35,6 +37,15 @@ public class CommandProvider {
 
             case "product-delete":
                 return new DeleteProductCommand();
+
+            case "lot-delete":
+                return new DeleteProductCommand();
+
+            case "lot-add":
+                return new AddLotCommand();
+
+            case "lot-show":
+                return new ShowLotsCommand();
 
             default:
                 throw new IllegalCommandException();

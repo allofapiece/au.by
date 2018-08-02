@@ -46,7 +46,7 @@
             <div class="form-group">
                 <label for="password-field"><fmt:message key="user.field.password.label" /></label>
                 <input type="password" name="password" class="form-control" id="password-field" aria-describedby="passwordHelp" placeholder="Enter password">
-                <small id="passwordHelp" class="form-text text-muted"><fmt:message key="user.field.password.help" /></small>
+                <small id="passwordHelp" class="fo♦rm-text text-muted"><fmt:message key="user.field.password.help" /></small>
             </div>
             <div class="form-group">
                 <label for="confirmation-field"><fmt:message key="user.field.confirmation.label" /></label>

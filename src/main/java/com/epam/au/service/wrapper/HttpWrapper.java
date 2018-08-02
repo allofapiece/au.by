@@ -5,6 +5,7 @@ import com.epam.au.controller.ResponseInfo;
 import com.epam.au.controller.Router;
 import com.epam.au.service.validator.Errors;
 import com.google.gson.Gson;
+import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 public class HttpWrapper {
+    private static final Logger LOG = Logger.getLogger(HttpWrapper.class);
     private ResponseInfo responseInfo;
     private HttpServletRequest request;
     private HttpServletResponse response;
@@ -68,6 +70,7 @@ public class HttpWrapper {
             jsonResponse = ejectJson();
             String json = new Gson().toJson(jsonResponse);
             response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
             response.getWriter().write(json);
             return;
         }
@@ -360,5 +363,53 @@ public class HttpWrapper {
 
     public boolean getBoolean(String name) {
         return reqParams.get(name).equals("on");
+    }
+
+    public long getLong(String field, String parameter) {
+        long value = 0;
+        try {
+            value = Long.parseLong(reqParams.get(parameter));
+        } catch (NumberFormatException e) {
+            LOG.error("Not a number", e);
+            this.addError(field, "error.nan");
+        }
+        return value;
+    }
+
+    public long getLong(String field) {
+        String parameter = field.substring(field.lastIndexOf("field.") + 6);
+        return getLong(field, parameter);
+    }
+
+    public int getInt(String field, String parameter) {
+        int value = 0;
+        try {
+            value = Integer.parseInt(reqParams.get(parameter));
+        } catch (NumberFormatException e) {
+            LOG.error("Not a number", e);
+            this.addError(field, "error.nan");
+        }
+        return value;
+    }
+
+    public int getInt(String field) {
+        String parameter = field.substring(field.lastIndexOf("field.") + 6);
+        return getInt(field, parameter);
+    }
+
+    public double getDouble(String field, String parameter) {
+        double value = 0;
+        try {
+            value = Double.parseDouble(reqParams.get(parameter));
+        } catch (NumberFormatException e) {
+            LOG.error("Not a number", e);
+            this.addError(field, "error.nan");
+        }
+        return value;
+    }
+
+    public double getDouble(String field) {
+        String parameter = field.substring(field.lastIndexOf("field.") + 6);
+        return getDouble(field, parameter);
     }
 }

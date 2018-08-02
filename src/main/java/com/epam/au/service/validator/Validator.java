@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+//TODO create the validation for type of value(int, string, double, etc.)
 public abstract class Validator {
     private Errors errors;
     private boolean isValid = true;
@@ -23,7 +24,7 @@ public abstract class Validator {
         this.errors = errors;
     }
 
-    abstract boolean validate(Object object);
+    public abstract boolean validate(Object object);
 
     public boolean validate(Object object, Errors errors) {
         this.errors = errors;

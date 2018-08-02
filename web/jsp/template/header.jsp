@@ -15,6 +15,7 @@
         <link rel="stylesheet" href="${context}/css/style.css">
         <link rel="stylesheet" href="${context}/css/adaptivity.css">
         <link rel="stylesheet" href="${context}/css/product.css">
+        <link rel="stylesheet" href="${context}/css/lots.css">
         <title><fmt:message key="${not empty title ? title : 'title.default.home'}" /></title>
     </head>
     <body>

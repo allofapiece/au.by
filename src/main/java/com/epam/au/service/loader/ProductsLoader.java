@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 
 import java.util.List;
 
-public class ProductsLoader {
+public class ProductsLoader implements Loader {
     private static final Logger LOG = Logger.getLogger(ProductsLoader.class);
     private ProductDataBaseDAO dao;
 
