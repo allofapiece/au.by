@@ -16,6 +16,11 @@ import com.epam.au.service.validator.lot.AddLotValidator;
 import com.epam.au.service.wrapper.HttpWrapper;
 import org.apache.log4j.Logger;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class AddLotFormHandler implements FormHandler {
     private final Logger LOG = Logger.getLogger(AddLotFormHandler.class);
 
@@ -57,7 +62,7 @@ public class AddLotFormHandler implements FormHandler {
                     (User) wrapper.getSessionAttribute("user")
             );
             if (product == null) {
-                wrapper.addError("lot.field,product-id", "error.not_exists");
+                wrapper.addError("lot.field.product-id", "error.not_exists");
             }
         } catch (EntityNotFoundException e) {
             LOG.error("Entity not found", e);
@@ -65,10 +70,16 @@ public class AddLotFormHandler implements FormHandler {
         lot.setProduct(product);
         lot.setProductAmount(wrapper.getInt("lot.field.amount"));
         lot.setBeginPrice(wrapper.getDouble("lot.field.begin-price"));
-
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm");
+        try {
+            Date date = (Date) formatter.parse(wrapper.getRequestParameter("start-date"));
+            lot.setStartTime(date);
+        } catch (ParseException e) {
+            LOG.error("Parse start date error", e);
+        }
         switch (type) {
             case "blitz":
-                ((BlitzLot) lot).setOutgoingAmount(wrapper.getInt("lot.field.outgoing"));
+                ((BlitzLot) lot).setOutgoingAmount(wrapper.getDouble("lot.field.outgoing"));
                 ((BlitzLot) lot).setRoundAmount(wrapper.getInt("lot.field.round.amount", "round-amount"));
                 ((BlitzLot) lot).setRoundTime(wrapper.getLong("lot.field.round.time", "round-time"));
                 ((BlitzLot) lot).setMinPeopleAmount(
@@ -107,6 +118,22 @@ public class AddLotFormHandler implements FormHandler {
             User user = (User) wrapper.getSessionAttribute("user");
             lot.setSellerId(user.getId());
             lot.setStatus(LotStatus.PROPOSED);
+
+            product.setAmount(product.getAmount() - lot.getProductAmount());
+            try {
+                if ((product.getAmount() != 0)) {
+                    productDAO.update(product);
+                } else {
+                    productDAO.delete(product);
+                }
+            } catch (EntityNotFoundException e) {
+                LOG.error("Product not found", e);
+            }
+
+            product.setAmount(lot.getProductAmount());
+            product.setStatus(ProductStatus.IN_LOT);
+            productDAO.create(product);
+
             dao.create(lot);
 
             return true;

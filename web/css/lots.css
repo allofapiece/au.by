@@ -1,3 +1,27 @@
 .internet, .english {
     display: none;
 }
+.lot-products .product {
+    width: 100%;
+}
+.lot:hover {
+    cursor: pointer;
+}
+.lots .lot {
+    box-shadow: 1px 1px 8px rgba(0,0,0,0.3);
+}
+.lot.border-teal:hover {
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.5), 0 0 20px inset rgba(32,201,151,0.3);
+}
+.lot.border-primary:hover {
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.5), 0 0 20px inset rgba(0,123,255,0.3);
+}
+.lot.border-cyan:hover {
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.5), 0 0 20px inset rgba(23,162,184,0.3);
+}
+.lot.border-danger:hover {
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.5), 0 0 20px inset rgba(220,53,69,0.3);
+}
+.lot.border-secondary:hover {
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.5), 0 0 20px inset rgba(108,117,125,0.3);
+}

@@ -1,0 +1,78 @@
+/* ======== teal ========= */
+
+div.bg-teal {
+    background-color: #20c997;
+    color: white;
+}
+.border-teal {
+    border-color: #20c997;
+}
+.btn-outline-teal {
+    color: #20c997;
+    background-color: transparent;
+    background-image: none;
+    border-color: #20c997;
+}
+.btn-outline-teal:not(:disabled):not(.disabled).active:focus,
+.btn-outline-teal:not(:disabled):not(.disabled):active:focus,
+.show>.btn-outline-teal.dropdown-toggle:focus {
+    color: #fff;
+    background-color: #20c997;
+    border-color: #20c997;
+}
+.btn-outline-teal:not(:disabled):not(.disabled).active,
+.btn-outline-teal:not(:disabled):not(.disabled):active,
+.show>.btn-outline-teal.dropdown-toggle {
+    color: #fff;
+    background-color: #20c997;
+    border-color: #20c997;
+}
+.btn-outline-teal.focus, .btn-outline-teal:focus {
+    box-shadow: 0 0 0 0.2rem rgba(32,201,151,.5);
+}
+.btn-outline-teal:hover {
+    color: white;
+    background-color: #20c997;
+    border-color: #20c997;
+}
+/* ======== teal ========= */
+
+/* ======== cyan ========= */
+
+div.bg-cyan {
+    background-color: #17a2b8;
+    color: white;
+}
+.border-cyan {
+    border-color: #17a2b8;
+}
+.btn-outline-cyan {
+    color: #17a2b8;
+    background-color: transparent;
+    background-image: none;
+    border-color: #17a2b8;
+}
+.btn-outline-cyan:not(:disabled):not(.disabled).active:focus,
+.btn-outline-cyan:not(:disabled):not(.disabled):active:focus,
+.show>.btn-outline-cyan.dropdown-toggle:focus {
+    color: #fff;
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+.btn-outline-cyan:not(:disabled):not(.disabled).active,
+.btn-outline-cyan:not(:disabled):not(.disabled):active,
+.show>.btn-outline-cyan.dropdown-toggle {
+    color: #fff;
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+.btn-outline-cyan.focus, .btn-outline-cyan:focus {
+    box-shadow: 0 0 0 0.2rem rgba(23,162,184,.5);
+}
+.btn-outline-cyan:hover {
+    color: white;
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+/* ======== cyan ========= */

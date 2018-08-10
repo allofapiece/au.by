@@ -13,6 +13,7 @@
     <head>
         <link rel="stylesheet" href="${context}/vendor/bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="${context}/css/style.css">
+        <link rel="stylesheet" href="${context}/css/theme.css">
         <link rel="stylesheet" href="${context}/css/adaptivity.css">
         <link rel="stylesheet" href="${context}/css/product.css">
         <link rel="stylesheet" href="${context}/css/lots.css">
@@ -29,14 +30,14 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="<c:url value="/fc?command=lots"/>"><fmt:message key="nav.bar.main" /><span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="<c:url value="/fc?command=lot-show&scope=all"/>"><fmt:message key="nav.bar.main" /><span class="sr-only">(current)</span></a>
                     </li>
                     <c:if test="${user ne null}">
                         <li class="nav-item">
                             <a class="nav-link" href="<c:url value="/fc?command=product-show"/>"><fmt:message key="nav.bar.my.products" /></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#"><fmt:message key="nav.bar.my.lots" /></a>
+                            <a class="nav-link" href="<c:url value="/fc?command=lot-show&scope=mine"/>"><fmt:message key="nav.bar.my.lots" /></a>
                         </li>
                     </c:if>
                 </ul>

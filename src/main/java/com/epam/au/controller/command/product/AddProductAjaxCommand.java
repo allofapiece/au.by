@@ -1,19 +1,20 @@
-package com.epam.au.controller.command.lot;
+package com.epam.au.controller.command.product;
 
 import com.epam.au.controller.command.Command;
 import com.epam.au.entity.User;
-import com.epam.au.service.loader.Loader;
-import com.epam.au.service.loader.LotLoader;
+import com.epam.au.service.handler.AddProductFormHandler;
 import com.epam.au.service.loader.ProductsLoader;
 import com.epam.au.service.wrapper.HttpWrapper;
 
 import javax.servlet.http.HttpServletResponse;
 
-public class ShowLotsCommand implements Command {
-    private Loader loader;
+public class AddProductAjaxCommand implements Command {
+    private AddProductFormHandler formHandler;
+    private ProductsLoader loader;
 
-    public ShowLotsCommand() {
-        loader = new LotLoader();
+    public AddProductAjaxCommand() {
+        formHandler = new AddProductFormHandler();
+        loader = new ProductsLoader();
     }
 
     @Override
@@ -27,14 +28,10 @@ public class ShowLotsCommand implements Command {
             return wrapper;
         }
 
-        if (wrapper.getMethod().equals("GET")) {
-            String scope = wrapper.getRequestParameter("scope");
-            if (scope.equals("all")) {
-                wrapper.setPage("lot.show.all");
-            } else if (scope.equals("mine")) {
-                wrapper.setPage("lot.show.mine");
-            }
+        wrapper.setAjax(true);
 
+        if (wrapper.getMethod().equals("POST")) {
+            wrapper.addRequestAttribute("product", loader.load(Long.parseLong(wrapper.getRequestParameter("id")), wrapper));
         } else {
             wrapper.setHttpError(HttpServletResponse.SC_NOT_FOUND);
         }

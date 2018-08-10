@@ -49,7 +49,7 @@ public class AddBlitzLotValidator extends AddLotValidator {
         );
         numberSizeValidate(
                 lot.getRoundTime(),
-                60000,
+                36000,
                 1800000,
                 "lot.field.round.time",
                 false
