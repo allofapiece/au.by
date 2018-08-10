@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface Loader {
     List<?> loadAll(HttpWrapper wrapper);
+    List<?> loadByUser(HttpWrapper wrapper);
+    Object load(long id);
 }

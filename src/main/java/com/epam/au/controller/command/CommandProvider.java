@@ -3,10 +3,10 @@ package com.epam.au.controller.command;
 import com.epam.au.controller.command.account.ConnectBankAccountCommand;
 import com.epam.au.controller.command.account.ShowBankAccountCommand;
 import com.epam.au.controller.command.lot.AddLotCommand;
+import com.epam.au.controller.command.lot.LoadLotsCommand;
+import com.epam.au.controller.command.lot.LoadUsersCommand;
 import com.epam.au.controller.command.lot.ShowLotsCommand;
-import com.epam.au.controller.command.product.AddProductCommand;
-import com.epam.au.controller.command.product.DeleteProductCommand;
-import com.epam.au.controller.command.product.ShowProductsCommand;
+import com.epam.au.controller.command.product.*;
 import com.epam.au.controller.command.user.LogOutCommand;
 import com.epam.au.controller.command.user.SignInUserCommand;
 import com.epam.au.controller.command.user.SignUpUserCommand;
@@ -23,6 +23,9 @@ public class CommandProvider {
             case "logout":
                 return new LogOutCommand();
 
+            case "user-load":
+                return new LoadUsersCommand();
+
             case "account-connect":
                 return new ConnectBankAccountCommand();
 
@@ -32,11 +35,17 @@ public class CommandProvider {
             case "product-add":
                 return new AddProductCommand();
 
+            case "product-add-ajax":
+                return new AddProductAjaxCommand();
+
             case "product-show":
                 return new ShowProductsCommand();
 
             case "product-delete":
                 return new DeleteProductCommand();
+
+            case "product-search":
+                return new SearchProductsCommand();
 
             case "lot-delete":
                 return new DeleteProductCommand();
@@ -46,6 +55,10 @@ public class CommandProvider {
 
             case "lot-show":
                 return new ShowLotsCommand();
+
+            case "lot-load":
+                return new LoadLotsCommand();
+
 
             default:
                 throw new IllegalCommandException();

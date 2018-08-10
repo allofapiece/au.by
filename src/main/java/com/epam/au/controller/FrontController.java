@@ -26,14 +26,17 @@ public class FrontController extends HttpServlet {
         CommandProvider commandProvider = new CommandProvider();
         String requestedCommand = req.getParameter("command");
 
+        //TODO url validation. Get 500 when url has ?
 
         //TODO delete this f*cking CODE
+        ////////////////
         UserDataBaseDAO dao = new UserDataBaseDAO();
         try {
             req.getSession().setAttribute("user", dao.find(59));
         } catch (DAOException e) {
             e.printStackTrace();
         }
+        ////////////////
 
         req.removeAttribute("errors");
         req.getSession().removeAttribute("errors");

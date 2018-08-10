@@ -4,6 +4,7 @@ import com.epam.au.dao.AbstractFactory;
 import com.epam.au.dao.DataBaseDAOFactory;
 import com.epam.au.dao.exception.DAOException;
 import com.epam.au.dao.impl.LotDataBaseDAO;
+import com.epam.au.dao.impl.UserDataBaseDAO;
 import com.epam.au.entity.User;
 import com.epam.au.entity.lot.Lot;
 import com.epam.au.service.wrapper.HttpWrapper;
@@ -11,42 +12,38 @@ import org.apache.log4j.Logger;
 
 import java.util.List;
 
-public class LotLoader implements Loader {
-    private static final Logger LOG = Logger.getLogger(LotLoader.class);
-    private LotDataBaseDAO dao;
+public class UserLoader implements Loader {
+    private static final Logger LOG = Logger.getLogger(UserLoader.class);
+    private UserDataBaseDAO dao;
 
-    public LotLoader() {
+    public UserLoader() {
         DataBaseDAOFactory factory;
         try {
             factory = (DataBaseDAOFactory) new AbstractFactory().create("DataBaseDAO");
-            dao = (LotDataBaseDAO) factory.create("lot");
+            dao = (UserDataBaseDAO) factory.create("user");
         } catch (DAOException e) {
             LOG.error("DAO error", e);
         }
+    }
+
+    public User load(long id) {
+        User user = null;
+        try {
+            user = dao.find(id);
+        } catch (DAOException e) {
+            LOG.error("DAO error", e);
+        }
+
+        return user;
     }
 
     public List<Lot> loadByUser(HttpWrapper wrapper) {
-        List<Lot> lots = null;
-        try {
-            lots = dao.findByUser((User) wrapper.getSessionAttribute("user"));
-        } catch (DAOException e) {
-            LOG.error("DAO error", e);
-        }
-        return lots;
+        //TODO throwing unsupported exceptioin
+        return null;
     }
 
     public List<Lot> loadAll(HttpWrapper wrapper) {
-        List<Lot> lots = null;
-        try {
-            lots = dao.findAll();
-        } catch (DAOException e) {
-            LOG.error("DAO error", e);
-        }
-        return lots;
-    }
-
-    public Lot load(long id) {
-        //TODO unsupported exception
+        //TODO throwing unsupported exceptioin
         return null;
     }
 }

@@ -65,16 +65,6 @@ public class HttpWrapper {
 
     public void go(RequestDispatcher requestDispatcher)
             throws ServletException, IOException {
-        if (responseInfo.isAjax()) {
-            jsonResponse = new HashMap<>();
-            jsonResponse = ejectJson();
-            String json = new Gson().toJson(jsonResponse);
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(json);
-            return;
-        }
-
         eject();
 
         if (getHttpError() != 0) {
@@ -88,9 +78,22 @@ public class HttpWrapper {
         }
     }
 
+    public void goAjax() throws ServletException, IOException {
+        jsonResponse = new HashMap<>();
+        jsonResponse = ejectJson();
+        String json = new Gson().toJson(jsonResponse);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(json);
+    }
+
     public void go() throws ServletException, IOException {
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher(responseInfo.getPage().getPath());
-        go(requestDispatcher);
+        if (isAjax()) {
+            goAjax();
+        } else {
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher(responseInfo.getPage().getPath());
+            go(requestDispatcher);
+        }
     }
 
     public void fill(HttpServletRequest req) {

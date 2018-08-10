@@ -79,7 +79,7 @@ public class ProductDataBaseDAO implements DataBaseDAO {
                 product.setDescription(rs.getString("description"));
                 product.setAmount(rs.getInt("amount"));
                 product.setPrice(rs.getDouble("price"));
-                product.setStatus(ProductStatus.valueOf(rs.getString("users.status").toUpperCase()));
+                product.setStatus(ProductStatus.valueOf(rs.getString("status").toUpperCase()));
             }
 
             product.setImages(imageDAO.findByProductId(id));
@@ -137,6 +137,37 @@ public class ProductDataBaseDAO implements DataBaseDAO {
                 product.setPrice(rs.getDouble("price"));
                 product.setStatus(ProductStatus.valueOf(rs.getString("status").toUpperCase()));
                 //product.setImages(imageDAO.findByProductId(product.getId()));
+                products.add(product);
+            }
+        } catch (ConnectionPoolException e) {
+            LOG.error("Connection pool error", e);
+        } catch (SQLException e) {
+            LOG.error("SQL error", e);
+        } finally {
+            connectionPool.closeConnection(conn, stmt, rs);
+        }
+
+        return products;
+    }
+
+    public List<Product> findStringLikeByUserIdAndName(String column, String value, long userId) {
+        List<Product> products = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = connectionPool.takeConnection();
+            stmt = conn.prepareStatement(queryBundle.getQuery("select.any.like.by.user_id.and.name"));
+            /*stmt.setString(1, column);*/
+            stmt.setString(1, "%" + value + "%");
+            stmt.setLong(2, userId);
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Product product = new Product();
+                product.setId(rs.getLong("id"));
+                product.setName(rs.getString("name"));
                 products.add(product);
             }
         } catch (ConnectionPoolException e) {
@@ -224,6 +255,37 @@ public class ProductDataBaseDAO implements DataBaseDAO {
      */
     @Override
     public void update(Object entity) throws EntityNotFoundException {
+        Product product = (Product) entity;
+        Connection conn = null;
+        PreparedStatement stmt = null;
 
+        try {
+            conn = connectionPool.takeConnection();
+            stmt = conn.prepareStatement(queryBundle.getQuery("update.one"));
+            stmt.setLong(1, product.getUserId());
+            stmt.setString(2, product.getName());
+            stmt.setString(3, product.getDescription());
+            stmt.setInt(4, product.getAmount());
+            stmt.setDouble(5, product.getPrice());
+            stmt.setString(6, product.getStatus().toString().toLowerCase());
+            stmt.setLong(7, product.getId());
+            stmt.executeUpdate();
+
+            /*if (!product.getImages().isEmpty()) {
+                if (rs != null && rs.next()) {
+                    generatedId = rs.getLong(1);
+                }
+                for (ProductImage image : product.getImages()) {
+                    image.setProductId(generatedId);
+                }
+                imageDAO.createAll(product.getImages());
+            }*/
+        } catch (ConnectionPoolException e) {
+            LOG.error("Connection pool error", e);
+        } catch (SQLException e) {
+            LOG.error("SQL error", e);
+        } finally {
+            connectionPool.closeConnection(conn, stmt);
+        }
     }
 }

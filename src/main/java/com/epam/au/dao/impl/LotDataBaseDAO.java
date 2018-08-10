@@ -19,10 +19,8 @@ import com.epam.au.service.pool.ConnectionPoolException;
 import org.apache.log4j.Logger;
 
 import javax.sql.PooledConnection;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,6 +65,36 @@ public class LotDataBaseDAO implements DataBaseDAO {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Lot> findAll() throws DAOException {
+        List<Lot> lots = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = connectionPool.takeConnection();
+            stmt = conn.prepareStatement(queryBundle.getQuery("select.all"));
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Lot lot = fillLotFromResultSet(rs);
+                lots.add(lot);
+            }
+        } catch (ConnectionPoolException e) {
+            LOG.error("Connection pool error", e);
+        } catch (SQLException e) {
+            LOG.error("SQL error", e);
+        } finally {
+            connectionPool.closeConnection(conn, stmt, rs);
+        }
+
+        return lots;
+    }
+
     public List<Lot> findByUser(User user) throws DAOException {
         return findByUserId(user.getId());
     }
@@ -105,7 +133,7 @@ public class LotDataBaseDAO implements DataBaseDAO {
             case "blitz":
                 lot = new BlitzLot();
                 generalFilling(lot, rs);
-                ((BlitzLot) lot).setOutgoingAmount(rs.getInt("outgoing_amount"));
+                ((BlitzLot) lot).setOutgoingAmount(rs.getDouble("outgoing_amount"));
                 ((BlitzLot) lot).setRoundAmount(rs.getInt("round_amount"));
                 ((BlitzLot) lot).setRoundTime(rs.getLong("round_time"));
                 ((BlitzLot) lot).setMinPeopleAmount(rs.getInt("min_people_amount"));
@@ -134,6 +162,7 @@ public class LotDataBaseDAO implements DataBaseDAO {
     private Lot generalFilling(Lot lot, ResultSet rs) throws SQLException, DAOException {
         //TODO setting data time for start and end lot
         lot.setId(rs.getLong("id"));
+        lot.setSellerId(rs.getLong("seller_id"));
         lot.setName(rs.getString("name"));
         lot.setDescription(rs.getString("description"));
         lot.setStatus(LotStatus.valueOf(rs.getString("status").toUpperCase()));
@@ -145,15 +174,6 @@ public class LotDataBaseDAO implements DataBaseDAO {
 
         return lot;
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List findAll() {
-        return null;
-    }
-
 
     /**
      * {@inheritDoc}
@@ -179,7 +199,6 @@ public class LotDataBaseDAO implements DataBaseDAO {
                     stmt = prepareInternetLot(lot, conn);
                     break;
             }
-            stmt = conn.prepareStatement(queryBundle.getQuery("insert.one.blitz"));
             stmt.executeUpdate();
         } catch (ConnectionPoolException e) {
             LOG.error("Connection pool error", e);
@@ -205,8 +224,12 @@ public class LotDataBaseDAO implements DataBaseDAO {
         stmt.setInt(10, ((BlitzLot) lot).getMinPeopleAmount());
         stmt.setInt(11, ((BlitzLot) lot).getMaxPeopleAmount());
         stmt.setInt(12, ((BlitzLot) lot).getRoundAmount());
-        stmt.setLong(13, ((BlitzLot) lot).getRoundTime());
-        stmt.setInt(14, ((BlitzLot) lot).getOutgoingAmount());
+        stmt.setTime(13, (new Time(((BlitzLot) lot).getRoundTime())));
+        stmt.setDouble(14, ((BlitzLot) lot).getOutgoingAmount());
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String datetime = format.format(lot.getStartTime());
+        stmt.setString(15, datetime);
 
         return stmt;
     }
@@ -223,7 +246,11 @@ public class LotDataBaseDAO implements DataBaseDAO {
         stmt.setInt(7, lot.getProductAmount());
         stmt.setDouble(8, lot.getBeginPrice());
         stmt.setDouble(9, ((EnglishLot) lot).getStepPrice());
-        stmt.setLong(10, ((EnglishLot) lot).getBetTime());
+        stmt.setTime(10, new Time(((EnglishLot) lot).getBetTime()));
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String datetime = format.format(lot.getStartTime());
+        stmt.setString(11, datetime);
 
         return stmt;
     }
@@ -240,7 +267,11 @@ public class LotDataBaseDAO implements DataBaseDAO {
         stmt.setInt(7, lot.getProductAmount());
         stmt.setDouble(8, lot.getBeginPrice());
         stmt.setDouble(9, ((InternetLot) lot).getBlitzPrice());
-        stmt.setLong(10, ((InternetLot) lot).getBetTime());
+        stmt.setTime(10, new Time(((InternetLot) lot).getBetTime()));
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String datetime = format.format(lot.getStartTime());
+        stmt.setString(11, datetime);
 
         return stmt;
     }

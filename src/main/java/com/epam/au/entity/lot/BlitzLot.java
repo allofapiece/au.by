@@ -13,7 +13,7 @@ public class BlitzLot extends Lot {
     private double blitzPrice;
     private int roundAmount;
     private long roundTime;
-    private int outgoingAmount;
+    private double outgoingAmount;
 
     public int getMinPeopleAmount() {
         return minPeopleAmount;
@@ -55,11 +55,11 @@ public class BlitzLot extends Lot {
         this.roundTime = roundTime;
     }
 
-    public int getOutgoingAmount() {
+    public double getOutgoingAmount() {
         return outgoingAmount;
     }
 
-    public void setOutgoingAmount(int outgoingAmount) {
+    public void setOutgoingAmount(double outgoingAmount) {
         this.outgoingAmount = outgoingAmount;
     }
 
@@ -89,7 +89,7 @@ public class BlitzLot extends Lot {
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + roundAmount;
         result = 31 * result + (int) (roundTime ^ (roundTime >>> 32));
-        result = 31 * result + outgoingAmount;
+        result = 31 * result + (int) outgoingAmount;
         return result;
     }
 }
