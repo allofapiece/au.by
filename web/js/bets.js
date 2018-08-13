@@ -2,8 +2,8 @@ var classPrefix = 'bet';
 var members = [];
 
 $(document).ready(function () {
-    loadMembers();
-    loadBets({id:qs('id'), scope: 'lot'});
+    loadMembers({id: qs('id'), scope: 'lot'});
+    loadBets({id: qs('id'), scope: 'lot'});
 });
 
 function showBets(bets) {
@@ -88,7 +88,7 @@ $(document).ready(function () {
 
 function loadMembers(data = null) {
     var success = function (data) {
-        showMembers(data.reqAttrs.members);
+        showMembers(data.reqAttrs.bieters);
     };
     ajaxAction('/fc?command=bieter-load', success, data, 'POST', 'json');
 }

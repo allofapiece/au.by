@@ -30,6 +30,9 @@ public class DataBaseDAOFactory implements Factory {
             case "bet":
                 return new BetDataBaseDAO();
 
+            case "bieter":
+                return new BieterDataBaseDAO();
+
             case "product-image":
                 return new ProductImageDataBaseDAO();
 

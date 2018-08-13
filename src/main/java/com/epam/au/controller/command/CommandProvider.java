@@ -3,6 +3,8 @@ package com.epam.au.controller.command;
 import com.epam.au.controller.command.account.ConnectBankAccountCommand;
 import com.epam.au.controller.command.account.ShowBankAccountCommand;
 import com.epam.au.controller.command.bet.LoadBetsCommand;
+import com.epam.au.controller.command.bieter.AddBieterCommand;
+import com.epam.au.controller.command.bieter.LoadBietersCommand;
 import com.epam.au.controller.command.lot.*;
 import com.epam.au.controller.command.product.*;
 import com.epam.au.controller.command.user.LogOutCommand;
@@ -62,6 +64,12 @@ public class CommandProvider {
 
             case "bet-load":
                 return new LoadBetsCommand();
+
+            case "bieter-load":
+                return new LoadBietersCommand();
+
+            case "bieter-add":
+                return new AddBieterCommand();
 
             default:
                 throw new IllegalCommandException();
