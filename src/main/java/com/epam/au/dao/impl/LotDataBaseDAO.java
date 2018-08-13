@@ -61,8 +61,35 @@ public class LotDataBaseDAO implements DataBaseDAO {
      * {@inheritDoc}
      */
     @Override
-    public Object find(long id) throws EntityNotFoundException {
-        return null;
+    public Object find(long id) throws DAOException {
+        Lot lot = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        int count = 0;
+        try {
+            conn = connectionPool.takeConnection();
+            stmt = conn.prepareStatement(queryBundle.getQuery("select.one.by_id"));
+            stmt.setLong(1, id);
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                lot = fillLotFromResultSet(rs);
+                count++;
+            }
+        } catch (ConnectionPoolException e) {
+            LOG.error("Connection pool error", e);
+        } catch (SQLException e) {
+            LOG.error("SQL error", e);
+        } finally {
+            connectionPool.closeConnection(conn, stmt, rs);
+        }
+
+        if (count != 1) {
+            throw new EntityNotFoundException();
+        }
+
+        return lot;
     }
 
     /**

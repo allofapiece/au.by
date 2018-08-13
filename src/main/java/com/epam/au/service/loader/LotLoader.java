@@ -3,6 +3,7 @@ package com.epam.au.service.loader;
 import com.epam.au.dao.AbstractFactory;
 import com.epam.au.dao.DataBaseDAOFactory;
 import com.epam.au.dao.exception.DAOException;
+import com.epam.au.dao.exception.EntityNotFoundException;
 import com.epam.au.dao.impl.LotDataBaseDAO;
 import com.epam.au.entity.User;
 import com.epam.au.entity.lot.Lot;
@@ -46,7 +47,12 @@ public class LotLoader implements Loader {
     }
 
     public Lot load(long id) {
-        //TODO unsupported exception
-        return null;
+        Lot lot = null;
+        try {
+            lot = (Lot) dao.find(id);
+        } catch (DAOException e) {
+            LOG.error("DAO error", e);
+        }
+        return lot;
     }
 }

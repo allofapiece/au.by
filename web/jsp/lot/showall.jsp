@@ -14,13 +14,7 @@
         <form class="form-inline lot-search">
             <input type="search" class="form-control mr-lg-2" placeholder="Search for..">
             <button type="submit" class="btn btn-primary">GO</button>
-            <div class="lot-filter">
-                <a href="#" role="button" class="btn btn-outline-cyan" aria-pressed="true"><fmt:message key="lot.show.inscription.status.open" /></a>
-                <a href="#" role="button" aria-pressed="true" class="btn btn-outline-primary"><fmt:message key="lot.show.inscription.status.started" /></a>
-                <a href="#" role="button" aria-pressed="true" class="btn btn-outline-teal"><fmt:message key="lot.show.inscription.status.completed" /></a>
-                <a href="#" role="button" aria-pressed="true" class="btn btn-outline-secondary"><fmt:message key="lot.show.inscription.status.proposed" /></a>
-                <a href="#" role="button" aria-pressed="true" class="btn btn-outline-danger"><fmt:message key="lot.show.inscription.status.closed" /></a>
-            </div>
+            <c:import url="/jsp/lot/lot-filter.jsp"/>
         </form>
 
     </div>
@@ -32,5 +26,7 @@
         </div>
     </div>
 </div>
+
+<script src="${context}/js/lots.js"></script>
 
 <c:import url="/jsp/template/footer.jsp"/>

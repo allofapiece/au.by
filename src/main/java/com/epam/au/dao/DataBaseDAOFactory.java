@@ -27,6 +27,9 @@ public class DataBaseDAOFactory implements Factory {
             case "lot":
                 return new LotDataBaseDAO();
 
+            case "bet":
+                return new BetDataBaseDAO();
+
             case "product-image":
                 return new ProductImageDataBaseDAO();
 

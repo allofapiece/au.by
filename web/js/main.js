@@ -138,3 +138,80 @@ function getPrototype(selector, removeClasses) {
 
     return clone;
 }
+
+function ejectLabels(element) {
+    var targets = element.find(
+        'p[data-label],' +
+        'h1[data-label],' +
+        'h2[data-label],' +
+        'h3[data-label],' +
+        'h4[data-label],' +
+        'h5[data-label],' +
+        'div[data-label],' +
+        'button[data-label],' +
+        'a[data-label]'
+    );
+    targets.each(function () {
+        if (
+            $(this).is('p') ||
+            $(this).is('h1') ||
+            $(this).is('h2') ||
+            $(this).is('h3') ||
+            $(this).is('h4') ||
+            $(this).is('h5') ||
+            $(this).is('a') ||
+            $(this).is('div')
+        ) {
+            $(this).html('<strong>' + $(this).data('label') + ':</strong> ');
+        } else if ($(this).is('button')) {
+            this.val(this.data('label'));
+        }
+    });
+}
+
+function deleteExcessEntities(newObjects, currentObjects) {
+    var isFind = false;
+    currentObjects.each(function () {
+        var id = $(this).find('input[name="entity-id"]').val();
+        isFind = false;
+
+        newObjects.forEach(function (entity) {
+            if (entity.id === parseInt(id)) {
+                isFind = true;
+                return false;
+            }
+        });
+
+        if (!isFind && !$(this).hasClass('prototype')) {
+            this.remove();
+        }
+    });
+}
+
+function addNewEntities(newObjects, currentObjects, entityType) {
+    var isFind = false;
+    newObjects.forEach(function (entity) {
+        isFind = false;
+
+        currentObjects.each(function () {
+            var id = $(this).find('input[name="entity-id"]').val();
+            if (entity.id === parseInt(id)) {
+                isFind = true;
+                return false;
+            }
+        });
+
+        if (!isFind) {
+            displayEntity(entity, entityType);
+        }
+    });
+}
+
+function displayEntity(entity, entityType) {
+    var functionName = 'display' + capitalize(entityType);
+    window[functionName](entity);
+}
+
+function capitalize(string) {
+    return string.charAt(0).toUpperCase() + string.substr(1).toLowerCase();
+}

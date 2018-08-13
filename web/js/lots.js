@@ -1,11 +1,7 @@
 var classPrefix = 'lot';
 
 $(document).ready(function () {
-    if (qs('command') === 'lot-show' && qs('scope') === 'mine') {
-        loadMyLots();
-    } else if (qs('command') === 'lot-show' && qs('scope') === 'all') {
-        loadAllLots();
-    }
+    loadLots();
 });
 
 function showLots(lots) {
@@ -122,6 +118,10 @@ function init(element, lot) {
     buttons.each(function () {
         if (!$(this).hasClass(classPrefix + '-' + lot.status.toLowerCase())) {
             $(this).remove();
+        } else {
+            var href = $(this).attr('href');
+            href = href.replace(/id=#/g, "id=" + lot.id);
+            $(this).attr('href', href);
         }
     });
     element.find('.' + classPrefix + '-' + lot.status.toLowerCase()).show();
@@ -132,6 +132,8 @@ function init(element, lot) {
         lot.auctionType.charAt(0) +
         lot.auctionType.toLowerCase().substr(1)
     );
+    element.find('input[name="lot-id"]').val(lot.id);
+    bindEvent(element, "click");
 }
 
 function loadSeller(id, element) {
@@ -141,48 +143,25 @@ function loadSeller(id, element) {
     loadUser(id, success, element);
 }
 
-function ejectLabels(element) {
-    var targets = element.find(
-        'p[data-label],' +
-        'h1[data-label],' +
-        'h2[data-label],' +
-        'h3[data-label],' +
-        'h4[data-label],' +
-        'h5[data-label],' +
-        'div[data-label],' +
-        'button[data-label],' +
-        'a[data-label]'
-    );
-    targets.each(function () {
-        if (
-            $(this).is('p') ||
-            $(this).is('h1') ||
-            $(this).is('h2') ||
-            $(this).is('h3') ||
-            $(this).is('h4') ||
-            $(this).is('h5') ||
-            $(this).is('a') ||
-            $(this).is('div')
-        ) {
-            $(this).html('<strong>' + $(this).data('label') + ':</strong> ');
-        } else if ($(this).is('button')) {
-            this.val(this.data('label'));
-        }
-    });
+function loadLots(data = null) {
+    if (qs('command') === 'lot-show' && qs('scope') === 'mine') {
+        loadMyLots(data);
+    } else if (qs('command') === 'lot-show' && qs('scope') === 'all') {
+        loadAllLots(data);
+    }
 }
-
-function loadMyLots() {
+function loadMyLots(data = null) {
     var success = function (data) {
         showLots(data.reqAttrs.lots);
     };
-    ajaxAction('/fc?command=lot-load&scope=mine', success, null, 'GET', 'json');
+    ajaxAction('/fc?command=lot-load&scope=mine', success, data, 'GET', 'json');
 }
 
-function loadAllLots() {
+function loadAllLots(data = null) {
     var success = function (data) {
         showLots(data.reqAttrs.lots);
     };
-    ajaxAction('/fc?command=lot-load&scope=all', success, null, 'GET', 'json');
+    ajaxAction('/fc?command=lot-load&scope=all', success, data, 'GET', 'json');
 }
 
 $(document).ready(function () {
@@ -192,7 +171,26 @@ $(document).ready(function () {
 
        $('.' + $(this).val()).show();
    });
+
+   $('.lot-filter .btn').on('click', function () {
+       $(this).toggleClass('active');
+
+       var terms = [];
+       $('.lot-filter .btn').each(function () {
+           if ($(this).hasClass('active')) {
+               terms.push($(this).data('filter-term'));
+           }
+       });
+
+       loadLots({filter:terms.join(',')});
+   });
 });
+
+function bindEvent(element, event) {
+    element.on(event, function () {
+        window.location.href = '/fc?command=lot-show-one&id=' + element.find('input[name="lot-id"]').val();
+    });
+}
 
 
 

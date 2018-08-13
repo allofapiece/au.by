@@ -2,10 +2,8 @@ package com.epam.au.controller.command;
 
 import com.epam.au.controller.command.account.ConnectBankAccountCommand;
 import com.epam.au.controller.command.account.ShowBankAccountCommand;
-import com.epam.au.controller.command.lot.AddLotCommand;
-import com.epam.au.controller.command.lot.LoadLotsCommand;
-import com.epam.au.controller.command.lot.LoadUsersCommand;
-import com.epam.au.controller.command.lot.ShowLotsCommand;
+import com.epam.au.controller.command.bet.LoadBetsCommand;
+import com.epam.au.controller.command.lot.*;
 import com.epam.au.controller.command.product.*;
 import com.epam.au.controller.command.user.LogOutCommand;
 import com.epam.au.controller.command.user.SignInUserCommand;
@@ -56,9 +54,14 @@ public class CommandProvider {
             case "lot-show":
                 return new ShowLotsCommand();
 
+            case "lot-show-one":
+                return new ShowLotCommand();
+
             case "lot-load":
                 return new LoadLotsCommand();
 
+            case "bet-load":
+                return new LoadBetsCommand();
 
             default:
                 throw new IllegalCommandException();
