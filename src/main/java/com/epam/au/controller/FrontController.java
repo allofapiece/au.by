@@ -4,6 +4,7 @@ import com.epam.au.controller.command.Command;
 import com.epam.au.controller.command.CommandProvider;
 import com.epam.au.controller.command.IllegalCommandException;
 import com.epam.au.dao.exception.DAOException;
+import com.epam.au.dao.impl.BetDataBaseDAO;
 import com.epam.au.dao.impl.UserDataBaseDAO;
 import org.apache.log4j.Logger;
 import com.epam.au.service.wrapper.HttpWrapper;

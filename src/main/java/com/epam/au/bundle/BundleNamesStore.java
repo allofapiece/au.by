@@ -11,6 +11,7 @@ public final class BundleNamesStore {
     public static final String PRODUCT_QUERY_BUNDLE = "query.product";
     public static final String PRODUCT_IMAGE_QUERY_BUNDLE = "query.product-image";
     public static final String LOT_QUERY_BUNDLE = "query.lot";
+    public static final String BET_QUERY_BUNDLE = "query.bet";
     public static final String BANK_ACCOUNT_QUERY_BUNDLE = "query.account";
     public static final String EXPRESSION_BUNDLE = "expression";
     public static final String DB_BUNDLE = "db";

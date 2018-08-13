@@ -21,6 +21,9 @@ public class QueryBundleFactory {
             case "lot":
                 return LotQueryBundle.getInstance();
 
+            case "bet":
+                return BetQueryBundle.getInstance();
+
             default:
                 throw new IllegalQueryBundleException();
         }

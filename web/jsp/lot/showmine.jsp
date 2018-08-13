@@ -10,10 +10,11 @@
     <hr>
 </div>
 <div class="row">
-    <div class="col-6">
-        <form class="form-inline">
+    <div class="container-fluid">
+        <form class="form-inline lot-search">
             <input type="search" class="form-control mr-lg-2" placeholder="Search for..">
             <button type="submit" class="btn btn-primary">GO</button>
+            <c:import url="/jsp/lot/lot-filter.jsp"/>
         </form>
     </div>
 </div>
@@ -25,5 +26,7 @@
         </div>
     </div>
 </div>
+
+<script src="${context}/js/lots.js"></script>
 
 <c:import url="/jsp/template/footer.jsp"/>

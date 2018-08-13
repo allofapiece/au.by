@@ -42,6 +42,11 @@
         <path>jsp/lot/showall.jsp</path>
     </page>
     <page>
+        <route>lot.show.one</route>
+        <title>title.lot.show.one</title>
+        <path>jsp/lot/show-one.jsp</path>
+    </page>
+    <page>
         <route>lot.add</route>
         <title>title.lot.add</title>
         <path>jsp/lot/add.jsp</path>

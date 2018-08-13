@@ -111,4 +111,6 @@
     </div>
 </div>
 
+<script src="${context}/js/lots.js"></script>
+
 <c:import url="/jsp/template/footer.jsp"/>
