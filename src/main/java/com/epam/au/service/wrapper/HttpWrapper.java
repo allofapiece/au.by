@@ -3,6 +3,7 @@ package com.epam.au.service.wrapper;
 import com.epam.au.controller.Page;
 import com.epam.au.controller.ResponseInfo;
 import com.epam.au.controller.Router;
+import com.epam.au.entity.User;
 import com.epam.au.service.validator.Errors;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
@@ -300,6 +301,10 @@ public class HttpWrapper {
         responseInfo.setPage(router.getPage(route));
     }
 
+    public void setPage(Page page) {
+        responseInfo.setPage(page);
+    }
+
     public Page getPage() {
         return responseInfo.getPage();
     }
@@ -362,6 +367,14 @@ public class HttpWrapper {
 
     public boolean isAjax() {
         return this.responseInfo.isAjax();
+    }
+
+    public User getUser() {
+        return (User) this.sessionAttrs.get("user");
+    }
+
+    public long getUserId() {
+        return getUser().getId();
     }
 
     public boolean getBoolean(String name) {

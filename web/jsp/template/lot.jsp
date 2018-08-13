@@ -21,7 +21,7 @@
         <a class="btn btn-outline-danger lot-action lot-closed" href="<c:url value=""/> " ><fmt:message key="lot.inscription.action.take-back" /></a>
         <a class="btn btn-outline-primary lot-action lot-started" href="<c:url value="/fc?command=lot-show-one&id=#"/> " ><fmt:message key="lot.inscription.action.watch" /></a>
         <a class="btn btn-outline-cyan lot-action lot-open" href="<c:url value="/fc?command=lot-show-one&id=#"/> " ><fmt:message key="lot.inscription.action.watch" /></a>
-        <a class="btn btn-outline-cyan action-play lot-action lot-open" href="<c:url value=""/> " ><fmt:message key="lot.inscription.action.play" /></a>
+        <a class="btn btn-outline-cyan action-play lot-action lot-open" href="<c:url value="/fc?command=bieter-add&id=#"/> " ><fmt:message key="lot.inscription.action.play" /></a>
         <a class="btn btn-outline-cyan action-cancel lot-action lot-open" href="#"><fmt:message key="lot.inscription.action.cancel" /></a>
         <a class="btn btn-outline-secondary action-cancel lot-action lot-proposed" href="#"><fmt:message key="lot.inscription.action.cancel" /></a>
         <a class="btn btn-outline-teal action-take-winnings lot-action lot-completed" href="#"><fmt:message key="lot.inscription.action.take-winnings" /></a>

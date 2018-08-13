@@ -24,6 +24,9 @@ public class QueryBundleFactory {
             case "bet":
                 return BetQueryBundle.getInstance();
 
+            case "bieter":
+                return BieterQueryBundle.getInstance();
+
             default:
                 throw new IllegalQueryBundleException();
         }

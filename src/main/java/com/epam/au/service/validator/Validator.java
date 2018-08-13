@@ -1,7 +1,13 @@
 package com.epam.au.service.validator;
 
 import com.epam.au.bundle.BundleNamesStore;
+import com.epam.au.dao.DataBaseDAOFactory;
+import com.epam.au.dao.exception.DAOException;
+import com.epam.au.dao.exception.IllegalDataBaseDAOException;
+import com.epam.au.dao.impl.UserDataBaseDAO;
+import com.epam.au.entity.User;
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,15 +18,25 @@ import java.util.regex.Pattern;
 
 //TODO create the validation for type of value(int, string, double, etc.)
 public abstract class Validator {
+    private static final Logger LOG = Logger.getLogger(Validator.class);
     private Errors errors;
     private boolean isValid = true;
+    private UserDataBaseDAO userDAO;
+
     protected ResourceBundle regexps = ResourceBundle.getBundle(BundleNamesStore.EXPRESSION_BUNDLE);
 
     public Validator() {
         errors = new Errors();
+        DataBaseDAOFactory daoFactory = new DataBaseDAOFactory();
+        try {
+            userDAO = (UserDataBaseDAO) daoFactory.create("user");
+        } catch (IllegalDataBaseDAOException e) {
+            LOG.error(e);
+        }
     }
 
     public Validator(Errors errors) {
+        this();
         this.errors = errors;
     }
 
@@ -249,6 +265,33 @@ public abstract class Validator {
         errors.setFieldErrors(field, messages);
 
         return isValid;
+    }
+
+    public boolean userExistValidate(User user, String field) {
+        return userExistValidate(user.getId(), field);
+    }
+
+    public boolean userExistValidate(long id, String field) {
+        boolean v = true;
+        List<String> messages = errors.getFieldErrors(field);
+        User user = null;
+
+        if (messages == null) {
+            messages = new ArrayList<>();
+        }
+
+        try {
+            user = userDAO.find(id);
+            if (user == null) {
+                messages.add("error.nexists");
+                v = false;
+                setValid(v);
+            }
+        } catch (DAOException e) {
+            LOG.error("DAO error", e);
+        }
+
+        return v;
     }
 
     public boolean isValid() {

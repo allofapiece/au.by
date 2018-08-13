@@ -23,6 +23,7 @@ public abstract class AddLotValidator extends Validator {
             LOG.error(e);
         }
     }
+
     @Override
     public boolean validate(Object object) {
         Lot lot = (Lot) object;
