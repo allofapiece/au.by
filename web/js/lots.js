@@ -70,6 +70,10 @@ function showLot(lot) {
                 newLotElement.find('.lot-action.action-cancel').remove();
             }
 
+            elementTimer(footer.find('.lot-timer'), lot.startTime, false, function() {
+                newLotElement.remove();
+            });
+
             break;
 
         case 'proposed':
@@ -88,6 +92,10 @@ function showLot(lot) {
             addStyleClasses([newLotElement], ['border-danger']);
             addStyleClasses([header], ['bg-danger']);
             addStyleClasses([footer], ['bg-transparent', 'border-danger']);
+
+            if (lot.message != null && lot.message !== '') {
+                header.find('small').append(" (" + lot.message + ")");
+            }
             break;
 
         case 'completed':
@@ -116,13 +124,47 @@ function init(element, lot) {
         }
     });
     buttons.each(function () {
-        if (!$(this).hasClass(classPrefix + '-' + lot.status.toLowerCase())) {
+        var button = this;
+        if ($(this).hasClass(classPrefix + '-' + lot.status.toLowerCase())) {
+            if ($(this).hasClass('action-play')) {
+                lot.bieters.forEach(function () {
+                    if (this.userId === userId) {
+                        $(button).remove();
+                        return false;
+                    }
+                });
+            }
+            if ($(this).hasClass('action-play') && lot.sellerId === userId) {
+                $(this).remove();
+            }
+            if (!userRoles.includes('admin')
+                && ($(this).hasClass('action-reject') || $(this).hasClass('action-accept'))) {
+                $(this).remove()
+            }
+            if ($(this).hasClass('action-take-back') && lot.sellerId !== userId) {
+                $(this).remove()
+            }
+            if ($(this).hasClass('action-cancel') && lot.sellerId !== userId) {
+                $(this).remove()
+            }
+
+            var href = $(this).attr('href');
+            href = href.replace(/id=#/g, "id=" + lot.id);
+            $(this).attr('href', href);
+        } else {
+            $(this).remove();
+        }
+        /*if (!$(this).hasClass(classPrefix + '-' + lot.status.toLowerCase())
+            || ($(this).hasClass('action-play') && lot.sellerId === userId)
+            || (!userRoles.includes('admin')
+                && ($(this).hasClass('action-reject') || $(this).hasClass('action-accept'))))
+        {
             $(this).remove();
         } else {
             var href = $(this).attr('href');
             href = href.replace(/id=#/g, "id=" + lot.id);
             $(this).attr('href', href);
-        }
+        }*/
     });
     element.find('.' + classPrefix + '-' + lot.status.toLowerCase()).show();
     element.find('.card-title').append(lot.name);

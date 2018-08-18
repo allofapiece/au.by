@@ -1,5 +1,8 @@
 package com.epam.au.entity.lot;
 
+import java.sql.Time;
+import java.util.Objects;
+
 /**
  * Concrete impl of lot. Blitz auction is one of the
  * auction types.
@@ -12,7 +15,7 @@ public class BlitzLot extends Lot {
     private int maxPeopleAmount;
     private double blitzPrice;
     private int roundAmount;
-    private long roundTime;
+    private Time roundTime;
     private double outgoingAmount;
 
     public int getMinPeopleAmount() {
@@ -47,11 +50,11 @@ public class BlitzLot extends Lot {
         this.roundAmount = roundAmount;
     }
 
-    public long getRoundTime() {
+    public Time getRoundTime() {
         return roundTime;
     }
 
-    public void setRoundTime(long roundTime) {
+    public void setRoundTime(Time roundTime) {
         this.roundTime = roundTime;
     }
 
@@ -81,15 +84,7 @@ public class BlitzLot extends Lot {
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        long temp;
-        result = 31 * result + minPeopleAmount;
-        result = 31 * result + maxPeopleAmount;
-        temp = Double.doubleToLongBits(blitzPrice);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + roundAmount;
-        result = 31 * result + (int) (roundTime ^ (roundTime >>> 32));
-        result = 31 * result + (int) outgoingAmount;
-        return result;
+
+        return Objects.hash(super.hashCode(), minPeopleAmount, maxPeopleAmount, blitzPrice, roundAmount, roundTime, outgoingAmount);
     }
 }

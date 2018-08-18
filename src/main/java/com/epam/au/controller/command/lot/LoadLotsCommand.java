@@ -1,10 +1,12 @@
 package com.epam.au.controller.command.lot;
 
 import com.epam.au.controller.command.Command;
+import com.epam.au.entity.Role;
 import com.epam.au.entity.User;
 import com.epam.au.entity.lot.Lot;
 import com.epam.au.entity.lot.LotStatus;
 import com.epam.au.service.filter.*;
+import com.epam.au.service.loader.BieterLoader;
 import com.epam.au.service.loader.Loader;
 import com.epam.au.service.loader.LotLoader;
 import com.epam.au.service.wrapper.HttpWrapper;
@@ -16,10 +18,12 @@ import java.util.*;
 public class LoadLotsCommand implements Command {
     private static final Logger LOG = Logger.getLogger(LoadLotsCommand.class);
     private Loader loader;
+    private BieterLoader bieterLoader;
     private EntityFilterInterface filter;
 
     public LoadLotsCommand() {
         loader = new LotLoader();
+        bieterLoader = new BieterLoader();
         filter = new LotFilter();
     }
 
@@ -31,11 +35,14 @@ public class LoadLotsCommand implements Command {
             List<Lot> lots = null;
             String scope = wrapper.getRequestParameter("scope");
             if (scope.equals("all")) {
-                try {
-                    lots = (ArrayList) filter.filter(loader.loadAll(wrapper),
-                            CriteriaProvider.getInstance().getCriterias(Rule.ALL_LOT_FILTER));
-                } catch (IllegalRuleException e) {
-                    LOG.error("Undefined requested filter rule", e);
+                lots = (ArrayList) loader.loadAll(wrapper);
+                if (!wrapper.getUser().hasRole(Role.ADMIN)) {
+                    try {
+                        lots = (ArrayList) filter.filter(lots,
+                                CriteriaProvider.getInstance().getCriterias(Rule.ALL_LOT_FILTER));
+                    } catch (IllegalRuleException e) {
+                        LOG.error("Undefined requested filter rule", e);
+                    }
                 }
             } else if (scope.equals("mine")) {
                 User user = (User) wrapper.getSessionAttribute("user");
@@ -60,6 +67,18 @@ public class LoadLotsCommand implements Command {
                 Map<String, Criteria> criterias = new HashMap<>();
                 criterias.put("status", criteria);
                 lots = (ArrayList) filter.filter(lots, criterias);
+            }
+
+            Criteria defaultCriteria = new Criteria();
+            defaultCriteria.setMode("!=");
+            defaultCriteria.addValue(LotStatus.DELETED);
+
+            Map<String, Criteria> defaultCriterias = new HashMap<>();
+            defaultCriterias.put("status", defaultCriteria);
+            lots = (ArrayList) filter.filter(lots, defaultCriterias);
+
+            for (Lot lot : lots) {
+                lot.setBieters(bieterLoader.loadByLot(lot, wrapper));
             }
 
             wrapper.addRequestAttribute("lots", lots);

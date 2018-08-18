@@ -33,12 +33,11 @@ public class FrontController extends HttpServlet {
         ////////////////
         UserDataBaseDAO dao = new UserDataBaseDAO();
         try {
-            req.getSession().setAttribute("user", dao.find(59));
+            req.getSession().setAttribute("user", dao.find(14));
         } catch (DAOException e) {
             e.printStackTrace();
         }
         ////////////////
-
         req.removeAttribute("errors");
         req.getSession().removeAttribute("errors");
         HttpWrapper wrapper = new HttpWrapper(req, resp);

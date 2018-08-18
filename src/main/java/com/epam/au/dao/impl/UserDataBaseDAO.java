@@ -209,7 +209,7 @@ public class UserDataBaseDAO implements DataBaseDAO {
         try {
             connection = connectionPool.takeConnection();
             statement = connection.prepareStatement(queryBundle.getQuery("select.any.by_id.roles"));
-            statement.setDouble(1, id);
+            statement.setLong(1, id);
 
             rs = statement.executeQuery();
 

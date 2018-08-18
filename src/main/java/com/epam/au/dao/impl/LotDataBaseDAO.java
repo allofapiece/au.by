@@ -1,5 +1,6 @@
 package com.epam.au.dao.impl;
 
+import com.epam.au.bundle.LocalizationBundle;
 import com.epam.au.bundle.QueryBundle;
 import com.epam.au.bundle.QueryBundleFactory;
 import com.epam.au.bundle.exception.IllegalQueryBundleException;
@@ -8,19 +9,15 @@ import com.epam.au.dao.DataBaseDAO;
 import com.epam.au.dao.DataBaseDAOFactory;
 import com.epam.au.dao.exception.DAOException;
 import com.epam.au.dao.exception.EntityNotFoundException;
-import com.epam.au.dao.exception.IllegalDAOTypeException;
 import com.epam.au.entity.AuctionType;
 import com.epam.au.entity.Product;
-import com.epam.au.entity.ProductStatus;
 import com.epam.au.entity.User;
 import com.epam.au.entity.lot.*;
 import com.epam.au.service.pool.ConnectionPool;
 import com.epam.au.service.pool.ConnectionPoolException;
 import org.apache.log4j.Logger;
 
-import javax.sql.PooledConnection;
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +30,8 @@ import java.util.List;
 public class LotDataBaseDAO implements DataBaseDAO {
     private static final Logger LOG = Logger.getLogger(UserDataBaseDAO.class);
     private QueryBundle queryBundle;
+    private QueryBundle eventQueryBundle;
+    private LocalizationBundle localizationBundle;
     private ConnectionPool connectionPool;
     private ProductDataBaseDAO productDAO;
 
@@ -45,6 +44,8 @@ public class LotDataBaseDAO implements DataBaseDAO {
         try {
             QueryBundleFactory queryBundleFactory = new QueryBundleFactory();
             queryBundle = queryBundleFactory.create("lot");
+            eventQueryBundle = queryBundleFactory.create("event");
+            localizationBundle = LocalizationBundle.getInstance();
         } catch (IllegalQueryBundleException e) {
             LOG.error("Illegal query bundle", e);
         }
@@ -162,7 +163,7 @@ public class LotDataBaseDAO implements DataBaseDAO {
                 generalFilling(lot, rs);
                 ((BlitzLot) lot).setOutgoingAmount(rs.getDouble("outgoing_amount"));
                 ((BlitzLot) lot).setRoundAmount(rs.getInt("round_amount"));
-                ((BlitzLot) lot).setRoundTime(rs.getLong("round_time"));
+                ((BlitzLot) lot).setRoundTime(rs.getTime("round_time"));
                 ((BlitzLot) lot).setMinPeopleAmount(rs.getInt("min_people_amount"));
                 ((BlitzLot) lot).setMaxPeopleAmount(rs.getInt("max_people_amount"));
                 ((BlitzLot) lot).setBlitzPrice(rs.getDouble("blitz_price"));
@@ -198,6 +199,9 @@ public class LotDataBaseDAO implements DataBaseDAO {
         lot.setProduct((Product) productDAO.find(rs.getLong("product_id")));
         lot.setProductAmount(rs.getInt("product_amount"));
         lot.setBeginPrice(rs.getDouble("begin_price"));
+        lot.setStartTime(rs.getTimestamp("start_time"));
+        lot.setEndTime(rs.getTimestamp("end_time"));
+        lot.setMessage(rs.getString("message"));
 
         return lot;
     }
@@ -210,34 +214,48 @@ public class LotDataBaseDAO implements DataBaseDAO {
         Lot lot = (Lot) entity;
         Connection conn = null;
         PreparedStatement stmt = null;
+        ResultSet rs = null;
 
         try {
             conn = connectionPool.takeConnection();
             switch (lot.getAuctionType()) {
                 case BLITZ:
-                    stmt = prepareBlitzLot(lot, conn);
+                    stmt = prepareBlitzLot(lot, conn, queryBundle.getQuery("insert.one.blitz"));
                     break;
 
                 case ENGLISH:
-                    stmt = prepareEnglishLot(lot, conn);
+                    stmt = prepareEnglishLot(lot, conn, queryBundle.getQuery("insert.one.english"));
                     break;
 
                 case INTERNET:
-                    stmt = prepareInternetLot(lot, conn);
+                    stmt = prepareInternetLot(lot, conn, queryBundle.getQuery("insert.one.internet"));
                     break;
             }
             stmt.executeUpdate();
+            rs = stmt.getGeneratedKeys();
+
+            if (rs != null && rs.next()) {
+                lot.setId(rs.getLong(1));
+            }
+
+            if (lot.getStartTime() != null) {
+                createEvent(lot, "start");
+            }
+            if (lot.getEndTime() != null) {
+                createEvent(lot, "end");
+            }
         } catch (ConnectionPoolException e) {
             LOG.error("Connection pool error", e);
         } catch (SQLException e) {
             LOG.error("SQL error", e);
         } finally {
-            connectionPool.closeConnection(conn, stmt);
+            connectionPool.closeConnection(conn, stmt, rs);
         }
     }
 
-    private PreparedStatement prepareBlitzLot(Lot lot, Connection conn) throws SQLException {
-        PreparedStatement stmt = conn.prepareStatement(queryBundle.getQuery("insert.one.blitz"));
+    private PreparedStatement prepareBlitzLot(Lot lot, Connection conn, String queryString) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement(queryString,
+                PreparedStatement.RETURN_GENERATED_KEYS);
 
         stmt.setString(1, lot.getName());
         stmt.setString(2, lot.getDescription());
@@ -251,18 +269,16 @@ public class LotDataBaseDAO implements DataBaseDAO {
         stmt.setInt(10, ((BlitzLot) lot).getMinPeopleAmount());
         stmt.setInt(11, ((BlitzLot) lot).getMaxPeopleAmount());
         stmt.setInt(12, ((BlitzLot) lot).getRoundAmount());
-        stmt.setTime(13, (new Time(((BlitzLot) lot).getRoundTime())));
+        stmt.setTime(13, (((BlitzLot) lot).getRoundTime()));
         stmt.setDouble(14, ((BlitzLot) lot).getOutgoingAmount());
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String datetime = format.format(lot.getStartTime());
-        stmt.setString(15, datetime);
+        stmt.setTimestamp(15, lot.getStartTime());
 
         return stmt;
     }
 
-    private PreparedStatement prepareEnglishLot(Lot lot, Connection conn) throws SQLException {
-        PreparedStatement stmt = conn.prepareStatement(queryBundle.getQuery("insert.one.english"));
+    private PreparedStatement prepareEnglishLot(Lot lot, Connection conn, String queryString) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement(queryString,
+                PreparedStatement.RETURN_GENERATED_KEYS);
 
         stmt.setString(1, lot.getName());
         stmt.setString(2, lot.getDescription());
@@ -274,16 +290,14 @@ public class LotDataBaseDAO implements DataBaseDAO {
         stmt.setDouble(8, lot.getBeginPrice());
         stmt.setDouble(9, ((EnglishLot) lot).getStepPrice());
         stmt.setTime(10, new Time(((EnglishLot) lot).getBetTime()));
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String datetime = format.format(lot.getStartTime());
-        stmt.setString(11, datetime);
+        stmt.setTimestamp(11, lot.getStartTime());
 
         return stmt;
     }
 
-    private PreparedStatement prepareInternetLot(Lot lot, Connection conn) throws SQLException {
-        PreparedStatement stmt = conn.prepareStatement(queryBundle.getQuery("insert.one.internet"));
+    private PreparedStatement prepareInternetLot(Lot lot, Connection conn, String queryString) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement(queryString,
+                PreparedStatement.RETURN_GENERATED_KEYS);
 
         stmt.setString(1, lot.getName());
         stmt.setString(2, lot.getDescription());
@@ -295,10 +309,7 @@ public class LotDataBaseDAO implements DataBaseDAO {
         stmt.setDouble(8, lot.getBeginPrice());
         stmt.setDouble(9, ((InternetLot) lot).getBlitzPrice());
         stmt.setTime(10, new Time(((InternetLot) lot).getBetTime()));
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String datetime = format.format(lot.getStartTime());
-        stmt.setString(11, datetime);
+        stmt.setTimestamp(11, lot.getStartTime());
 
         return stmt;
     }
@@ -318,7 +329,79 @@ public class LotDataBaseDAO implements DataBaseDAO {
      * {@inheritDoc}
      */
     @Override
-    public void update(Object entity) throws EntityNotFoundException {
+    public void update(Object entity) {
+        Lot lot = (Lot) entity;
+        Connection conn = null;
+        PreparedStatement stmt = null;
 
+        try {
+            conn = connectionPool.takeConnection();
+            switch (lot.getAuctionType()) {
+                case BLITZ:
+                    stmt = prepareBlitzLot(lot, conn, queryBundle.getQuery("update.one.blitz"));
+                    stmt.setLong(16, lot.getId());
+                    break;
+
+                case ENGLISH:
+                    stmt = prepareEnglishLot(lot, conn, queryBundle.getQuery("update.one.english"));
+                    stmt.setLong(12, lot.getId());
+                    break;
+
+                case INTERNET:
+                    stmt = prepareInternetLot(lot, conn, queryBundle.getQuery("update.one.internet"));
+                    stmt.setLong(12, lot.getId());
+                    break;
+            }
+            stmt.executeUpdate();
+        } catch (ConnectionPoolException e) {
+            LOG.error("Connection pool error", e);
+        } catch (SQLException e) {
+            LOG.error("SQL error", e);
+        } finally {
+            connectionPool.closeConnection(conn, stmt);
+        }
+    }
+
+    public void createEvent(Lot lot, String type) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = connectionPool.takeConnection();
+
+
+            switch (type) {
+                case "start":
+                    stmt = conn.prepareStatement("CREATE EVENT start_lot_" + lot.getId() +
+                            " ON SCHEDULE AT ? " +
+                            "DO " +
+                            "BEGIN " +
+                            "SET @amount = (SELECT count(*) FROM bieters WHERE lot_id = ?);" +
+                            "UPDATE lots SET lots.status = IF(@amount >= lots.min_people_amount, 'started', 'closed')," +
+                            "lots.message = IF(@amount < lots.min_people_amount, ?, NULL) WHERE id = ?;" +
+                            "END");
+                    stmt.setTimestamp(1, lot.getStartTime());
+                    stmt.setLong(2, lot.getId());
+                    stmt.setString(3, localizationBundle.getValue("lot.schedule.close"));
+                    stmt.setLong(4, lot.getId());
+                    break;
+
+                case "end":
+                    stmt = conn.prepareStatement("CREATE EVENT start_lot_" + lot.getId() +
+                            " ON SCHEDULE AT ? DO UPDATE lots SET lots.status = 'completed' WHERE id = ?;");
+
+                    stmt.setTimestamp(1, lot.getStartTime());
+                    stmt.setLong(2, lot.getId());
+                    break;
+            }
+
+            stmt.execute();
+        } catch (ConnectionPoolException e) {
+            LOG.error("Connection pool error", e);
+        } catch (SQLException e) {
+            LOG.error("SQL error", e);
+        } finally {
+            connectionPool.closeConnection(conn, stmt);
+        }
     }
 }

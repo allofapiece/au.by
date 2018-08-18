@@ -12,4 +12,5 @@ public enum LotStatus {
     COMPLETED,
     CLOSED,
     PROPOSED,
+    DELETED,
 }
