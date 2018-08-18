@@ -1,10 +1,14 @@
 package com.epam.au.entity.lot;
 
 import com.epam.au.entity.AuctionType;
+import com.epam.au.entity.Bieter;
 import com.epam.au.entity.Product;
 import com.epam.au.entity.User;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Class describes the lot of auction. Lot is the main part of the subject
@@ -21,11 +25,17 @@ public abstract class Lot {
     protected String description;
     protected LotStatus status;
     protected AuctionType auctionType;
-    protected Date startTime;
-    protected Date endTime;
+    protected Timestamp startTime;
+    protected Timestamp endTime;
     protected Product product;
     protected int productAmount;
     protected double beginPrice;
+    protected String message;
+    protected List<Bieter> bieters;
+
+    public Lot () {
+        bieters = new ArrayList<>();
+    }
 
     public long getId() {
         return id;
@@ -67,19 +77,19 @@ public abstract class Lot {
         this.auctionType = auctionType;
     }
 
-    public Date getStartTime() {
+    public Timestamp getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(Timestamp startTime) {
         this.startTime = startTime;
     }
 
-    public Date getEndTime() {
+    public Timestamp getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(Timestamp endTime) {
         this.endTime = endTime;
     }
 
@@ -121,6 +131,34 @@ public abstract class Lot {
 
     public void setMediatorId(long mediatorId) {
         this.mediatorId = mediatorId;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public List<Bieter> getBieters() {
+        return bieters;
+    }
+
+    public void setBieters(List<Bieter> bieters) {
+        this.bieters = bieters;
+    }
+
+    public void addBieter(Bieter bieter) {
+        if (bieter != null) {
+            bieters.add(bieter);
+        }
+    }
+
+    public void removeBieter(Bieter bieter) {
+        if (bieter != null) {
+            bieters.remove(bieter);
+        }
     }
 
     @Override

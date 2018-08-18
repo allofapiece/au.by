@@ -46,14 +46,14 @@ public class AddBlitzLotValidator extends AddLotValidator {
                 lot.getRoundTime(),
                 "lot.field.round.time",
                 true
-        );
+        );/*
         numberSizeValidate(
                 lot.getRoundTime(),
                 36000,
                 1800000,
                 "lot.field.round.time",
                 false
-        );
+        );*/
 
         emptyValidate(
                 lot.getMinPeopleAmount(),

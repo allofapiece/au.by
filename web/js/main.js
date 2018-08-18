@@ -147,7 +147,6 @@ function ejectLabels(element) {
         'h3[data-label],' +
         'h4[data-label],' +
         'h5[data-label],' +
-        'div[data-label],' +
         'button[data-label],' +
         'a[data-label]'
     );
@@ -207,6 +206,10 @@ function addNewEntities(newObjects, currentObjects, entityType) {
     });
 }
 
+function initEntity(element, entity) {
+    element.find('input[name="entity-id"]').val(entity.id);
+}
+
 function displayEntity(entity, entityType) {
     var functionName = 'display' + capitalize(entityType);
     window[functionName](entity);
@@ -214,4 +217,15 @@ function displayEntity(entity, entityType) {
 
 function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.substr(1).toLowerCase();
+}
+
+function getRolesByJSPString(string = '') {
+    return arrayToLowerCase(string.match(/([\w]+\b)/g));
+}
+
+function arrayToLowerCase(array) {
+    for (var i = 0; i < array.length; i++) {
+        array[i] = array[i].toLowerCase()
+    }
+    return array;
 }

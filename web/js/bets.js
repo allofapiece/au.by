@@ -4,69 +4,54 @@ var members = [];
 $(document).ready(function () {
     loadMembers({id: qs('id'), scope: 'lot'});
     loadBets({id: qs('id'), scope: 'lot'});
+
+    setInterval(function() { loadMembers({id: qs('id'), scope: 'lot'}) }, 2000);
+    setInterval(function() { loadBets({id: qs('id'), scope: 'lot'}) }, 1000);
 });
 
 function showBets(bets) {
     var currentBets = $('.bet');
 
-    deleteExcessEntities(bets, currentBets);
     addNewEntities(bets, currentBets, 'bet');
 }
 
 function showMembers(members) {
-    var currentMembers = $('.member');
+    var currentMembers = $('.bieter:not(".prototype")');
 
     deleteExcessEntities(members, currentMembers);
     addNewEntities(members, currentMembers, 'member');
 }
 
 function displayBet(bet) {
-    var newBetElement = getPrototype('.members', ['bet-prototype', 'prototype']);
+    var newBetElement = getPrototype('.bets-list .prototype', ['bet-prototype', 'prototype']);
+
+    loadBieter(bet.userId, newBetElement);
+
+    initBet(newBetElement, bet);
+
+    newBetElement.show();
+    $('.bets-list').prepend(newBetElement);
 }
 
 function displayMember(member) {
-    var newMemberElement = getPrototype('.members', ['bet-prototype', 'prototype']);
+    var newMemberElement = getPrototype('.members-list .prototype', ['bieter-prototype', 'prototype']);
 
+    loadBieter(member.userId, newMemberElement);
+
+    initMember(newMemberElement, member);
+
+    newMemberElement.show();
+    $('.members-list').prepend(newMemberElement);
 }
 
-function init(element, lot) {
+function initMember(element, member) {
+    initEntity(element, member);
 }
 
-function loadMember(id, element) {
-    success = function (data) {
-        element.find('.lot-seller-name').append(data.reqAttrs.user.name);
-    };
-    loadUser(id, success, element);
-}
+function initBet(element, bet) {
+    initEntity(element, bet);
 
-function ejectLabels(element) {
-    var targets = element.find(
-        'p[data-label],' +
-        'h1[data-label],' +
-        'h2[data-label],' +
-        'h3[data-label],' +
-        'h4[data-label],' +
-        'h5[data-label],' +
-        'div[data-label],' +
-        'button[data-label],' +
-        'a[data-label]'
-    );
-    targets.each(function () {
-        if (
-            $(this).is('p') ||
-            $(this).is('h1') ||
-            $(this).is('h2') ||
-            $(this).is('h3') ||
-            $(this).is('h4') ||
-            $(this).is('h5') ||
-            $(this).is('a') ||
-            $(this).is('div')
-        ) {
-            $(this).html('<strong>' + $(this).data('label') + ':</strong> ');
-        } else if ($(this).is('button')) {
-            this.val(this.data('label'));
-        }
-    });
+    element.find('p.bet-price').text(bet.price + '$');
 }
 
 function loadBets(data = null) {
@@ -93,3 +78,15 @@ function loadMembers(data = null) {
     ajaxAction('/fc?command=bieter-load', success, data, 'POST', 'json');
 }
 
+function loadBieter(id, element) {
+    success = function (data) {
+        var nameElement = element.find('.bet-bieter-name');
+
+        nameElement.append(data.reqAttrs.user.name);
+        if (data.reqAttrs.user.id === userId) {
+            element.addClass('active');
+            nameElement.append(' (' + nameElement.data('label') + ')');
+        }
+    };
+    loadUser(id, success, element);
+}

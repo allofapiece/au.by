@@ -14,6 +14,7 @@ public final class BundleNamesStore {
     public static final String BET_QUERY_BUNDLE = "query.bet";
     public static final String BIETER_QUERY_BUNDLE = "query.bieter";
     public static final String BANK_ACCOUNT_QUERY_BUNDLE = "query.account";
+    public static final String EVENT_QUERY_BUNDLE = "query.event";
     public static final String EXPRESSION_BUNDLE = "expression";
     public static final String DB_BUNDLE = "db";
     public static final String LOCALIZATION_BUNDLE = "localization.local";

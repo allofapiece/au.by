@@ -16,6 +16,8 @@ import com.epam.au.service.validator.lot.AddLotValidator;
 import com.epam.au.service.wrapper.HttpWrapper;
 import org.apache.log4j.Logger;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -73,7 +75,7 @@ public class AddLotFormHandler implements FormHandler {
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm");
         try {
             Date date = (Date) formatter.parse(wrapper.getRequestParameter("start-date"));
-            lot.setStartTime(date);
+            lot.setStartTime(new Timestamp(date.getTime()));
         } catch (ParseException e) {
             LOG.error("Parse start date error", e);
         }
@@ -81,7 +83,7 @@ public class AddLotFormHandler implements FormHandler {
             case "blitz":
                 ((BlitzLot) lot).setOutgoingAmount(wrapper.getDouble("lot.field.outgoing"));
                 ((BlitzLot) lot).setRoundAmount(wrapper.getInt("lot.field.round.amount", "round-amount"));
-                ((BlitzLot) lot).setRoundTime(wrapper.getLong("lot.field.round.time", "round-time"));
+                ((BlitzLot) lot).setRoundTime(new Time(wrapper.getLong("lot.field.round.time", "round-time")));
                 ((BlitzLot) lot).setMinPeopleAmount(
                         !wrapper.getRequestParameter("min-people").equals("")
                         ? wrapper.getInt("lot.field.min-people")
@@ -117,7 +119,12 @@ public class AddLotFormHandler implements FormHandler {
         if (validator.validate(lot)) {
             User user = (User) wrapper.getSessionAttribute("user");
             lot.setSellerId(user.getId());
-            lot.setStatus(LotStatus.PROPOSED);
+
+            if (user.hasRole(Role.ADMIN)) {
+                lot.setStatus(LotStatus.OPEN);
+            } else {
+                lot.setStatus(LotStatus.PROPOSED);
+            }
 
             product.setAmount(product.getAmount() - lot.getProductAmount());
             try {

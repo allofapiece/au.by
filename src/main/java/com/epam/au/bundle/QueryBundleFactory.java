@@ -27,6 +27,9 @@ public class QueryBundleFactory {
             case "bieter":
                 return BieterQueryBundle.getInstance();
 
+            case "event":
+                return EventQueryBundle.getInstance();
+
             default:
                 throw new IllegalQueryBundleException();
         }
