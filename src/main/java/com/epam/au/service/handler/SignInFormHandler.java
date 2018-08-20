@@ -45,11 +45,12 @@ public class SignInFormHandler implements FormHandler {
 
         if (validator.validate(user)) {
             user = dao.findByEmail(user.getEmail());
-            wrapper.addRequestAttribute("user", user);
+            wrapper.addSessionAttribute("user", user);
 
             return true;
         } else {
             errors = validator.getErrors();
+
             return false;
         }
     }

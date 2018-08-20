@@ -340,16 +340,19 @@ public class LotDataBaseDAO implements DataBaseDAO {
                 case BLITZ:
                     stmt = prepareBlitzLot(lot, conn, queryBundle.getQuery("update.one.blitz"));
                     stmt.setLong(16, lot.getId());
+                    stmt.setTimestamp(17, lot.getEndTime());
                     break;
 
                 case ENGLISH:
                     stmt = prepareEnglishLot(lot, conn, queryBundle.getQuery("update.one.english"));
                     stmt.setLong(12, lot.getId());
+                    stmt.setTimestamp(13, lot.getEndTime());
                     break;
 
                 case INTERNET:
                     stmt = prepareInternetLot(lot, conn, queryBundle.getQuery("update.one.internet"));
                     stmt.setLong(12, lot.getId());
+                    stmt.setTimestamp(16, lot.getEndTime());
                     break;
             }
             stmt.executeUpdate();
@@ -369,7 +372,6 @@ public class LotDataBaseDAO implements DataBaseDAO {
         try {
             conn = connectionPool.takeConnection();
 
-
             switch (type) {
                 case "start":
                     stmt = conn.prepareStatement("CREATE EVENT start_lot_" + lot.getId() +
@@ -378,7 +380,9 @@ public class LotDataBaseDAO implements DataBaseDAO {
                             "BEGIN " +
                             "SET @amount = (SELECT count(*) FROM bieters WHERE lot_id = ?);" +
                             "UPDATE lots SET lots.status = IF(@amount >= lots.min_people_amount, 'started', 'closed')," +
-                            "lots.message = IF(@amount < lots.min_people_amount, ?, NULL) WHERE id = ?;" +
+                            "lots.message = IF(@amount < lots.min_people_amount, ?, NULL)," +
+                            "lots.end_time = IF(@amount < lots.min_people_amount, NOW(), NULL)" +
+                            " WHERE id = ?;" +
                             "END");
                     stmt.setTimestamp(1, lot.getStartTime());
                     stmt.setLong(2, lot.getId());
@@ -387,7 +391,7 @@ public class LotDataBaseDAO implements DataBaseDAO {
                     break;
 
                 case "end":
-                    stmt = conn.prepareStatement("CREATE EVENT start_lot_" + lot.getId() +
+                    stmt = conn.prepareStatement("CREATE EVENT end_lot_" + lot.getId() +
                             " ON SCHEDULE AT ? DO UPDATE lots SET lots.status = 'completed' WHERE id = ?;");
 
                     stmt.setTimestamp(1, lot.getStartTime());

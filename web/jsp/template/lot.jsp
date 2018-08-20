@@ -30,7 +30,29 @@
         <%--TODO accept, reject buttons for proposed lots for admin--%>
         <input type="hidden" name="lot-id">
     </div>
-    <div class="card-footer bg-transparent lot-open" data-label="<fmt:message key="lot.show.inscription.timer.left" />">
+    <div class="card-footer bg-transparent lot-open"
+         data-label-full="<fmt:message key="lot.show.inscription.timer.open.full" />"
+         data-label-short="<fmt:message key="lot.show.inscription.timer.open.short" />">
         <c:import url="/jsp/template/timer.jsp"/>
     </div>
+        <div class="card-footer bg-transparent lot-closed"
+             data-label-full="<fmt:message key="lot.show.inscription.timer.closed.full" />"
+             data-label-short="<fmt:message key="lot.show.inscription.timer.closed.short" />">
+        <c:import url="/jsp/template/timer.jsp"/>
+    </div>
+        <div class="card-footer bg-transparent lot-started"
+             data-label-full="<fmt:message key="lot.show.inscription.timer.started.full" />"
+             data-label-short="<fmt:message key="lot.show.inscription.timer.started.short" />">
+            <c:import url="/jsp/template/timer.jsp"/>
+        </div>
+        <div class="card-footer bg-transparent lot-completed"
+             data-label-full="<fmt:message key="lot.show.inscription.timer.completed.full" />"
+             data-label-short="<fmt:message key="lot.show.inscription.timer.completed.short" />">
+            <c:import url="/jsp/template/timer.jsp"/>
+        </div>
+        <div class="card-footer bg-transparent lot-proposed"
+             data-label-full="<fmt:message key="lot.show.inscription.timer.proposed.full" />"
+             data-label-short="<fmt:message key="lot.show.inscription.timer.proposed.short" />">
+            <c:import url="/jsp/template/timer.jsp"/>
+        </div>
 </div>

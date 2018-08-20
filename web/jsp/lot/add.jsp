@@ -1,3 +1,4 @@
+<%@ page pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
@@ -50,20 +51,20 @@
             </div>
             <div class="form-group">
                 <label for="name-field"><fmt:message key="lot.field.name.label" /></label>
-                <input value="Cobic" type="text" name="name" class="form-control" id="name-field" aria-describedby="nameHelp" placeholder="<fmt:message key="lot.field.name.placeholder" />">
+                <input type="text" name="name" class="form-control" id="name-field" aria-describedby="nameHelp" placeholder="<fmt:message key="lot.field.name.placeholder" />">
                 <small id="nameHelp" class="form-text text-muted"><fmt:message key="lot.field.name.help" /></small>
             </div>
             <div class="form-group">
                 <label for="description-field"><fmt:message key="lot.field.description.label" /></label>
-                <input value="red" type="text" name="description" class="form-control" id="description-field" aria-describedby="descriptionHelp" placeholder="<fmt:message key="lot.field.description.placeholder" />">
+                <input type="text" name="description" class="form-control" id="description-field" aria-describedby="descriptionHelp" placeholder="<fmt:message key="lot.field.description.placeholder" />">
             </div>
             <div class="form-group">
                 <label for="amount-field"><fmt:message key="lot.field.amount.label" /></label>
-                <input value="2" type="number" name="amount" class="form-control" id="amount-field" aria-describedby="amount" placeholder="<fmt:message key="lot.field.amount.placeholder" />">
+                <input type="number" name="amount" class="form-control" id="amount-field" aria-describedby="amount" placeholder="<fmt:message key="lot.field.amount.placeholder" />">
             </div>
             <div class="form-group">
                 <label for="begin-price-field"><fmt:message key="lot.field.begin-price.label" /></label>
-                <input value="5.0" type="number" name="begin-price" class="form-control" id="begin-price-field" aria-describedby="begin-price" placeholder="<fmt:message key="lot.field.begin-price.placeholder" />">
+                <input type="number" name="begin-price" class="form-control" id="begin-price-field" aria-describedby="begin-price" placeholder="<fmt:message key="lot.field.begin-price.placeholder" />">
             </div>
             <div class="form-group">
                 <label for="start-date-field"><fmt:message key="lot.field.start-date.label" /></label>
@@ -78,35 +79,35 @@
         <h4 class="internet"><fmt:message key="title.lot.add.additional.internet" /></h4>
         <div class="form-group blitz">
             <label for="outgoing-field"><fmt:message key="lot.field.outgoing.label" /></label>
-            <input value="0.25" type="number" form="add-lot-form" name="outgoing" class="form-control" id="outgoing-field" aria-describedby="outgoing" placeholder="<fmt:message key="lot.field.outgoing.placeholder" />">
+            <input type="number" form="add-lot-form" name="outgoing" class="form-control" id="outgoing-field" aria-describedby="outgoing" placeholder="<fmt:message key="lot.field.outgoing.placeholder" />">
         </div>
         <div class="form-group blitz">
             <label for="round-amount-field"><fmt:message key="lot.field.round.amount.label" /></label>
-            <input value="4" type="number" form="add-lot-form" name="round-amount" class="form-control" id="round-amount-field" aria-describedby="round-amount" placeholder="<fmt:message key="lot.field.round.amount.placeholder" />">
+            <input type="number" form="add-lot-form" name="round-amount" class="form-control" id="round-amount-field" aria-describedby="round-amount" placeholder="<fmt:message key="lot.field.round.amount.placeholder" />">
         </div>
         <div class="form-group blitz">
             <label for="round-time-field"><fmt:message key="lot.field.round.time.label" /></label>
-            <input value="36000" type="number" form="add-lot-form" name="round-time" class="form-control" id="round-time-field" aria-describedby="round-time" placeholder="<fmt:message key="lot.field.round.amount.placeholder" />">
+            <input type="number" form="add-lot-form" name="round-time" class="form-control" id="round-time-field" aria-describedby="round-time" placeholder="<fmt:message key="lot.field.round.amount.placeholder" />">
         </div>
         <div class="form-group blitz">
             <label for="min-people-field"><fmt:message key="lot.field.min-people.label" /></label>
-            <input value="20" type="number" form="add-lot-form" name="min-people" class="form-control" id="min-people-field" aria-describedby="min-people" placeholder="<fmt:message key="lot.field.min-people.placeholder" />">
+            <input type="number" form="add-lot-form" name="min-people" class="form-control" id="min-people-field" aria-describedby="min-people" placeholder="<fmt:message key="lot.field.min-people.placeholder" />">
         </div>
         <div class="form-group blitz">
             <label for="max-people-field"><fmt:message key="lot.field.max-people.label" /></label>
-            <input value="40" type="number" form="add-lot-form" name="max-people" class="form-control" id="max-people-field" aria-describedby="max-people" placeholder="<fmt:message key="lot.field.max-people.placeholder" />">
+            <input type="number" form="add-lot-form" name="max-people" class="form-control" id="max-people-field" aria-describedby="max-people" placeholder="<fmt:message key="lot.field.max-people.placeholder" />">
         </div>
         <div class="form-group blitz internet">
             <label for="blitz-price-field"><fmt:message key="lot.field.blitz-price.label" /></label>
-            <input value="40" type="number" form="add-lot-form" name="blitz-price" class="form-control" id="blitz-price-field" aria-describedby="blitz-price" placeholder="<fmt:message key="lot.field.blitz-price.placeholder" />">
+            <input type="number" form="add-lot-form" name="blitz-price" class="form-control" id="blitz-price-field" aria-describedby="blitz-price" placeholder="<fmt:message key="lot.field.blitz-price.placeholder" />">
         </div>
         <div class="form-group english internet">
             <label for="bet-time-field"><fmt:message key="lot.field.bet-time.label" /></label>
-            <input value="36000" type="number" form="add-lot-form" name="bet-time" class="form-control" id="bet-time-field" aria-describedby="bet-time" placeholder="<fmt:message key="lot.field.bet-time.placeholder" />">
+            <input type="number" form="add-lot-form" name="bet-time" class="form-control" id="bet-time-field" aria-describedby="bet-time" placeholder="<fmt:message key="lot.field.bet-time.placeholder" />">
         </div>
         <div class="form-group english">
             <label for="step-price-field"><fmt:message key="lot.field.step-price.label" /></label>
-            <input value="1" type="number" form="add-lot-form" name="step-price" class="form-control" id="step-price-field" aria-describedby="step-price" placeholder="<fmt:message key="lot.field.step-price.placeholder" />">
+            <input type="number" form="add-lot-form" name="step-price" class="form-control" id="step-price-field" aria-describedby="step-price" placeholder="<fmt:message key="lot.field.step-price.placeholder" />">
         </div>
     </div>
 </div>

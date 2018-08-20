@@ -27,9 +27,7 @@ public class FrontController extends HttpServlet {
         CommandProvider commandProvider = new CommandProvider();
         String requestedCommand = req.getParameter("command");
 
-        //TODO url validation. Get 500 when url has ?
-
-        //TODO delete this f*cking CODE
+        //TODO delete this CODE
         ////////////////
         UserDataBaseDAO dao = new UserDataBaseDAO();
         try {
@@ -41,12 +39,18 @@ public class FrontController extends HttpServlet {
         req.removeAttribute("errors");
         req.getSession().removeAttribute("errors");
         HttpWrapper wrapper = new HttpWrapper(req, resp);
-        try {
-            Command command = commandProvider.getCommand(requestedCommand);
-            command.execute(wrapper);
-        } catch (IllegalCommandException e) {
-            LOG.error("Requested command is not defined", e);
+
+        if (requestedCommand == null) {
+            wrapper.setHttpError(HttpServletResponse.SC_NOT_FOUND);
+        } else {
+            try {
+                Command command = commandProvider.getCommand(requestedCommand);
+                command.execute(wrapper);
+            } catch (IllegalCommandException e) {
+                LOG.error("Requested command is not defined", e);
+            }
         }
+
         wrapper.go();
     }
 

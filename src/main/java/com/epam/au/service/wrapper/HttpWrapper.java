@@ -14,10 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class HttpWrapper {
     private static final Logger LOG = Logger.getLogger(HttpWrapper.class);
@@ -62,6 +59,8 @@ public class HttpWrapper {
         setRequest(request);
         setResponse(response);
         setSession(request.getSession());
+
+        switchLanguage();
     }
 
     public void go(RequestDispatcher requestDispatcher)
@@ -92,6 +91,7 @@ public class HttpWrapper {
         if (isAjax()) {
             goAjax();
         } else {
+
             RequestDispatcher requestDispatcher = request.getRequestDispatcher(responseInfo.getPage().getPath());
             go(requestDispatcher);
         }
@@ -208,6 +208,14 @@ public class HttpWrapper {
         }
 
         return jsonResponse;
+    }
+
+    public void switchLanguage() {
+        if (reqParams.containsKey("language")) {
+            Locale locale = new Locale(reqParams.get("language"));
+            sessionAttrs.put("locale", locale);
+            addRequestAttribute("language", locale.getLanguage());
+        }
     }
 
     public String getMethod() {

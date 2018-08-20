@@ -53,45 +53,43 @@ function showLot(lot) {
     var newLotElement = getPrototype('.lots .prototype', ['lot-prototype', 'prototype']);
     var header = newLotElement.find('.card-header');
     var body = newLotElement.find('.card-body');
-    var footer = newLotElement.find('.card-footer');
+    var footers = newLotElement.find('.card-footer');
 
-    loadSeller(lot.sellerId, newLotElement);
+    footers.each(function () {
+        if (!$(this).hasClass(classPrefix + '-' + lot.status.toLowerCase())) {
+            $(this).remove();
+        }
+    });
 
     ejectLabels(newLotElement);
+    loadSeller(lot.sellerId, newLotElement);
     init(newLotElement, lot);
+    initFooters(footers, newLotElement, lot);
 
     switch (lot.status.toLowerCase()) {
         case 'open':
             addStyleClasses([newLotElement], ['border-cyan']);
             addStyleClasses([header], ['bg-cyan']);
-            addStyleClasses([footer], ['bg-transparent', 'border-cyan']);
 
             if (lot.sellerId !== userId) {
                 newLotElement.find('.lot-action.action-cancel').remove();
             }
-
-            elementTimer(footer.find('.lot-timer'), lot.startTime, false, function() {
-                newLotElement.remove();
-            });
 
             break;
 
         case 'proposed':
             addStyleClasses([newLotElement], ['border-secondary']);
             addStyleClasses([header], ['bg-secondary']);
-            addStyleClasses([footer], ['bg-transparent', 'border-secondary']);
             break;
 
         case 'started':
             addStyleClasses([newLotElement], ['border-primary']);
             addStyleClasses([header], ['bg-primary']);
-            addStyleClasses([footer], ['bg-transparent', 'border-primary']);
             break;
 
         case 'closed':
             addStyleClasses([newLotElement], ['border-danger']);
             addStyleClasses([header], ['bg-danger']);
-            addStyleClasses([footer], ['bg-transparent', 'border-danger']);
 
             if (lot.message != null && lot.message !== '') {
                 header.find('small').append(" (" + lot.message + ")");
@@ -101,7 +99,6 @@ function showLot(lot) {
         case 'completed':
             addStyleClasses([newLotElement], ['border-teal']);
             addStyleClasses([header], ['bg-teal']);
-            addStyleClasses([footer], ['bg-transparent', 'border-teal']);
 
             if (lot.sellerId !== userId) {
                 newLotElement.find('.lot-action.action-take-winnings').remove();
@@ -154,17 +151,6 @@ function init(element, lot) {
         } else {
             $(this).remove();
         }
-        /*if (!$(this).hasClass(classPrefix + '-' + lot.status.toLowerCase())
-            || ($(this).hasClass('action-play') && lot.sellerId === userId)
-            || (!userRoles.includes('admin')
-                && ($(this).hasClass('action-reject') || $(this).hasClass('action-accept'))))
-        {
-            $(this).remove();
-        } else {
-            var href = $(this).attr('href');
-            href = href.replace(/id=#/g, "id=" + lot.id);
-            $(this).attr('href', href);
-        }*/
     });
     element.find('.' + classPrefix + '-' + lot.status.toLowerCase()).show();
     element.find('.card-title').append(lot.name);
@@ -176,6 +162,69 @@ function init(element, lot) {
     );
     element.find('input[name="lot-id"]').val(lot.id);
     bindEvent(element, "click");
+}
+
+function initFooters(footers, lotElement, lot) {
+    var indexes = [];
+    footers.each(function (index, item) {
+        if (!$(this).hasClass(classPrefix + '-' + lot.status.toLowerCase())) {
+            this.remove();
+            indexes.push(index);
+        }
+    });
+
+    indexes.reverse().forEach(function (value) {
+        footers.splice(value, 1);
+    });
+
+    var inscriptions = {"full": footers.data('label-full'), "short": footers.data('label-short')};
+
+    switch (lot.status.toLowerCase()) {
+        case 'open':
+            addStyleClasses([footers], ['bg-transparent', 'border-cyan']);
+
+            elementTimer(footers.find('.lot-timer'), lot.startTime, false, inscriptions, function() {
+                lotElement.remove();
+            });
+
+            break;
+
+        case 'proposed':
+            addStyleClasses([footers], ['bg-transparent', 'border-secondary']);
+
+            elementTimer(footers.find('.lot-timer'), lot.startTime, false, inscriptions, function() {
+                lotElement.remove();
+            });
+
+            break;
+
+        case 'started':
+            addStyleClasses([footers], ['bg-transparent', 'border-primary']);
+
+            elementTimer(footers.find('.lot-timer'), lot.startTime, true, inscriptions, function() {
+                lotElement.remove();
+            });
+
+            break;
+
+        case 'closed':
+            addStyleClasses([footers], ['bg-transparent', 'border-danger']);
+
+            elementTimer(footers.find('.lot-timer'), lot.endTime, true, inscriptions, function() {
+                lotElement.remove();
+            });
+
+            break;
+
+        case 'completed':
+            addStyleClasses([footers], ['bg-transparent', 'border-teal']);
+
+            elementTimer(footers.find('.lot-timer'), lot.endTime, true, inscriptions, function() {
+                lotElement.remove();
+            });
+
+            break;
+    }
 }
 
 function loadSeller(id, element) {
