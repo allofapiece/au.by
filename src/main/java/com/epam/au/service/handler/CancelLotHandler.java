@@ -11,6 +11,9 @@ import com.epam.au.entity.lot.LotStatus;
 import com.epam.au.service.wrapper.HttpWrapper;
 import org.apache.log4j.Logger;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 public class CancelLotHandler {
     private static final Logger LOG = Logger.getLogger(CancelLotHandler.class);
     private LotDataBaseDAO dao;
@@ -48,6 +51,7 @@ public class CancelLotHandler {
             }
 
             lot.setStatus(LotStatus.CLOSED);
+            lot.setEndTime(new Timestamp(new Date().getTime()));
             dao.update(lot);
         } catch (DAOException e) {
             LOG.error("DAO error", e);

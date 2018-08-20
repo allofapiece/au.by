@@ -8,6 +8,7 @@
 
 <div id="content-title" style="margin-top: 15px;">
     <h2></h2>
+    <a class="btn btn-primary" href="<c:url value="/fc?command=lot-add"/>"><fmt:message key="lot.submit.add.label" /></a>
     <hr>
 </div>
 <div class="row">

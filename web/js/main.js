@@ -25,17 +25,15 @@ function searchProduct(value) {
         },
         url: '/fc?command=product-search',
         success: function (data) {
-            if (data.reqAttrs.products.length === 0) {
-                //searchResultSection.append('<li>No Listings Found...</li>');
-            } else {
-
+            if (data.reqAttrs.products.length !== 0) {
                 data.reqAttrs.products.forEach(function (product) {
                     var prototype = '<li data-product="' + product.id + '" ' +
                         '>' +
                         product.name +
                         '</li>';
-                    searchResultSection.append(prototype);});}/*addClass([searchResultSection], 'd-block');
-               removeClass([searchResultSection], 'd-none');*/
+                    searchResultSection.append(prototype);
+                });
+            }
             searchResultSection.show();
             updateEvents();
         }
@@ -148,6 +146,7 @@ function ejectLabels(element) {
         'h4[data-label],' +
         'h5[data-label],' +
         'button[data-label],' +
+        'div[data-label]' +
         'a[data-label]'
     );
     targets.each(function () {
@@ -161,7 +160,7 @@ function ejectLabels(element) {
             $(this).is('a') ||
             $(this).is('div')
         ) {
-            $(this).html('<strong>' + $(this).data('label') + ':</strong> ');
+            $(this).prepend('<strong>' + $(this).data('label') + ':</strong> ');
         } else if ($(this).is('button')) {
             this.val(this.data('label'));
         }

@@ -1,9 +1,11 @@
-function elementTimer(element, timePoint, straightly = false, endFunc = function(){}) {
+'use strict';
+
+function elementTimer(element, timePoint, straightly = false, inscriptions, endFunc = function(){}) {
     var x = setInterval(function() {
         var timerResult;
         var time;
 
-        timePoint instanceof Date ? time = timePoint.getTime() : time = new Date(timePoint).getTime();
+        time = timePoint instanceof Date ? timePoint.getTime() : new Date(timePoint).getTime();
 
         var now = new Date().getTime();
 
@@ -16,11 +18,24 @@ function elementTimer(element, timePoint, straightly = false, endFunc = function
 
         if (days > 0) {
             timerResult = time;
+
+            if (straightly) {
+                clearInterval(x);
+            }
+
+            if (inscriptions !== undefined) {
+                timerResult = inscriptions['full'].replace('{timer}', timePoint);
+            }
         } else {
             var hoursString = hours > 0 ? hours + ":" : '';
-            var minutesString = minutes > 0 ? minutes + ":" : '';
+            var minutesString = (minutes < 10 ? ('0' + minutes) : minutes) + ":";
+            var secondsString = seconds < 10 ? ('0' + seconds) : seconds;
 
-            timerResult = hoursString + minutesString + seconds
+            timerResult = hoursString + minutesString + secondsString;
+
+            if (inscriptions !== undefined) {
+                timerResult = inscriptions['short'].replace('{timer}', timerResult);
+            }
         }
 
         element.text(timerResult);
