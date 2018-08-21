@@ -29,17 +29,17 @@
     <script src="${context}/js/timer.js"></script>
     <script src="${context}/js/main.js"></script>
 
-<script>
-    var userId = ${sessionScope.user.id};
-    var userRolesString = "${sessionScope.user.roles}";
-    var userRoles = getRolesByJSPString(userRolesString);
+    <script>
+        var userId = ${sessionScope.user.id};
+        var userRolesString = "${sessionScope.user.roles}";
+        var userRoles = getRolesByJSPString(userRolesString);
 
-    $('.language a').each(function () {
-        var url = $(this).attr('href');
-        url = url.replace(/language(=[^&]*)?|^language(=[^&]*)?&?/g, '');
-        $(this).attr('href', url + 'language=' + $(this).data('lang'));
-    })
-</script>
+        $('.language a').each(function () {
+            var url = $(this).attr('href');
+            url = url.replace(/[&?]language(=[^&]*)?|^language(=[^&]*)?&?/g, '');
+            $(this).attr('href', url + (url.indexOf('?') !== -1 ? '&language=' : 'language=') + $(this).data('lang'));
+        })
+    </script>
 
     <script src="${context}/js/style.js"></script>
 
