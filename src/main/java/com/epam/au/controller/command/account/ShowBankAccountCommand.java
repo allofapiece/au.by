@@ -26,7 +26,6 @@ public class ShowBankAccountCommand implements Command {
         if (user.getAccount() == null) {
             wrapper.setPage("account.connect");
             wrapper.setIsUpdated(true);
-            wrapper.addError("account.page", "warning.account.connection");
             return wrapper;
         }
 

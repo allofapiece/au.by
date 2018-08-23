@@ -35,7 +35,7 @@ public class SignUpUserCommand implements Command {
 
                 if (wrapper.getErrors().hasErrors()) {
                     wrapper.setPage("account.connect");
-                    wrapper.addError("account.page", "warning.account.signup_error");
+                    wrapper.addError("page", "warning.account.signup_error");
                 } else {
                     wrapper.setPage("other.main");
                 }

@@ -59,7 +59,6 @@ public class SignupFormHandler implements FormHandler {
         user.setName(wrapper.getRequestParameter("name"));
         user.setSurname(wrapper.getRequestParameter("surname"));
 
-
         if (validator.validate(user)) {
             user.setStatus(UserStatus.DISABLED);
             user.setPassword(reformer.reform(user.getPassword(), user));

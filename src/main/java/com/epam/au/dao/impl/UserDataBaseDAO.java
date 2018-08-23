@@ -114,7 +114,7 @@ public class UserDataBaseDAO implements DataBaseDAO {
         User user = (User) entity;
         long generatedId = 0;
         Connection conn = null;
-         PreparedStatement stmt = null;
+        PreparedStatement stmt = null;
         ResultSet rs = null;
 
         try {
@@ -228,7 +228,7 @@ public class UserDataBaseDAO implements DataBaseDAO {
     }
 
     public User findCredentialsByEmail(String email) {
-        User user = new User();
+        User user = null;
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -241,6 +241,7 @@ public class UserDataBaseDAO implements DataBaseDAO {
             rs = stmt.executeQuery();
 
             while (rs.next()) {
+                user = new User();
                 user.setId(rs.getInt("id"));
                 user.setEmail(email);
                 user.setPassword(rs.getString("password"));

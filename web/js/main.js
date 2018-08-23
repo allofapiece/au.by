@@ -84,6 +84,11 @@ function fillEmptyFields(product) {
 }
 
 $(document).ready(function () {
+    /*$('#signup-form input').on('input', function() {
+        if (!this.checkValidity()) {
+            $('button[form="signup-form"]').click();
+        }
+    });*/
     $('#product-id-field').on("input", function () {
         searchResultSection.empty().hide();
         var value = $(this).val();

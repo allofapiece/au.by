@@ -2,14 +2,17 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<fmt:setBundle basename="localization.local" />
-
 <c:import url="/jsp/template/header.jsp"/>
+
+<c:if test="${sessionScope.language ne null}">
+    <fmt:setLocale value="${sessionScope.language}" />
+</c:if>
+<fmt:setBundle basename="localization.local" />
 
 <div class="row">
     <div class="col-12">
         <c:forEach items="${errors}" var="field">
-            <c:if test="${field.key == 'account.page'}">
+            <c:if test="${field.key == 'page'}">
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
                     <c:forEach items="${field.value}" var="error">
                         <p><fmt:message key='${field.key}.${error}.message' /></p>
@@ -18,7 +21,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <c:set target="${errors}" property="account.page" value="${null}"/>
+                <c:set target="${errors}" property="page" value="${null}"/>
             </c:if>
         </c:forEach>
     </div>
@@ -48,10 +51,6 @@
             </div>
             <button type="submit" class="btn btn-primary"><fmt:message key="account.connect.submit.label" /></button>
         </form>
-    </div>
-    <div class="col-6">
-        <h4><fmt:message key="user.account.connect.title"/></h4>
-        <p style="margin-top: 15px;"><fmt:message key="account.description.text"/></p>
     </div>
 </div>
 
