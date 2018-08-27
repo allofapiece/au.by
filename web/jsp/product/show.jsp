@@ -1,6 +1,7 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <c:import url="/jsp/template/header.jsp"/>
 
@@ -27,6 +28,9 @@
     </ul>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-products-tab">
+            <c:if test="${products eq null or fn:length(products) == 0}">
+                <p><fmt:message key="product.show.inscription.null" /></p>
+            </c:if>
             <c:forEach items="${products}" var="product">
                 <c:import url="/jsp/template/product.jsp">
                     <c:param name="name" value="${product.name}"/>
@@ -51,8 +55,12 @@
                         <c:param name="id" value="${product.id}"/>
                         <c:param name="status" value="${product.status}"/>
                     </c:import>
+                    <c:set value="true" var="isAvailableFind"/>
                 </c:if>
             </c:forEach>
+            <c:if test="${isAvailableFind != true}">
+                <p><fmt:message key="product.show.inscription.null" /></p>
+            </c:if>
         </div>
         <div class="tab-pane fade" id="in-lots" role="tabpanel" aria-labelledby="in-lots-tab">
             <c:forEach items="${products}" var="product">
@@ -66,8 +74,12 @@
                         <c:param name="id" value="${product.id}"/>
                         <c:param name="status" value="${product.status}"/>
                     </c:import>
+                    <c:set value="true" var="isInLotFind"/>
                 </c:if>
             </c:forEach>
+            <c:if test="${isInLotFind != true}">
+                <p><fmt:message key="product.show.inscription.null" /></p>
+            </c:if>
         </div>
         <div class="tab-pane fade" id="sold" role="tabpanel" aria-labelledby="sold-tab">
             <c:forEach items="${products}" var="product">
@@ -81,8 +93,12 @@
                         <c:param name="id" value="${product.id}"/>
                         <c:param name="status" value="${product.status}"/>
                     </c:import>
+                    <c:set value="true" var="isSoldFind"/>
                 </c:if>
             </c:forEach>
+            <c:if test="${isSoldFind != true}">
+                <p><fmt:message key="product.show.inscription.null" /></p>
+            </c:if>
         </div>
     </div>
 </div>

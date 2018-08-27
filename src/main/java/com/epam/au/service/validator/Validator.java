@@ -9,10 +9,7 @@ import com.epam.au.entity.User;
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -267,6 +264,83 @@ public abstract class Validator {
         return isValid;
     }
 
+    public boolean timeValidate(
+            Date time,
+            Date pointTime,
+            long distance,
+            boolean straightly,
+            String field,
+            boolean isStacked
+    ) {
+        if (!isStacked && errors.getAllErrors().containsKey(field)) {
+            return false;
+        }
+
+        return timeValidate(time.getTime(), pointTime.getTime(), distance, straightly, field, isStacked);
+    }
+
+    public boolean timeValidate(
+            Date time,
+            long pointTime,
+            long distance,
+            boolean straightly,
+            String field,
+            boolean isStacked
+    ) {
+        if (!isStacked && errors.getAllErrors().containsKey(field)) {
+            return false;
+        }
+
+        return timeValidate(time.getTime(), pointTime, distance, straightly, field, isStacked);
+    }
+
+    public boolean timeValidate(
+            Date time,
+            Date pointTime,
+            Date distance,
+            boolean straightly,
+            String field,
+            boolean isStacked
+    ) {
+        if (!isStacked && errors.getAllErrors().containsKey(field)) {
+            return false;
+        }
+
+        return timeValidate(time.getTime(), pointTime.getTime(), distance.getTime(), straightly, field, isStacked);
+    }
+
+    public boolean timeValidate(
+            long time,
+            long pointTime,
+            long distance,
+            boolean straightly,
+            String field,
+            boolean isStacked
+    ) {
+        boolean v = true;
+        List<String> messages = errors.getFieldErrors(field);
+
+        if (!isStacked && errors.getAllErrors().containsKey(field)) {
+            return false;
+        }
+
+        if (messages == null) {
+            messages = new ArrayList<>();
+        }
+
+        long difference = straightly ? time - pointTime : pointTime - time;
+
+        if (straightly ? (difference < distance) : (difference > distance)) {
+            messages.add("error.length");
+            v = false;
+            setValid(v);
+        }
+
+        errors.setFieldErrors(field, messages);
+
+        return v;
+    }
+
     public boolean userExistValidate(User user, String field) {
         return userExistValidate(user.getId(), field);
     }
@@ -290,6 +364,8 @@ public abstract class Validator {
         } catch (DAOException e) {
             LOG.error("DAO error", e);
         }
+
+        errors.setFieldErrors(field, messages);
 
         return v;
     }

@@ -1,7 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<fmt:setBundle basename="localization.local"/>
+<c:if test="${sessionScope.language ne null}">
+    <fmt:setLocale value="${sessionScope.language}" />
+</c:if>
+<fmt:setBundle basename="localization.local" />
 
 <div class="card product" style="max-width: 18rem;">
     <c:if test="${param.image ne null and not empty param.image}">
@@ -29,10 +32,12 @@
             </c:when>
         </c:choose>
         <div class="product-tools">
-            <button class="btn btn-danger btn-xs delete-product">
-                &times;
-                <input type="hidden" value="${param.id}" name="delete-product">
-            </button>
+            <c:if test="${param.status == 'AVAILABLE'}">
+                <button class="btn btn-danger btn-xs delete-product">
+                    &times;
+                    <input type="hidden" value="${param.id}" name="delete-product">
+                </button>
+            </c:if>
         </div>
     </div>
 </div>

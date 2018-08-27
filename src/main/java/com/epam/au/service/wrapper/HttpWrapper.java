@@ -405,7 +405,7 @@ public class HttpWrapper {
     }
 
     public long getLong(String field, String parameter) {
-        long value = 0;
+        long value = -1;
         try {
             value = Long.parseLong(reqParams.get(parameter));
         } catch (NumberFormatException e) {

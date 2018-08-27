@@ -28,14 +28,13 @@ public class FrontController extends HttpServlet {
         String requestedCommand = req.getParameter("command");
 
         //TODO delete this CODE
-        /*UserDataBaseDAO dao = new UserDataBaseDAO();
+        UserDataBaseDAO dao = new UserDataBaseDAO();
         try {
-            req.getSession().setAttribute("user", dao.find(14));
+            req.getSession().setAttribute("user", dao.find(60));
         } catch (DAOException e) {
             e.printStackTrace();
         }
 
-        */
         req.removeAttribute("errors");
         req.getSession().removeAttribute("errors");
         HttpWrapper wrapper = new HttpWrapper(req, resp);

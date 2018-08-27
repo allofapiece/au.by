@@ -36,7 +36,7 @@
     <script src="${context}/js/main.js"></script>
 
     <script>
-            <c:if test="${user ne null}">var userId = "${sessionScope.user.id}"</c:if>;
+            <c:if test="${user ne null}">var userId = parseInt("${sessionScope.user.id}");</c:if>
             <c:if test="${user ne null}">
                 var userRolesString = "${sessionScope.user.roles}";
             var userRoles = getRolesByJSPString(userRolesString);

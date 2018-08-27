@@ -45,6 +45,9 @@ public class AddLotFormHandler implements FormHandler {
     @Override
     public boolean handle(HttpWrapper wrapper) {
         Lot lot;
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        DateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
+
         String type = wrapper.getRequestParameter("type");
         try {
             lot = lotStrategy(type);
@@ -59,10 +62,12 @@ public class AddLotFormHandler implements FormHandler {
         lot.setAuctionType(AuctionType.valueOf(type.toUpperCase()));
         Product product = null ;
         try {
-            product = productDAO.findForUser(
-                    wrapper.getLong("lot.field.product-id"),
-                    (User) wrapper.getSessionAttribute("user")
-            );
+            long productId = wrapper.getLong("lot.field.product-id");
+
+            //TODO removing product id is not a number error from errors
+
+            product = productDAO.findForUser(productId, wrapper.getUser());
+
             if (product == null) {
                 wrapper.addError("lot.field.product-id", "error.not_exists");
             }
@@ -72,9 +77,9 @@ public class AddLotFormHandler implements FormHandler {
         lot.setProduct(product);
         lot.setProductAmount(wrapper.getInt("lot.field.amount"));
         lot.setBeginPrice(wrapper.getDouble("lot.field.begin-price"));
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm");
+
         try {
-            Date date = (Date) formatter.parse(wrapper.getRequestParameter("start-date"));
+            Date date = (Date) dateFormatter.parse(wrapper.getRequestParameter("start-date"));
             lot.setStartTime(new Timestamp(date.getTime()));
         } catch (ParseException e) {
             LOG.error("Parse start date error", e);
@@ -83,7 +88,7 @@ public class AddLotFormHandler implements FormHandler {
             case "blitz":
                 ((BlitzLot) lot).setOutgoingAmount(wrapper.getDouble("lot.field.outgoing"));
                 ((BlitzLot) lot).setRoundAmount(wrapper.getInt("lot.field.round.amount", "round-amount"));
-                ((BlitzLot) lot).setRoundTime(new Time(wrapper.getLong("lot.field.round.time", "round-time")));
+                ((BlitzLot) lot).setRoundTime(wrapper.getLong("lot.field.round.time", "round-time"));
                 ((BlitzLot) lot).setMinPeopleAmount(
                         !wrapper.getRequestParameter("min-people").equals("")
                         ? wrapper.getInt("lot.field.min-people")
@@ -127,12 +132,13 @@ public class AddLotFormHandler implements FormHandler {
             }
 
             product.setAmount(product.getAmount() - lot.getProductAmount());
+
+            if (product.getAmount() == 0) {
+                product.setStatus(ProductStatus.DELETED);
+            }
+
             try {
-                if ((product.getAmount() != 0)) {
-                    productDAO.update(product);
-                } else {
-                    productDAO.delete(product);
-                }
+                productDAO.update(product);
             } catch (EntityNotFoundException e) {
                 LOG.error("Product not found", e);
             }

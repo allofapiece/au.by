@@ -6,6 +6,7 @@ import com.epam.au.dao.exception.DAOException;
 import com.epam.au.dao.exception.EntityNotFoundException;
 import com.epam.au.dao.impl.ProductDataBaseDAO;
 import com.epam.au.entity.Product;
+import com.epam.au.entity.ProductStatus;
 import com.epam.au.entity.User;
 import com.epam.au.service.wrapper.HttpWrapper;
 import org.apache.log4j.Logger;
@@ -27,7 +28,7 @@ public class ProductDeleter implements Deleter {
     @Override
     public HttpWrapper delete(HttpWrapper wrapper) {
         long id = Long.parseLong(wrapper.getRequestParameter("id"));
-        User user = (User) wrapper.getSessionAttribute("user");
+        User user = wrapper.getUser();
 
         try {
             Product product = (Product) dao.find(id);
@@ -37,7 +38,9 @@ public class ProductDeleter implements Deleter {
                 return wrapper;
             }
 
-            dao.delete(product);
+            product.setStatus(ProductStatus.DELETED);
+
+            dao.update(product);
         } catch (EntityNotFoundException e) {
             LOG.error("Request product to delete was not found", e);
         }

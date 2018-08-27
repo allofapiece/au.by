@@ -9,6 +9,7 @@ import com.epam.au.entity.lot.Lot;
 import com.epam.au.service.validator.Validator;
 import org.apache.log4j.Logger;
 
+import java.util.Date;
 import java.util.List;
 
 public abstract class AddLotValidator extends Validator {
@@ -53,6 +54,9 @@ public abstract class AddLotValidator extends Validator {
                 "lot.field.begin-price",
                 false
         );
+
+        emptyValidate(lot.getStartTime(), "lot.field.start-time", true);
+        timeValidate(lot.getStartTime(), new Date(), 86400000, true, "lot.field.start-time", false);
 
         return isValid();
     }

@@ -18,17 +18,7 @@
 <div class="row">
     <div class="col-6">
         <form action="<c:url value="/fc?command=signin"/>" method="post">
-            <c:if test="${errors ne null and not empty errors}">
-                <div class="alert alert-danger" role="alert">
-                    <h5 class="alert-heading"><fmt:message key="signup.error.form.summary.title" /></h5>
-                    <c:forEach items="${errors}" var="field">
-                        <h6 class="alert-heading"><fmt:message key='${field.key}.label' /></h6>
-                        <c:forEach items="${field.value}" var="error">
-                            <p><fmt:message key="${field.key}.${error}.message" /></p>
-                        </c:forEach>
-                    </c:forEach>
-                </div>
-            </c:if>
+            <c:import url="/jsp/template/form-errors.jsp"/>
             <div class="form-group">
                 <c:if test="${errors.email ne null}">
                     <div class="alert alert-danger" role="alert">

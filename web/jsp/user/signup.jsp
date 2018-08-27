@@ -16,24 +16,14 @@
 <div class="row">
     <div class="col-6">
         <form action="<c:url value="/fc?command=signup"/>" id="signup-form" method="post">
-            <c:if test="${errors ne null and not empty errors}">
-                <div class="alert alert-danger" role="alert">
-                    <h5 class="alert-heading"><fmt:message key="signup.error.form.summary.title" /></h5>
-                    <c:forEach items="${errors}" var="field">
-                        <h6 class="alert-heading"><fmt:message key='${field.key}.label' /></h6>
-                        <c:forEach items="${field.value}" var="error">
-                            <p><fmt:message key='${field.key}.${error}.message' /></p>
-                        </c:forEach>
-                    </c:forEach>
-                </div>
-            </c:if>
+            <c:import url="/jsp/template/form-errors.jsp"/>
             <div class="form-group<c:if test="${errors['user.field.name'] ne null}"> invalid</c:if>">
                 <label for="name-field"><fmt:message key="user.field.name.label" /></label>
                 <input value="<c:if test="${name ne null}">${name}</c:if>" minlength="4" required type="text" name="name" class="form-control" id="name-field" aria-describedby="nameHelp" placeholder="<fmt:message key="user.field.name.placeholder" />">
                 <small id="nameHelp" class="form-text text-muted"><fmt:message key="user.field.name.help" /></small>
                 <c:if test="${errors['user.field.name'] ne null}">
                     <c:forEach items="${errors['user.field.name']}" var="error">
-                        <div class="invalid-feedback"><fmt:message key="user.field.surname.${error}.message" /></div>
+                        <div class="invalid-feedback"><fmt:message key="user.field.name.${error}.message" /></div>
                     </c:forEach>
                 </c:if>
             </div>

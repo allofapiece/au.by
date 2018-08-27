@@ -1,7 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<fmt:setBundle basename="localization.local"/>
+<c:if test="${sessionScope.language ne null}">
+    <fmt:setLocale value="${sessionScope.language}" />
+</c:if>
+<fmt:setBundle basename="localization.local" />
 
 <div class="card lot prototype lot-prototype border-teal" style="/*max-width: 18rem;*/ display: none;">
     <%--<div class="card-header proposed-status bg-info text-white"><small><fmt:message key="lot.show.inscription.status.proposed" /></small></div>--%>

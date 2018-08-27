@@ -15,7 +15,7 @@ public class BlitzLot extends Lot {
     private int maxPeopleAmount;
     private double blitzPrice;
     private int roundAmount;
-    private Time roundTime;
+    private long roundTime;
     private double outgoingAmount;
 
     public int getMinPeopleAmount() {
@@ -50,11 +50,11 @@ public class BlitzLot extends Lot {
         this.roundAmount = roundAmount;
     }
 
-    public Time getRoundTime() {
+    public long getRoundTime() {
         return roundTime;
     }
 
-    public void setRoundTime(Time roundTime) {
+    public void setRoundTime(long roundTime) {
         this.roundTime = roundTime;
     }
 
