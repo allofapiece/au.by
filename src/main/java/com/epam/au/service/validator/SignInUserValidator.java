@@ -25,7 +25,7 @@ public class SignInUserValidator extends Validator {
                 targetUser == null ||
                 !targetUser.getPassword().equals(reformer.reform(user.getPassword(), user))
         ) {
-            getErrors().addFieldError("user.field.all", "Credentials are not valid");
+            getErrors().addFieldError("user.field.all", "error.credentials");
             setValid(false);
 
             return isValid();

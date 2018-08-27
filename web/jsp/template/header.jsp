@@ -5,18 +5,21 @@
 <c:set var="language" value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}" scope="session" />
 <c:set var="context" value="${pageContext.request.contextPath}" />
 
+
 <fmt:setLocale value="${language}" />
 <fmt:setBundle basename="localization.local" />
 
 <!DOCTYPE html>
 <html lang="${language}">
     <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <link rel="stylesheet" href="${context}/vendor/bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="${context}/css/style.css">
         <link rel="stylesheet" href="${context}/css/theme.css">
         <link rel="stylesheet" href="${context}/css/adaptivity.css">
         <link rel="stylesheet" href="${context}/css/product.css">
         <link rel="stylesheet" href="${context}/css/lots.css">
+        <link rel="stylesheet" href="${context}/css/validation.css">
         <title><fmt:message key="${not empty title ? title : 'title.default.home'}" /></title>
     </head>
     <body>
@@ -39,6 +42,9 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="<c:url value="/fc?command=lot-show&scope=mine"/>"><fmt:message key="nav.bar.my.lots" /></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<c:url value="/fc?command=account-show"/>"><fmt:message key="nav.bar.account.show" /></a>
                             </li>
                         </c:if>
                     </ul>

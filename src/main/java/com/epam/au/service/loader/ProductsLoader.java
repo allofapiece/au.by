@@ -27,12 +27,12 @@ public class ProductsLoader implements Loader {
     }
 
     public List<Product> loadAll(HttpWrapper wrapper) {
-        return dao.findByUser((User) wrapper.getSessionAttribute("user"));
+        return dao.findByUser(wrapper.getUser());
     }
 
     public Product load(long id, HttpWrapper wrapper) {
         try {
-            return dao.findForUserId(id, ((User) wrapper.getSessionAttribute("user")).getId());
+            return dao.findForUserId(id, wrapper.getUserId());
         } catch (EntityNotFoundException e) {
             LOG.error("Product not found", e);
         }

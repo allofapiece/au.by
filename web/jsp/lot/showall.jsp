@@ -2,9 +2,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<fmt:setBundle basename="localization.local"/>
-
 <c:import url="/jsp/template/header.jsp"/>
+
+<c:if test="${sessionScope.language ne null}">
+    <fmt:setLocale value="${sessionScope.language}" />
+</c:if>
+<fmt:setBundle basename="localization.local" />
 
 <div id="content-title" style="margin-top: 15px;">
     <h2></h2>
@@ -13,8 +16,8 @@
 <div class="row">
     <div class="container-fluid">
         <form class="form-inline lot-search">
-            <input type="search" class="form-control mr-lg-2" placeholder="Search for..">
-            <button type="submit" class="btn btn-primary">GO</button>
+            <input type="search" class="form-control mr-lg-2" placeholder="<fmt:message key="summary.search" />">
+            <button type="submit" class="btn btn-primary"><fmt:message key="summary.search.button" /></button>
             <c:import url="/jsp/lot/lot-filter.jsp"/>
         </form>
 

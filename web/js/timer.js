@@ -24,7 +24,7 @@ function elementTimer(element, timePoint, straightly = false, inscriptions, endF
             }
 
             if (inscriptions !== undefined) {
-                timerResult = inscriptions['full'].replace('{timer}', timePoint);
+                timerResult = inscriptions['full'].replace('{timer}', new Date(timePoint).toLocaleString());
             }
         } else {
             var hoursString = hours > 0 ? hours + ":" : '';

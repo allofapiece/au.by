@@ -56,6 +56,7 @@ public class HttpWrapper {
 
     public HttpWrapper(HttpServletRequest request, HttpServletResponse response) {
         this();
+
         setRequest(request);
         setResponse(response);
         setSession(request.getSession());
@@ -78,7 +79,7 @@ public class HttpWrapper {
         }
     }
 
-    public void goAjax() throws ServletException, IOException {
+    public void goAjax() throws IOException {
         jsonResponse = new HashMap<>();
         jsonResponse = ejectJson();
         String json = new Gson().toJson(jsonResponse);
@@ -91,7 +92,6 @@ public class HttpWrapper {
         if (isAjax()) {
             goAjax();
         } else {
-
             RequestDispatcher requestDispatcher = request.getRequestDispatcher(responseInfo.getPage().getPath());
             go(requestDispatcher);
         }
@@ -139,13 +139,13 @@ public class HttpWrapper {
         while (names.hasMoreElements()) {
             String name = (String) names.nextElement();
             sessionAttrs.put(name, session.getAttribute(name));
-            session.removeAttribute(name);
         }
     }
 
     public void eject() {
         ejectRequestAttributes();
-        ejectSessionAttributed();
+        ejectRequestParameters();
+        ejectSessionAttributes();
         ejectResponseInfo();
         ejectErrors();
     }
@@ -164,7 +164,21 @@ public class HttpWrapper {
         return this.request;
     }
 
-    public HttpSession ejectSessionAttributed() {
+    public HttpServletRequest ejectRequestParameters() {
+        if (isUpdated()) {
+            for (Map.Entry<String, String> attr : reqParams.entrySet()) {
+                this.session.setAttribute(attr.getKey(), attr.getValue());
+            }
+        } else {
+            for (Map.Entry<String, String> attr : reqParams.entrySet()) {
+                this.request.setAttribute(attr.getKey(), attr.getValue());
+            }
+        }
+
+        return this.request;
+    }
+
+    public HttpSession ejectSessionAttributes() {
         for (Map.Entry<String, Object> attr : sessionAttrs.entrySet()) {
             this.session.setAttribute(attr.getKey(), attr.getValue());
         }
@@ -288,6 +302,7 @@ public class HttpWrapper {
     }
 
     public void removeSessionAttribute(String name) {
+        session.removeAttribute(name);
         sessionAttrs.remove(name);
     }
 
@@ -390,7 +405,7 @@ public class HttpWrapper {
     }
 
     public long getLong(String field, String parameter) {
-        long value = 0;
+        long value = -1;
         try {
             value = Long.parseLong(reqParams.get(parameter));
         } catch (NumberFormatException e) {

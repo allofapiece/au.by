@@ -163,7 +163,7 @@ public class LotDataBaseDAO implements DataBaseDAO {
                 generalFilling(lot, rs);
                 ((BlitzLot) lot).setOutgoingAmount(rs.getDouble("outgoing_amount"));
                 ((BlitzLot) lot).setRoundAmount(rs.getInt("round_amount"));
-                ((BlitzLot) lot).setRoundTime(rs.getTime("round_time"));
+                ((BlitzLot) lot).setRoundTime(rs.getLong("round_time"));
                 ((BlitzLot) lot).setMinPeopleAmount(rs.getInt("min_people_amount"));
                 ((BlitzLot) lot).setMaxPeopleAmount(rs.getInt("max_people_amount"));
                 ((BlitzLot) lot).setBlitzPrice(rs.getDouble("blitz_price"));
@@ -269,7 +269,7 @@ public class LotDataBaseDAO implements DataBaseDAO {
         stmt.setInt(10, ((BlitzLot) lot).getMinPeopleAmount());
         stmt.setInt(11, ((BlitzLot) lot).getMaxPeopleAmount());
         stmt.setInt(12, ((BlitzLot) lot).getRoundAmount());
-        stmt.setTime(13, (((BlitzLot) lot).getRoundTime()));
+        stmt.setLong(13, (((BlitzLot) lot).getRoundTime()));
         stmt.setDouble(14, ((BlitzLot) lot).getOutgoingAmount());
         stmt.setTimestamp(15, lot.getStartTime());
 
@@ -289,7 +289,7 @@ public class LotDataBaseDAO implements DataBaseDAO {
         stmt.setInt(7, lot.getProductAmount());
         stmt.setDouble(8, lot.getBeginPrice());
         stmt.setDouble(9, ((EnglishLot) lot).getStepPrice());
-        stmt.setTime(10, new Time(((EnglishLot) lot).getBetTime()));
+        stmt.setLong(10, ((EnglishLot) lot).getBetTime());
         stmt.setTimestamp(11, lot.getStartTime());
 
         return stmt;
@@ -308,7 +308,7 @@ public class LotDataBaseDAO implements DataBaseDAO {
         stmt.setInt(7, lot.getProductAmount());
         stmt.setDouble(8, lot.getBeginPrice());
         stmt.setDouble(9, ((InternetLot) lot).getBlitzPrice());
-        stmt.setTime(10, new Time(((InternetLot) lot).getBetTime()));
+        stmt.setLong(10, ((InternetLot) lot).getBetTime());
         stmt.setTimestamp(11, lot.getStartTime());
 
         return stmt;

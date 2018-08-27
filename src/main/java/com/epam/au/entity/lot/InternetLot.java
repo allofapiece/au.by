@@ -1,5 +1,9 @@
 package com.epam.au.entity.lot;
 
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.Objects;
+
 /**
  * Concrete impl of lot. Internet auction is one of the
  * auction types.
@@ -41,11 +45,7 @@ public class InternetLot extends Lot {
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        long temp;
-        temp = Double.doubleToLongBits(blitzPrice);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (int) (betTime ^ (betTime >>> 32));
-        return result;
+
+        return Objects.hash(super.hashCode(), blitzPrice, betTime);
     }
 }

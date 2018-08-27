@@ -1,14 +1,21 @@
-package com.epam.au.controller.command.account;
+package com.epam.au.controller.command.bet;
 
 import com.epam.au.controller.command.Command;
+import com.epam.au.entity.Role;
 import com.epam.au.entity.User;
+import com.epam.au.service.handler.AddLotFormHandler;
+import com.epam.au.service.loader.ProductsLoader;
 import com.epam.au.service.wrapper.HttpWrapper;
 
 import javax.servlet.http.HttpServletResponse;
 
-public class ShowBankAccountCommand implements Command {
+public class AddBetCommand implements Command {
+    private AddBetHandler formHandler;
+    private ProductsLoader loader;
 
-    public ShowBankAccountCommand() {
+    public AddBetCommand() {
+        formHandler = new AddBetHandler();
+        loader = new ProductsLoader();
     }
 
     @Override
@@ -17,21 +24,24 @@ public class ShowBankAccountCommand implements Command {
 
         if (user == null) {
             wrapper.setPage("user.login");
-            wrapper.setTitle("Sign in");
             wrapper.setIsUpdated(true);
             wrapper.addError("page", "warning.permission");
             return wrapper;
         }
 
-        if (user.getAccount() == null) {
+        if (!user.hasRole(Role.SOLVENT)) {
             wrapper.setPage("account.connect");
             wrapper.setIsUpdated(true);
+            wrapper.addError("page", "warning.permission");
             return wrapper;
         }
 
-        if (wrapper.getMethod().equals("GET")) {
-            wrapper.setPage("account.show");
-            wrapper.setTitle("title.account.show");
+        if (wrapper.getMethod().equals("POST")) {
+            if (formHandler.handle(wrapper)) {
+                wrapper.addRequestAttribute("lots", loader.loadAll(wrapper));
+            } else {
+                wrapper.setPage("lot.add");
+            }
         } else {
             wrapper.setHttpError(HttpServletResponse.SC_NOT_FOUND);
         }

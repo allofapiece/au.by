@@ -5,6 +5,8 @@ import com.epam.au.entity.lot.EnglishLot;
 import com.epam.au.service.validator.ConnectBankAccountValidator;
 import org.apache.log4j.Logger;
 
+import java.sql.Time;
+
 public class AddEnglishLotValidator extends AddLotValidator {
     private static final Logger LOG = Logger.getLogger(ConnectBankAccountValidator.class);
 
@@ -24,8 +26,8 @@ public class AddEnglishLotValidator extends AddLotValidator {
         );
         numberSizeValidate(
                 lot.getBetTime(),
-                30000,
-                1800000,
+                5,
+                1200,
                 "lot.field.bet-time",
                 false
         );

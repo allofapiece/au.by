@@ -1,7 +1,11 @@
+<%@ page pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<fmt:setBundle basename="localization.local"/>
+<c:if test="${sessionScope.language ne null}">
+    <fmt:setLocale value="${sessionScope.language}" />
+</c:if>
+<fmt:setBundle basename="localization.local" />
 
 <div class="lot-filter">
     <a href="#" data-filter-term="open" role="button" aria-pressed="true" class="btn btn-outline-cyan"><fmt:message key="lot.show.inscription.status.open" /></a>

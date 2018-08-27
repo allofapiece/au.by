@@ -2,9 +2,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<fmt:setBundle basename="localization.local"/>
-
 <c:import url="/jsp/template/header.jsp"/>
+
+<c:if test="${sessionScope.language ne null}">
+    <fmt:setLocale value="${sessionScope.language}" />
+</c:if>
+<fmt:setBundle basename="localization.local" />
 
 <div id="content-title" style="margin-top: 15px;">
     <h2>${lot.name}</h2>
@@ -33,7 +36,7 @@
         <c:choose>
             <c:when test="${lot.auctionType == 'BLITZ'}">
                 <p class="card-text lot-round-amount"><fmt:message key="lot.field.round.amount.label" />: ${lot.roundAmount}</p>
-                <p class="card-text lot-round-time"><fmt:message key="lot.field.round.time.label" />: ${lot.roundTime.seconds} <fmt:message key="unit.time.seconds.short" /></p>
+                <p class="card-text lot-round-time"><fmt:message key="lot.field.round.time.label" />: ${lot.roundTime} <fmt:message key="unit.time.seconds.short" /></p>
                 <p class="card-text lot-outgoing"><fmt:message key="lot.field.outgoing.label" />: ${lot.outgoingAmount}</p>
             </c:when>
         </c:choose>
@@ -76,20 +79,21 @@
     </div>
     <div class="col-4 lot-side-section lot-bets">
         <div class="container-fluid side-title"><fmt:message key="lot.show.inscription.title.bets" /></div>
+        <p class="bet-time" data-label-short="<fmt:message key="lot.show.inscription.timer.bet-time.short" />"></p>
         <ul class="list-group bets-list">
             <c:import url="/jsp/template/bet.jsp"/>
         </ul>
 
-        <c:if test="${sessionScope.user.id != lot.sellerId and isBieter}">
+        <c:if test="${sessionScope.user.id != lot.sellerId and isBieter and lot.status == 'STARTED'}">
             <form action="#" id="do-bet-form" style="margin-top: 15px;">
                 <div class="form-group" style="margin-bottom:5px;">
                     <label for="bet-field"><fmt:message key="lot.show.inscription.bet.title" /></label>
                     <input value="1" type="number" name="bet" class="form-control" id="bet-field" placeholder="<fmt:message key="lot.field.description.placeholder" />">
                 </div>
                 <div style="float: right;">
-                    <a href="#" role="button" aria-pressed="true" class="btn btn-outline-teal"><fmt:message key="lot.show.inscription.bet.make" /></a>
-                    <c:if test="${lot.auctionType != 'ENGLISH' and lot.blitzPrice ne null}">
-                        <a href="#" role="button" aria-pressed="true" class="btn btn-outline-teal"><fmt:message key="lot.show.inscription.bet.redeem" /> ${lot.blitzPrice}$</a>
+                    <a href="#" id="make-bet" role="button" aria-pressed="true" class="btn btn-outline-teal"><fmt:message key="lot.show.inscription.bet.make" /></a>
+                    <c:if test="${lot.auctionType != 'ENGLISH' and lot.blitzPrice ne null and lot.status == 'STARTED'}">
+                        <a href="#" id="redeem" role="button" aria-pressed="true" class="btn btn-outline-teal"><fmt:message key="lot.show.inscription.bet.redeem" /> ${lot.blitzPrice}$</a>
                     </c:if>
 
                 </div>
@@ -105,7 +109,10 @@
 </div>
 
 <script>
-    var lotType = ${lot.auctionType};
+    var lotStatus = '${lot.status}';
+    var lotType = '${lot.auctionType}';
+    var lotStartTime = '${lot.startTime}';
+    var lotBetTime = ${lot.betTime};
 </script>
 <script src="${context}/js/bets.js"></script>
 

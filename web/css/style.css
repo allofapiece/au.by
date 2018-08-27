@@ -46,6 +46,9 @@ body {
     text-transform: capitalize;
     display: inline;
 }
+div[role="alert"] .form-control {
+    margin-top: 10px;
+}
 .product {
     width: 30%;
     margin: 0 10px 10px 0;
