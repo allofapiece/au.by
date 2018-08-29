@@ -1,5 +1,7 @@
 package com.epam.au.service.wrapper;
 
+import com.epam.au.bundle.BundleNamesStore;
+import com.epam.au.bundle.LocalizationBundle;
 import com.epam.au.controller.Page;
 import com.epam.au.controller.ResponseInfo;
 import com.epam.au.controller.Router;
@@ -211,8 +213,18 @@ public class HttpWrapper {
     }
 
     public Map<String, Object> ejectJson() {
+        ResourceBundle bundle = ResourceBundle.getBundle(BundleNamesStore.LOCALIZATION_BUNDLE, request.getLocale());
+
         if (getErrors().hasErrors()) {
-            jsonResponse.put("errors", getAllErrors());
+            List<String> ajaxErrors = new ArrayList<>();
+
+            for (Map.Entry entry : getErrors().getAllErrors().entrySet()) {
+                for (String error : (ArrayList<String>) entry.getValue()) {
+                    ajaxErrors.add(bundle.getString(entry.getKey() + "." + error + ".message"));
+                }
+            }
+
+            jsonResponse.put("errors", ajaxErrors);
         }
         if (getPage() != null) {
             jsonResponse.put("page", getPage());

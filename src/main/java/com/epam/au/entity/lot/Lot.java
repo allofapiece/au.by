@@ -32,6 +32,7 @@ public abstract class Lot {
     protected double beginPrice;
     protected String message;
     protected List<Bieter> bieters;
+    protected Timestamp updateAt;
 
     public Lot () {
         bieters = new ArrayList<>();
@@ -159,6 +160,14 @@ public abstract class Lot {
         if (bieter != null) {
             bieters.remove(bieter);
         }
+    }
+
+    public Timestamp getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(Timestamp updateAt) {
+        this.updateAt = updateAt;
     }
 
     @Override

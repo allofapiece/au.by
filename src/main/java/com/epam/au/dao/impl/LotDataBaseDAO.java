@@ -202,7 +202,7 @@ public class LotDataBaseDAO implements DataBaseDAO {
         lot.setStartTime(rs.getTimestamp("start_time"));
         lot.setEndTime(rs.getTimestamp("end_time"));
         lot.setMessage(rs.getString("message"));
-
+        lot.setUpdateAt(rs.getTimestamp("update_at"));
         return lot;
     }
 
@@ -365,6 +365,26 @@ public class LotDataBaseDAO implements DataBaseDAO {
         }
     }
 
+    public void updateUpdateAt(long id, Timestamp timestamp) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = connectionPool.takeConnection();
+            stmt = conn.prepareStatement(queryBundle.getQuery("update.update-at.by-id"));
+            stmt.setTimestamp(1, timestamp);
+            stmt.setLong(2, id);
+
+            stmt.executeUpdate();
+        } catch (ConnectionPoolException e) {
+            LOG.error("Connection pool error", e);
+        } catch (SQLException e) {
+            LOG.error("SQL error", e);
+        } finally {
+            connectionPool.closeConnection(conn, stmt);
+        }
+    }
+
     public void createEvent(Lot lot, String type) {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -396,6 +416,26 @@ public class LotDataBaseDAO implements DataBaseDAO {
 
                     stmt.setTimestamp(1, lot.getStartTime());
                     stmt.setLong(2, lot.getId());
+                    break;
+            }
+
+            stmt.execute();
+
+            switch (type) {
+                case "start":
+                    stmt = conn.prepareStatement("CREATE EVENT bets_" + lot.getId() +
+                            " ON SCHEDULE AT ? + interval ? SECOND " +
+                            "DO " +
+                            "UPDATE lots SET status = 'completed' " +
+                            "WHERE id = ?;");
+                    if (lot.getAuctionType() == AuctionType.ENGLISH) {
+                        stmt.setLong(2, ((EnglishLot) lot).getBetTime());
+                    }
+                    if (lot.getAuctionType() == AuctionType.INTERNET) {
+                        stmt.setLong(2, ((InternetLot) lot).getBetTime());
+                    }
+                    stmt.setTimestamp(1, lot.getStartTime());
+                    stmt.setLong(3, lot.getId());
                     break;
             }
 

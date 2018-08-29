@@ -1,12 +1,13 @@
 var classPrefix = 'bet';
 var members = [];
 var startDate = new Date(lotStartTime);
+var updateDate = new Date(lotUpdateTime);
 
 $(document).ready(function () {
-    $('a#make-bet').on('click', function () {
+    $('a#make-bet').unbind().on('click', function () {
         var value = $('input[name="bet"]').val();
 
-        makeBet(value);
+        makeBet({price: value, id: qs('id')});
     });
 
     initLot();
@@ -114,16 +115,18 @@ function initLot() {
     var inscriptions = {"full": '{timer}', "short": startTimeElement.data('label-short')};
     var now = new Date();
 
-    elementTimer(startTimeElement, (lotBetTime * 1000) - ((now - startDate) % (lotBetTime * 1000)) + now.getTime(), false, inscriptions, endLot);
+    elementTimer(startTimeElement, (lotBetTime * 1000) - ((now - updateDate) % (lotBetTime * 1000)) + now.getTime(), false, inscriptions, endLot);
 }
 
-function makeBet(value) {
+function makeBet(data) {
     var success = function (data) {
-        //$('#do-bet-form').hide();
+        if (data.errors !== undefined) {
+            alert(data.errors.join('\n'));
+        }
     };
-    ajaxAction('/fc?command=bet-make', success, {value: value}, 'POST', 'json');
+    ajaxAction('/fc?command=bet-add', success, data, 'POST', 'json');
 }
 
 function endLot() {
-
+    location.reload();
 }

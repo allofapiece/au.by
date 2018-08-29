@@ -40,6 +40,8 @@ public class ConnectBankAccountValidator extends Validator {
                 false
         );
 
+        //TODO account already connect by another user validation
+
         return isValid();
     }
 

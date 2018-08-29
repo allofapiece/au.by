@@ -31,17 +31,17 @@ function searchProduct(value) {
                         '>' +
                         product.name +
                         '</li>';
-                    searchResultSection.append(prototype);
+                    $('.search .search-result').append(prototype);
                 });
             }
-            searchResultSection.show();
+            $('.search .search-result').show();
             updateEvents();
         }
     })
 }
 
 function updateEvents() {
-    searchResultSection.find('li').off('click').on('click', function () {
+    $('.search .search-result').find('li').off('click').on('click', function () {
         addProduct.apply(this);
     });
 }
@@ -90,7 +90,7 @@ $(document).ready(function () {
         }
     });*/
     $('#product-id-field').on("input", function () {
-        searchResultSection.empty().hide();
+        $('.search .search-result').empty().hide();
         var value = $(this).val();
         if (value.length > 0) {
             searchProduct(value);
@@ -99,12 +99,12 @@ $(document).ready(function () {
 
     $('body').on('click', function (e) {
         if (e.target.id !== 'product' && e.target.id !== 'product-id-field') {
-            searchResultSection.hide();
+            $('.search .search-result').hide();
         }
     });
 
     $('#product-id-field').on('focusin', function () {
-        searchResultSection.show();
+        $('.search .search-result').show();
     });
 });
 

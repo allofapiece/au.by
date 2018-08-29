@@ -32,6 +32,7 @@
             <p class="card-text lot-end-time"><fmt:message key="lot.field.end-time.label" />: ${lot.endTime}</p>
         </c:if>
         <p class="card-text"><fmt:message key="lot.field.seller-name.label" />: <a class="lot-seller-name">${seller.name}</a></p>
+        <p class="card-text"><fmt:message key="lot.field.status.label" />: <a class="lot-seller-name">${lot.status}</a></p>
 
         <c:choose>
             <c:when test="${lot.auctionType == 'BLITZ'}">
@@ -79,7 +80,9 @@
     </div>
     <div class="col-4 lot-side-section lot-bets">
         <div class="container-fluid side-title"><fmt:message key="lot.show.inscription.title.bets" /></div>
-        <p class="bet-time" data-label-short="<fmt:message key="lot.show.inscription.timer.bet-time.short" />"></p>
+        <c:if test="${lot.status == 'STARTED'}">
+            <p class="bet-time" data-label-short="<fmt:message key="lot.show.inscription.timer.bet-time.short" />" style="margin-top: 10px;"></p>
+        </c:if>
         <ul class="list-group bets-list">
             <c:import url="/jsp/template/bet.jsp"/>
         </ul>
@@ -112,8 +115,10 @@
     var lotStatus = '${lot.status}';
     var lotType = '${lot.auctionType}';
     var lotStartTime = '${lot.startTime}';
+    var lotUpdateTime = '${lot.updateAt}';
     var lotBetTime = ${lot.betTime};
 </script>
+
 <script src="${context}/js/bets.js"></script>
 
 <c:import url="/jsp/template/footer.jsp">

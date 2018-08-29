@@ -302,6 +302,30 @@ public class UserDataBaseDAO implements DataBaseDAO {
         return user;
     }
 
+    public void addRoleToUser(long id, Role role) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        if (findRolesByUserId(id).contains(role)) {
+            return;
+        }
+
+        try {
+            conn = connectionPool.takeConnection();
+            stmt = conn.prepareStatement(queryBundle.getQuery("add.role"));
+            stmt.setLong(1, id);
+            stmt.setString(2, role.toString().toLowerCase());
+
+            stmt.execute();
+        } catch (ConnectionPoolException e) {
+            LOG.error("Connection pool error", e);
+        } catch (SQLException e) {
+            LOG.error("SQL error", e);
+        } finally {
+            connectionPool.closeConnection(conn, stmt);
+        }
+    }
+
     public int amountByEmail(String email) {
         int amount = 0;
         Connection conn = null;

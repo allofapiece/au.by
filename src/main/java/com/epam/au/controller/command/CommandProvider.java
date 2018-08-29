@@ -2,6 +2,7 @@ package com.epam.au.controller.command;
 
 import com.epam.au.controller.command.account.ConnectBankAccountCommand;
 import com.epam.au.controller.command.account.ShowBankAccountCommand;
+import com.epam.au.controller.command.bet.AddBetCommand;
 import com.epam.au.controller.command.bet.LoadBetsCommand;
 import com.epam.au.controller.command.bieter.AddBieterCommand;
 import com.epam.au.controller.command.bieter.LoadBietersCommand;
@@ -70,6 +71,9 @@ public class CommandProvider {
 
             case "bet-load":
                 return new LoadBetsCommand();
+
+            case "bet-add":
+                return new AddBetCommand();
 
             case "bieter-load":
                 return new LoadBietersCommand();
