@@ -9,9 +9,12 @@ import com.epam.au.dao.DataBaseDAOFactory;
 import com.epam.au.dao.exception.DAOException;
 import com.epam.au.dao.exception.EntityNotFoundException;
 import com.epam.au.dao.exception.UnsupportedDAOMethodException;
+import com.epam.au.entity.AuctionType;
 import com.epam.au.entity.Bet;
 import com.epam.au.entity.Product;
 import com.epam.au.entity.User;
+import com.epam.au.entity.lot.EnglishLot;
+import com.epam.au.entity.lot.InternetLot;
 import com.epam.au.entity.lot.Lot;
 import com.epam.au.service.pool.ConnectionPool;
 import com.epam.au.service.pool.ConnectionPoolException;
@@ -20,6 +23,7 @@ import org.apache.log4j.Logger;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,7 +36,7 @@ public class BetDataBaseDAO implements DataBaseDAO {
     private static final Logger LOG = Logger.getLogger(UserDataBaseDAO.class);
     private QueryBundle queryBundle;
     private ConnectionPool connectionPool;
-    private ProductDataBaseDAO productDAO;
+    private LotDataBaseDAO lotDAO;
 
     /**
      * Default constructor.
@@ -49,7 +53,7 @@ public class BetDataBaseDAO implements DataBaseDAO {
         DataBaseDAOFactory factory;
         try {
             factory = (DataBaseDAOFactory) new AbstractFactory().create("DataBaseDAO");
-            productDAO = (ProductDataBaseDAO) factory.create("product");
+            lotDAO = (LotDataBaseDAO) factory.create("lot");
         } catch (DAOException e) {
             LOG.error("DAO error", e);
         }
@@ -221,12 +225,11 @@ public class BetDataBaseDAO implements DataBaseDAO {
             stmt.setLong(1, bet.getLotId());
             stmt.setLong(2, bet.getUserId());
             stmt.setDouble(3, bet.getPrice());
-
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String datetime = format.format(bet.getTime());
-            stmt.setString(4, datetime);
+            stmt.setTimestamp(4, bet.getTime());
 
             stmt.executeUpdate();
+
+            updateLotEvent(bet.getLotId());
         } catch (ConnectionPoolException e) {
             LOG.error("Connection pool error", e);
         } catch (SQLException e) {
@@ -255,5 +258,37 @@ public class BetDataBaseDAO implements DataBaseDAO {
     @Override
     public void update(Object entity) throws DAOException {
         throw new UnsupportedDAOMethodException();
+    }
+
+    public void updateLotEvent(long lotId) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            Lot lot = (Lot) lotDAO.find(lotId);
+            conn = connectionPool.takeConnection();
+
+            stmt = conn.prepareStatement("ALTER EVENT bets_" + lotId +
+                            " ON SCHEDULE AT ? + interval ? SECOND " +
+                            "DO " +
+                            "UPDATE lots SET status = 'completed' " +
+                            "WHERE id = ?;");
+            if (lot.getAuctionType() == AuctionType.ENGLISH) {
+                stmt.setLong(2, ((EnglishLot) lot).getBetTime());
+            }
+            if (lot.getAuctionType() == AuctionType.INTERNET) {
+                stmt.setLong(2, ((InternetLot) lot).getBetTime());
+            }
+            stmt.setTimestamp(1, new Timestamp(new Date().getTime()));
+            stmt.setLong(3, lot.getId());
+
+            stmt.execute();
+        } catch (DAOException e) {
+            LOG.error("DAO exception", e);
+        } catch (SQLException e) {
+            LOG.error("SQL error", e);
+        } finally {
+            connectionPool.closeConnection(conn, stmt);
+        }
     }
 }

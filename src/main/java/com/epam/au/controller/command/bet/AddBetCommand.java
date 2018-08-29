@@ -3,6 +3,7 @@ package com.epam.au.controller.command.bet;
 import com.epam.au.controller.command.Command;
 import com.epam.au.entity.Role;
 import com.epam.au.entity.User;
+import com.epam.au.service.handler.AddBetHandler;
 import com.epam.au.service.handler.AddLotFormHandler;
 import com.epam.au.service.loader.ProductsLoader;
 import com.epam.au.service.wrapper.HttpWrapper;
@@ -11,11 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 
 public class AddBetCommand implements Command {
     private AddBetHandler formHandler;
-    private ProductsLoader loader;
 
     public AddBetCommand() {
         formHandler = new AddBetHandler();
-        loader = new ProductsLoader();
     }
 
     @Override
@@ -36,9 +35,11 @@ public class AddBetCommand implements Command {
             return wrapper;
         }
 
+        wrapper.setAjax(true);
+
         if (wrapper.getMethod().equals("POST")) {
             if (formHandler.handle(wrapper)) {
-                wrapper.addRequestAttribute("lots", loader.loadAll(wrapper));
+                wrapper.setPage("lot.show.all");
             } else {
                 wrapper.setPage("lot.add");
             }

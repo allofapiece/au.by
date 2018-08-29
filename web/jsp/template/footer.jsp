@@ -29,11 +29,7 @@
 
 
 
-    <script src="${context}/vendor/jquery/jquery-3.3.1.min.js"></script>
-    <script src="${context}/vendor/bootstrap/js/bootstrap.min.js"></script>
-    <%--<script src="${context}/vendor/vue.js"></script>--%>
-    <script src="${context}/js/timer.js"></script>
-    <script src="${context}/js/main.js"></script>
+
 
     <script>
             <c:if test="${user ne null}">var userId = parseInt("${sessionScope.user.id}");</c:if>
@@ -50,13 +46,14 @@
         })
     </script>
 
-    <script src="${context}/js/style.js"></script>
+
 
     <c:if test="${param.dependency ne null}">
         <script src="${param.dependency}"></script>
     </c:if>
 
     <script src="${context}/js/product.js"></script>
-    <script src="${context}/js/lots.js"></script>
+
+
     </body>
 </html>

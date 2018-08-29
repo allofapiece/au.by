@@ -6,6 +6,7 @@ import com.epam.au.dao.exception.DAOException;
 import com.epam.au.dao.impl.BankAccountDataBaseDAO;
 import com.epam.au.dao.impl.UserDataBaseDAO;
 import com.epam.au.entity.Account;
+import com.epam.au.entity.Role;
 import com.epam.au.entity.User;
 import org.apache.log4j.Logger;
 import com.epam.au.service.validator.ConnectBankAccountValidator;
@@ -39,8 +40,9 @@ public class ConnectBankAccountFormHandler implements FormHandler {
         account.setNumber(wrapper.getRequestParameter("account-number"));
 
         if (validator.validate(account)) {
-            User user = (User) wrapper.getSessionAttribute("user");
+            User user = wrapper.getUser();
             account = dao.findByNumber(account.getNumber());
+            userDAO.addRoleToUser(user.getId(), Role.SOLVENT);
 
             try {
                 user.setAccount(account);

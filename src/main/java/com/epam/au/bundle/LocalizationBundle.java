@@ -19,7 +19,7 @@ public class LocalizationBundle {
             return instance;
         }
 
-        public String getValue(String key){
+        public String getValue(String key) {
             return bundle.getString(key);
         }
 }

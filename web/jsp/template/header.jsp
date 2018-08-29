@@ -20,6 +20,14 @@
         <link rel="stylesheet" href="${context}/css/product.css">
         <link rel="stylesheet" href="${context}/css/lots.css">
         <link rel="stylesheet" href="${context}/css/validation.css">
+
+        <script src="${context}/vendor/jquery/jquery-3.3.1.min.js"></script>
+        <script src="${context}/vendor/bootstrap/js/bootstrap.min.js"></script>
+        <%--<script src="${context}/vendor/vue.js"></script>--%>
+        <script src="${context}/js/timer.js"></script>
+        <script src="${context}/js/main.js"></script>
+        <script src="${context}/js/style.js"></script>
+
         <title><fmt:message key="${not empty title ? title : 'title.default.home'}" /></title>
     </head>
     <body>

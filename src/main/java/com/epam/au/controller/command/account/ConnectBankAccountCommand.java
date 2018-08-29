@@ -26,15 +26,12 @@ public class ConnectBankAccountCommand implements Command {
 
         if (wrapper.getMethod().equals("GET")) {
             wrapper.setPage("account.connect");
-            wrapper.setTitle("title.account.connect");
         } else {
             if (formHandler.handle(wrapper)) {
                 wrapper.setIsUpdated(true);
-                wrapper.setPage("jsp/account/account.jsp");
-                wrapper.setTitle("title.account.info");
+                wrapper.setPage("account.show");
             } else {
                 wrapper.setPage("account.connect");
-                wrapper.setTitle("title.account.connect");
             }
         }
 

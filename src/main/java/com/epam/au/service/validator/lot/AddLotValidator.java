@@ -56,7 +56,7 @@ public abstract class AddLotValidator extends Validator {
         );
 
         emptyValidate(lot.getStartTime(), "lot.field.start-time", true);
-        timeValidate(lot.getStartTime(), new Date(), 86400000, true, "lot.field.start-time", false);
+        timeValidate(lot.getStartTime(), new Date(), 0, true, "lot.field.start-time", false);
 
         return isValid();
     }

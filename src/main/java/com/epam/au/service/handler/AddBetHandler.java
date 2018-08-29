@@ -5,8 +5,10 @@ import com.epam.au.dao.DataBaseDAOFactory;
 import com.epam.au.dao.exception.DAOException;
 import com.epam.au.dao.impl.BetDataBaseDAO;
 import com.epam.au.dao.impl.BieterDataBaseDAO;
+import com.epam.au.dao.impl.LotDataBaseDAO;
 import com.epam.au.entity.Bet;
 import com.epam.au.entity.Bieter;
+import com.epam.au.service.validator.AddBetValidator;
 import com.epam.au.service.validator.AddBieterValidator;
 import com.epam.au.service.wrapper.HttpWrapper;
 import org.apache.log4j.Logger;
@@ -19,6 +21,7 @@ public class AddBetHandler implements FormHandler {
 
     private AddBetValidator validator;
     private BetDataBaseDAO dao;
+    private LotDataBaseDAO lotDAO;
 
     public AddBetHandler() {
         validator = new AddBetValidator();
@@ -27,6 +30,7 @@ public class AddBetHandler implements FormHandler {
         try {
             factory = (DataBaseDAOFactory) new AbstractFactory().create("DataBaseDAO");
             dao = (BetDataBaseDAO) factory.create("bet");
+            lotDAO = (LotDataBaseDAO) factory.create("lot");
         } catch (DAOException e) {
             LOG.error("DAO error", e);
         }
@@ -45,9 +49,16 @@ public class AddBetHandler implements FormHandler {
         }
 
         if (validator.validate(bet)) {
+            Timestamp time = new Timestamp(new Date().getTime());
+
+            bet.setTime(time);
             dao.create(bet);
+            lotDAO.updateUpdateAt(bet.getLotId(), time);
+
             return true;
         } else {
+            wrapper.addErrors(validator.getErrors());
+
             return false;
         }
     }
