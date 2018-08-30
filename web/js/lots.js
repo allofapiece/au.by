@@ -1,6 +1,8 @@
 var classPrefix = 'lot';
 
 $(document).ready(function () {
+    $('#add-lot-form #start-date-field').val(new Date().toDateInputValue());
+
     loadLots();
 });
 
@@ -124,8 +126,8 @@ function init(element, lot) {
         var button = this;
         if ($(this).hasClass(classPrefix + '-' + lot.status.toLowerCase())) {
             if ($(this).hasClass('action-play')) {
-                lot.bieters.forEach(function () {
-                    if (this.userId === userId) {
+                lot.bieters.forEach(function (bieter) {
+                    if (bieter.userId === userId) {
                         $(button).remove();
                         return false;
                     }

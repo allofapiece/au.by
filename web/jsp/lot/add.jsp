@@ -21,7 +21,7 @@
             <div class="form-group<c:if test="${errors['lot.field.type'] ne null}"> invalid</c:if>">
                 <label for="type-field"><fmt:message key="lot.field.type.label" /></label>
                 <select name="type" class="form-control" id="type-field" aria-describedby="typeHelp">
-                    <option value="blitz"><fmt:message key="lot.field.type.value.blitz" /></option>
+                    <option disabled value="blitz"><fmt:message key="lot.field.type.value.blitz" /></option>
                     <option value="english"><fmt:message key="lot.field.type.value.english" /></option>
                     <option value="internet"><fmt:message key="lot.field.type.value.internet" /></option>
                 </select>
@@ -136,7 +136,7 @@
         <div class="form-group blitz<c:if test="${errors['lot.field.round.time'] ne null}"> invalid</c:if>">
             <label for="round-time-field"><fmt:message key="lot.field.round.time.label" /></label>
             <input type="time" form="add-lot-form" name="round-time" class="form-control" id="round-time-field" aria-describedby="round-time" placeholder="<fmt:message key="lot.field.round.amount.placeholder" />">
-            <small id="round-timeHelp" class="form-text text-muted"><fmt:message key="lot.field.round-time.help" /></small>
+            <small id="round-timeHelp" class="form-text text-muted"><fmt:message key="lot.field.round.time.help" /></small>
             <c:if test="${errors['lot.field.round.time'] ne null}">
                 <c:forEach items="${errors['lot.field.round.time']}" var="error">
                     <div class="invalid-feedback"><fmt:message key="lot.field.round.time.${error}.message" /></div>

@@ -269,10 +269,7 @@ public class BetDataBaseDAO implements DataBaseDAO {
             conn = connectionPool.takeConnection();
 
             stmt = conn.prepareStatement("ALTER EVENT bets_" + lotId +
-                            " ON SCHEDULE AT ? + interval ? SECOND " +
-                            "DO " +
-                            "UPDATE lots SET status = 'completed' " +
-                            "WHERE id = ?;");
+                            " ON SCHEDULE AT ? + INTERVAL ? SECOND;");
             if (lot.getAuctionType() == AuctionType.ENGLISH) {
                 stmt.setLong(2, ((EnglishLot) lot).getBetTime());
             }
@@ -280,7 +277,6 @@ public class BetDataBaseDAO implements DataBaseDAO {
                 stmt.setLong(2, ((InternetLot) lot).getBetTime());
             }
             stmt.setTimestamp(1, new Timestamp(new Date().getTime()));
-            stmt.setLong(3, lot.getId());
 
             stmt.execute();
         } catch (DAOException e) {

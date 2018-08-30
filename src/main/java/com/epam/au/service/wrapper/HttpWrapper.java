@@ -408,6 +408,10 @@ public class HttpWrapper {
         return (User) this.sessionAttrs.get("user");
     }
 
+    public void setUser(User user) {
+        this.sessionAttrs.put("user", user);
+    }
+
     public long getUserId() {
         return getUser().getId();
     }

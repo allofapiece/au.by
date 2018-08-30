@@ -1,5 +1,11 @@
 package com.epam.au.controller.command;
 
+/**
+ * Exception describes undefined name of requested command in command provider.
+ *
+ * @author Listratsenka Stanislau
+ * @version 1.0
+ */
 public class IllegalCommandException extends Exception {
     /**
      * Default constructor.
@@ -9,7 +15,7 @@ public class IllegalCommandException extends Exception {
     }
 
     /**
-     * @param message
+     * @param message describes reason of exception.
      */
     public IllegalCommandException(String message) {
         super(message);

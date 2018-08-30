@@ -16,7 +16,6 @@ import com.epam.au.service.validator.lot.AddLotValidator;
 import com.epam.au.service.wrapper.HttpWrapper;
 import org.apache.log4j.Logger;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -60,7 +59,7 @@ public class AddLotFormHandler implements FormHandler {
         lot.setName(wrapper.getRequestParameter("name"));
         lot.setDescription(wrapper.getRequestParameter("description"));
         lot.setAuctionType(AuctionType.valueOf(type.toUpperCase()));
-        Product product = null ;
+        Product product = null;
         try {
             long productId = wrapper.getLong("lot.field.product-id");
 
@@ -91,13 +90,13 @@ public class AddLotFormHandler implements FormHandler {
                 ((BlitzLot) lot).setRoundTime(wrapper.getLong("lot.field.round.time", "round-time"));
                 ((BlitzLot) lot).setMinPeopleAmount(
                         !wrapper.getRequestParameter("min-people").equals("")
-                        ? wrapper.getInt("lot.field.min-people")
-                        : 0
+                                ? wrapper.getInt("lot.field.min-people")
+                                : 0
                 );
                 ((BlitzLot) lot).setMaxPeopleAmount(
                         !wrapper.getRequestParameter("max-people").equals("")
-                        ? wrapper.getInt("lot.field.max-people")
-                        : 0
+                                ? wrapper.getInt("lot.field.max-people")
+                                : 0
                 );
                 ((BlitzLot) lot).setBlitzPrice(
                         !wrapper.getRequestParameter("blitz-price").equals("")
@@ -125,11 +124,7 @@ public class AddLotFormHandler implements FormHandler {
             User user = (User) wrapper.getSessionAttribute("user");
             lot.setSellerId(user.getId());
 
-            if (user.hasRole(Role.ADMIN)) {
-                lot.setStatus(LotStatus.OPEN);
-            } else {
-                lot.setStatus(LotStatus.PROPOSED);
-            }
+            lot.setStatus(LotStatus.PROPOSED);
 
             product.setAmount(product.getAmount() - lot.getProductAmount());
 
@@ -139,15 +134,17 @@ public class AddLotFormHandler implements FormHandler {
 
             try {
                 productDAO.update(product);
+
+                product.setAmount(lot.getProductAmount());
+                product.setStatus(ProductStatus.IN_LOT);
+                productDAO.create(product);
+
+                lot.setProduct((Product) productDAO.find(productDAO.getLastGeneratedId()));
+
+                dao.create(lot);
             } catch (EntityNotFoundException e) {
                 LOG.error("Product not found", e);
             }
-
-            product.setAmount(lot.getProductAmount());
-            product.setStatus(ProductStatus.IN_LOT);
-            productDAO.create(product);
-
-            dao.create(lot);
 
             return true;
         } else {

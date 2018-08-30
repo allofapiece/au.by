@@ -35,7 +35,7 @@ public class ProductDataBaseDAO implements DataBaseDAO {
     private QueryBundle queryBundle;
     private ConnectionPool connectionPool;
     private ProductImageDataBaseDAO imageDAO;
-
+    private long lastGeneratedId;
     /**
      * Default constructor.
      */
@@ -206,6 +206,10 @@ public class ProductDataBaseDAO implements DataBaseDAO {
             stmt.executeUpdate();
             rs = stmt.getGeneratedKeys();
 
+            if (rs != null && rs.next()) {
+                generatedId = rs.getLong(1);
+                lastGeneratedId = generatedId;
+            }
             /*if (!product.getImages().isEmpty()) {
                 if (rs != null && rs.next()) {
                     generatedId = rs.getLong(1);
@@ -287,5 +291,13 @@ public class ProductDataBaseDAO implements DataBaseDAO {
         } finally {
             connectionPool.closeConnection(conn, stmt);
         }
+    }
+
+    public long getLastGeneratedId() {
+        return lastGeneratedId;
+    }
+
+    public void setLastGeneratedId(long lastGeneratedId) {
+        this.lastGeneratedId = lastGeneratedId;
     }
 }

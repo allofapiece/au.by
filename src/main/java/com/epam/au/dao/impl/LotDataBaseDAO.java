@@ -339,20 +339,25 @@ public class LotDataBaseDAO implements DataBaseDAO {
             switch (lot.getAuctionType()) {
                 case BLITZ:
                     stmt = prepareBlitzLot(lot, conn, queryBundle.getQuery("update.one.blitz"));
-                    stmt.setLong(16, lot.getId());
-                    stmt.setTimestamp(17, lot.getEndTime());
+                    stmt.setTimestamp(16, lot.getEndTime());
+                    stmt.setLong(17, lot.getMediatorId());
+                    stmt.setLong(18, lot.getId());
+
                     break;
 
                 case ENGLISH:
                     stmt = prepareEnglishLot(lot, conn, queryBundle.getQuery("update.one.english"));
-                    stmt.setLong(12, lot.getId());
-                    stmt.setTimestamp(13, lot.getEndTime());
+                    stmt.setTimestamp(12, lot.getEndTime());
+                    stmt.setLong(13, lot.getMediatorId());
+                    stmt.setLong(14, lot.getId());
                     break;
 
                 case INTERNET:
                     stmt = prepareInternetLot(lot, conn, queryBundle.getQuery("update.one.internet"));
-                    stmt.setLong(12, lot.getId());
-                    stmt.setTimestamp(16, lot.getEndTime());
+                    stmt.setTimestamp(12, lot.getEndTime());
+                    stmt.setLong(13, lot.getMediatorId());
+                    stmt.setLong(14, lot.getId());
+
                     break;
             }
             stmt.executeUpdate();
@@ -401,8 +406,8 @@ public class LotDataBaseDAO implements DataBaseDAO {
                             "SET @amount = (SELECT count(*) FROM bieters WHERE lot_id = ?);" +
                             "UPDATE lots SET lots.status = IF(@amount >= lots.min_people_amount, 'started', 'closed')," +
                             "lots.message = IF(@amount < lots.min_people_amount, ?, NULL)," +
-                            "lots.end_time = IF(@amount < lots.min_people_amount, NOW(), NULL)" +
-                            " WHERE id = ?;" +
+                            "lots.end_time = IF(@amount < lots.min_people_amount, CURRENT_TIMESTAMP, NULL) " +
+                            "WHERE id = ?;" +
                             "END");
                     stmt.setTimestamp(1, lot.getStartTime());
                     stmt.setLong(2, lot.getId());
@@ -424,10 +429,34 @@ public class LotDataBaseDAO implements DataBaseDAO {
             switch (type) {
                 case "start":
                     stmt = conn.prepareStatement("CREATE EVENT bets_" + lot.getId() +
-                            " ON SCHEDULE AT ? + interval ? SECOND " +
+                            " ON SCHEDULE AT ? + INTERVAL ? SECOND " +
                             "DO " +
-                            "UPDATE lots SET status = 'completed' " +
-                            "WHERE id = ?;");
+                            "BEGIN " +
+                            "SET @amount = (SELECT count(*) FROM bets WHERE lot_id = ?);" +
+                            "IF @amount = 0 THEN " +
+                            "UPDATE lots SET lots.status = 'closed', end_time = CURRENT_TIMESTAMP WHERE id = ?;" +
+                            "UPDATE products SET products.status = 'available' WHERE id = (SELECT product_id FROM lots WHERE id = ?);" +
+                            "ELSE " +
+                            "UPDATE lots SET status = 'completed', end_time = CURRENT_TIMESTAMP WHERE id = ?;" +
+                            "SET @winner_id = (SELECT MAX(id) FROM bets WHERE lot_id = ?);" +
+
+                            "SET @mediator = (SELECT mediator_id FROM lots WHERE id = ?);" +
+                            "SET @product = (SELECT product_id FROM lots WHERE id = ?);" +
+                            "SET @buyer = (SELECT user_id FROM bets WHERE id = @winner_id);" +
+                            "SET @seller = (SELECT seller_id FROM lots WHERE id = ?);" +
+
+                            "INSERT INTO deals (lot_id, seller_id, buyer_id, mediator_id, product_id) VALUES (?, @seller, @buyer, @mediator, @product);" +
+
+                            "UPDATE products SET user_id = @buyer, status = 'available' WHERE id = @product;" +
+
+                            "UPDATE accounts SET money = money + (SELECT MAX(price) FROM bets WHERE user_id = @buyer AND lot_id = ?) " +
+                            "WHERE accounts.number = (SELECT account_number FROM users WHERE users.id = @seller);" +
+
+                            "UPDATE accounts SET money = money - (SELECT MAX(price) FROM bets WHERE user_id = @buyer AND lot_id = ?) " +
+                            "WHERE accounts.number = (SELECT account_number FROM users WHERE users.id = @buyer);" +
+                            "END IF;" +
+                            "END");
+                    
                     if (lot.getAuctionType() == AuctionType.ENGLISH) {
                         stmt.setLong(2, ((EnglishLot) lot).getBetTime());
                     }
@@ -436,6 +465,16 @@ public class LotDataBaseDAO implements DataBaseDAO {
                     }
                     stmt.setTimestamp(1, lot.getStartTime());
                     stmt.setLong(3, lot.getId());
+                    stmt.setLong(4, lot.getId());
+                    stmt.setLong(5, lot.getId());
+                    stmt.setLong(6, lot.getId());
+                    stmt.setLong(7, lot.getId());
+                    stmt.setLong(8, lot.getId());
+                    stmt.setLong(9, lot.getId());
+                    stmt.setLong(10, lot.getId());
+                    stmt.setLong(11, lot.getId());
+                    stmt.setLong(12, lot.getId());
+                    stmt.setLong(13, lot.getId());
                     break;
             }
 
