@@ -46,7 +46,7 @@
                     </c:forEach>
                 </c:if>
                 <div class="lot-products" style="margin-top: 15px; display: none;">
-                    <div class="card product" >
+                    <div class="card product">
                         <div class="card-header bg-success product-name"></div>
                         <div class="card-body">
                             <p class="card-text product-amount" data-label="<fmt:message key="product.field.amount.label" />"></p>

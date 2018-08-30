@@ -3,6 +3,10 @@ var classPrefix = 'lot';
 $(document).ready(function () {
     $('#add-lot-form #start-date-field').val(new Date().toDateInputValue());
 
+    if (qs('command') === 'lot-add' && qs('productid') !== null) {
+        addProduct(qs('productid'));
+    }
+
     loadLots();
 });
 
@@ -146,7 +150,9 @@ function init(element, lot) {
             if ($(this).hasClass('action-cancel') && lot.sellerId !== userId) {
                 $(this).remove()
             }
-
+            if ($(this).hasClass('action-take-winnings')) {
+                $(this).remove();
+            }
             var href = $(this).attr('href');
             href = href.replace(/id=#/g, "id=" + lot.id);
             $(this).attr('href', href);

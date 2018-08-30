@@ -47,6 +47,7 @@ public class FrontController extends HttpServlet {
                 command.execute(wrapper);
             } catch (IllegalCommandException e) {
                 LOG.error("Requested command is not defined", e);
+                wrapper.setHttpError(HttpServletResponse.SC_NOT_FOUND);
             }
         }
 
