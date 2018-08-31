@@ -163,6 +163,7 @@ function init(element, lot) {
     element.find('.' + classPrefix + '-' + lot.status.toLowerCase()).show();
     element.find('.card-title').append(lot.name);
     element.find('.lot-begin-price').append(lot.beginPrice);
+    element.find('.lot-amount').append(lot.productAmount);
     element.find('.lot-description').append(lot.description);
     element.find('.lot-type').append(
         lot.auctionType.charAt(0) +
@@ -283,7 +284,30 @@ $(document).ready(function () {
 
        loadLots({filter:terms.join(',')});
    });
+
+   $('.lot-search a.search-button').on('click', function () {
+       $('.lot-filter .btn').removeClass('active');
+       searchLots($('.lot-search input').val());
+   });
+
+   $('.lot-products .delete-product').on('click', function () {
+       $('.lot-products').hide();
+       $('.lot-products .product input[name="product-id"]').val('');
+   })
 });
+
+function searchLots(value) {
+    $.ajax({
+        method: 'post',
+        data: {
+            searchValue: value
+        },
+        url: '/fc?command=lot-search',
+        success: function (data) {
+            showLots(data.reqAttrs.lots);
+        }
+    })
+}
 
 function bindEvent(element, event) {
     element.on(event, function () {

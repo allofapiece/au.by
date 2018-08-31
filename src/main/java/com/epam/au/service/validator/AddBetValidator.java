@@ -19,12 +19,14 @@ public class AddBetValidator extends Validator {
     private static final Logger LOG = Logger.getLogger(ConnectBankAccountValidator.class);
 
     private BetDataBaseDAO betDAO;
+    private LotDataBaseDAO lotDAO;
     private List<Bet> bets;
 
     public AddBetValidator() {
         DataBaseDAOFactory daoFactory = new DataBaseDAOFactory();
         try {
             betDAO = (BetDataBaseDAO) daoFactory.create("bet");
+            lotDAO = (LotDataBaseDAO) daoFactory.create("lot");
         } catch (IllegalDataBaseDAOException e) {
             LOG.error(e);
         }
@@ -42,9 +44,11 @@ public class AddBetValidator extends Validator {
         }
 
         emptyValidate(bet.getPrice(), "bet.field.price", true);
-        numberSizeValidate(bet.getPrice(), 0.01, 100, "bet.field.price", false);
+        numberSizeValidate(bet.getPrice(), 1, 10000, "bet.field.price", false);
 
         lastBieterValidate(bet.getUserId(), "bet.field.bieter");
+
+        priceGreaterThanStartPrice(bet, "bet.field.price");
 
         if (isValid()) {
             priceGreaterThanLastValidate(bet.getPrice(), "bet.field.price");
@@ -90,6 +94,33 @@ public class AddBetValidator extends Validator {
 
         if (bets.get(0).getPrice() >= price) {
             messages.add("error.little-bet");
+            v = false;
+            setValid(v);
+        }
+
+        getErrors().setFieldErrors(field, messages);
+
+        return v;
+    }
+
+    public boolean priceGreaterThanStartPrice(Bet bet, String field) {
+        boolean v = true;
+        List<String> messages = getErrors().getFieldErrors(field);
+
+        if (messages == null) {
+            messages = new ArrayList<>();
+        }
+
+        Lot lot = null;
+
+        try {
+            lot = (Lot) lotDAO.find(bet.getLotId());
+        } catch (DAOException e) {
+            LOG.error(e);
+        }
+
+        if (lot == null || bet.getPrice() <= lot.getBeginPrice()) {
+            messages.add("error.begin-price.tight");
             v = false;
             setValid(v);
         }

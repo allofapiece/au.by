@@ -155,6 +155,34 @@ public class LotDataBaseDAO implements DataBaseDAO {
         return lots;
     }
 
+    public List<Lot> findLotsByNameLike(String name) throws DAOException {
+        List<Lot> lots = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = connectionPool.takeConnection();
+            stmt = conn.prepareStatement(queryBundle.getQuery("select.any.by_name.like"));
+            stmt.setString(1, "%" + name + "%");
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Lot lot = fillLotFromResultSet(rs);
+                lots.add(lot);
+            }
+        } catch (ConnectionPoolException e) {
+            LOG.error("Connection pool error", e);
+        } catch (SQLException e) {
+            LOG.error("SQL error", e);
+        } finally {
+            connectionPool.closeConnection(conn, stmt, rs);
+        }
+
+        return lots;
+    }
+
+
     private Lot fillLotFromResultSet(ResultSet rs) throws SQLException, DAOException {
         Lot lot = null;
         switch (rs.getString("auction_type")) {
@@ -340,7 +368,11 @@ public class LotDataBaseDAO implements DataBaseDAO {
                 case BLITZ:
                     stmt = prepareBlitzLot(lot, conn, queryBundle.getQuery("update.one.blitz"));
                     stmt.setTimestamp(16, lot.getEndTime());
-                    stmt.setLong(17, lot.getMediatorId());
+                    if (lot.getMediatorId() != 0) {
+                        stmt.setLong(17, lot.getMediatorId());
+                    } else {
+                        stmt.setNull(17, Types.INTEGER);
+                    }
                     stmt.setLong(18, lot.getId());
 
                     break;
@@ -348,14 +380,22 @@ public class LotDataBaseDAO implements DataBaseDAO {
                 case ENGLISH:
                     stmt = prepareEnglishLot(lot, conn, queryBundle.getQuery("update.one.english"));
                     stmt.setTimestamp(12, lot.getEndTime());
-                    stmt.setLong(13, lot.getMediatorId());
+                    if (lot.getMediatorId() != 0) {
+                        stmt.setLong(13, lot.getMediatorId());
+                    } else {
+                        stmt.setNull(13, Types.INTEGER);
+                    }
                     stmt.setLong(14, lot.getId());
                     break;
 
                 case INTERNET:
                     stmt = prepareInternetLot(lot, conn, queryBundle.getQuery("update.one.internet"));
                     stmt.setTimestamp(12, lot.getEndTime());
-                    stmt.setLong(13, lot.getMediatorId());
+                    if (lot.getMediatorId() != 0) {
+                        stmt.setLong(13, lot.getMediatorId());
+                    } else {
+                        stmt.setNull(13, Types.INTEGER);
+                    }
                     stmt.setLong(14, lot.getId());
 
                     break;

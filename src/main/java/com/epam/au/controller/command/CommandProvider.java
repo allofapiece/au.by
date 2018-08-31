@@ -83,6 +83,9 @@ public class CommandProvider {
             case "lot-cancel":
                 return new CancelLotCommand();
 
+            case "lot-search":
+                return new SearchLotsCommand();
+
             case "bet-load":
                 return new LoadBetsCommand();
 

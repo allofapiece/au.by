@@ -64,9 +64,12 @@
                     </c:forEach>
                 </c:if>
             </div>
+
         </form>
+        <button type="submit" form="signup-form" class="btn btn-primary"<%-- style="margin-left: 15px;"--%>><fmt:message key="signup.submit.label" /></button>
+
     </div>
-    <div class="col-6">
+    <%--<div class="col-6">
         <h4><fmt:message key="user.account.connect.title"/></h4>
         <p style="margin-top: 15px;"><fmt:message key="account.description.text"/></p>
         <div class="form-check">
@@ -83,8 +86,7 @@
                 </c:forEach>
             </c:if>
         </div>
-    </div>
-    <button type="submit" form="signup-form" class="btn btn-primary" style="margin-left: 15px;"><fmt:message key="signup.submit.label" /></button>
+    </div>--%>
 </div>
 
 <c:import url="/jsp/template/footer.jsp"/>
