@@ -8,6 +8,7 @@ import com.epam.au.dao.impl.BieterDataBaseDAO;
 import com.epam.au.dao.impl.LotDataBaseDAO;
 import com.epam.au.entity.Bet;
 import com.epam.au.entity.Bieter;
+import com.epam.au.entity.User;
 import com.epam.au.service.validator.AddBetValidator;
 import com.epam.au.service.validator.AddBieterValidator;
 import com.epam.au.service.wrapper.HttpWrapper;
@@ -39,10 +40,15 @@ public class AddBetHandler implements FormHandler {
     @Override
     public boolean handle(HttpWrapper wrapper) {
         Bet bet = new Bet();
+        User user = wrapper.getUser();
 
         bet.setLotId(wrapper.getLong("bieter.field.id"));
         bet.setUserId(wrapper.getUserId());
         bet.setPrice(wrapper.getLong("bieter.field.price"));
+
+        if (bet.getPrice() > user.getAccount().getMoney()) {
+            wrapper.addError("bet.field.price", "error.money.tight");
+        }
 
         if (wrapper.getErrors().hasErrors()) {
             return false;

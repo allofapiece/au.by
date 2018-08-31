@@ -2,9 +2,16 @@ var searchResultSection = $('.search .search-result');
 
 function qs(key) {
     key = key.replace(/[*+?^$.\[\]{}()|\\\/]/g, "\\$&"); // escape RegEx meta chars
-    var match = location.search.match(new RegExp("[?&]"+key+"=([^&]+)(&|$)"));
+    var match = location.search.match(new RegExp("[?&]" + key + "=([^&]+)(&|$)"));
+
     return match && decodeURIComponent(match[1].replace(/\+/g, " "));
 }
+
+Date.prototype.toDateInputValue = (function() {
+    var local = new Date(this);
+    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+    return local.toJSON().slice(0,10);
+});
 
 function loadUser(id, success, element) {
     $.ajax({
@@ -42,13 +49,11 @@ function searchProduct(value) {
 
 function updateEvents() {
     $('.search .search-result').find('li').off('click').on('click', function () {
-        addProduct.apply(this);
+        addProduct($(this).data('product'));
     });
 }
 
-function addProduct() {
-    var that = $(this);
-    var id = that.data('product');
+function addProduct(id) {
     $.ajax({
         method: 'post',
         data: {id: id},

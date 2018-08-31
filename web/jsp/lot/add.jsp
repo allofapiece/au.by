@@ -21,7 +21,7 @@
             <div class="form-group<c:if test="${errors['lot.field.type'] ne null}"> invalid</c:if>">
                 <label for="type-field"><fmt:message key="lot.field.type.label" /></label>
                 <select name="type" class="form-control" id="type-field" aria-describedby="typeHelp">
-                    <option value="blitz"><fmt:message key="lot.field.type.value.blitz" /></option>
+                    <option disabled value="blitz"><fmt:message key="lot.field.type.value.blitz" /></option>
                     <option value="english"><fmt:message key="lot.field.type.value.english" /></option>
                     <option value="internet"><fmt:message key="lot.field.type.value.internet" /></option>
                 </select>
@@ -46,14 +46,14 @@
                     </c:forEach>
                 </c:if>
                 <div class="lot-products" style="margin-top: 15px; display: none;">
-                    <div class="card product" >
+                    <div class="card product">
                         <div class="card-header bg-success product-name"></div>
                         <div class="card-body">
                             <p class="card-text product-amount" data-label="<fmt:message key="product.field.amount.label" />"></p>
                             <p class="card-text product-price"  data-label="<fmt:message key="product.field.price.label" />"></p>
                             <p class="card-text product-description"></p>
                             <div class="product-tools">
-                                <button class="btn btn-danger btn-xs delete-product">
+                                <button type="button" class="btn btn-danger btn-xs delete-product">
                                     &times;
                                 </button>
                             </div>
@@ -136,7 +136,7 @@
         <div class="form-group blitz<c:if test="${errors['lot.field.round.time'] ne null}"> invalid</c:if>">
             <label for="round-time-field"><fmt:message key="lot.field.round.time.label" /></label>
             <input type="time" form="add-lot-form" name="round-time" class="form-control" id="round-time-field" aria-describedby="round-time" placeholder="<fmt:message key="lot.field.round.amount.placeholder" />">
-            <small id="round-timeHelp" class="form-text text-muted"><fmt:message key="lot.field.round-time.help" /></small>
+            <small id="round-timeHelp" class="form-text text-muted"><fmt:message key="lot.field.round.time.help" /></small>
             <c:if test="${errors['lot.field.round.time'] ne null}">
                 <c:forEach items="${errors['lot.field.round.time']}" var="error">
                     <div class="invalid-feedback"><fmt:message key="lot.field.round.time.${error}.message" /></div>
@@ -163,7 +163,7 @@
         </div>
         <div class="form-group blitz internet<c:if test="${errors['lot.field.blitz-price'] ne null}"> invalid</c:if>">
             <label for="blitz-price-field"><fmt:message key="lot.field.blitz-price.label" /></label>
-            <input type="number" form="add-lot-form" name="blitz-price" class="form-control" id="blitz-price-field" aria-describedby="blitz-price" placeholder="<fmt:message key="lot.field.blitz-price.placeholder" />">
+            <input type="number" max="10000" min="1" form="add-lot-form" name="blitz-price" class="form-control" id="blitz-price-field" aria-describedby="blitz-price" placeholder="<fmt:message key="lot.field.blitz-price.placeholder" />">
             <c:if test="${errors['lot.field.blitz-price'] ne null}">
                 <c:forEach items="${errors['lot.field.blitz-price']}" var="error">
                     <div class="invalid-feedback"><fmt:message key="lot.field.blitz-price.${error}.message" /></div>
@@ -172,7 +172,7 @@
         </div>
         <div class="form-group english internet<c:if test="${errors['lot.field.bet-time'] ne null}"> invalid</c:if>">
             <label for="bet-time-field"><fmt:message key="lot.field.bet-time.label" /></label>
-            <input type="number" max="59" min="1" form="add-lot-form" name="bet-time" class="form-control" id="bet-time-field" aria-describedby="bet-time" placeholder="<fmt:message key="lot.field.bet-time.placeholder" />">
+            <input type="number" max="1200" min="10" form="add-lot-form" name="bet-time" class="form-control" id="bet-time-field" aria-describedby="bet-time" placeholder="<fmt:message key="lot.field.bet-time.placeholder" />">
             <small id="bet-timeHelp" class="form-text text-muted"><fmt:message key="lot.field.bet-time.help" /></small>
             <c:if test="${errors['lot.field.bet-time'] ne null}">
                 <c:forEach items="${errors['lot.field.bet-time']}" var="error">
@@ -182,7 +182,7 @@
         </div>
         <div class="form-group english<c:if test="${errors['lot.field.step-price'] ne null}"> invalid</c:if>">
             <label for="step-price-field"><fmt:message key="lot.field.step-price.label" /></label>
-            <input type="number" form="add-lot-form" name="step-price" class="form-control" id="step-price-field" aria-describedby="step-price" placeholder="<fmt:message key="lot.field.step-price.placeholder" />">
+            <input type="number" max="10000" min="1" form="add-lot-form" name="step-price" class="form-control" id="step-price-field" aria-describedby="step-price" placeholder="<fmt:message key="lot.field.step-price.placeholder" />">
             <c:if test="${errors['lot.field.step-price'] ne null}">
                 <c:forEach items="${errors['lot.field.step-price']}" var="error">
                     <div class="invalid-feedback"><fmt:message key="lot.field.step-price.${error}.message" /></div>

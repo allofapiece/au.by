@@ -12,7 +12,21 @@ import com.epam.au.controller.command.user.LogOutCommand;
 import com.epam.au.controller.command.user.SignInUserCommand;
 import com.epam.au.controller.command.user.SignUpUserCommand;
 
+/**
+ * Class is a part of GoF command pattern. Is a provider of existing command
+ * objects. Act as strategy.
+ *
+ * @author Listratsenka Stanislau
+ * @version 1.0
+ */
 public class CommandProvider {
+    /**
+     * Returns necessary command by string, that describe name of command.
+     *
+     * @param command string, that describe name of command.
+     * @return Command target commnad object.
+     * @throws IllegalCommandException if name of command is not defined.
+     */
     public Command getCommand(String command) throws IllegalCommandException {
         switch (command) {
             case "signup":
@@ -68,6 +82,9 @@ public class CommandProvider {
 
             case "lot-cancel":
                 return new CancelLotCommand();
+
+            case "lot-search":
+                return new SearchLotsCommand();
 
             case "bet-load":
                 return new LoadBetsCommand();

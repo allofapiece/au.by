@@ -4,6 +4,9 @@ import com.epam.au.dao.AbstractFactory;
 import com.epam.au.dao.DataBaseDAOFactory;
 import com.epam.au.dao.exception.DAOException;
 import com.epam.au.dao.impl.LotDataBaseDAO;
+import com.epam.au.dao.impl.ProductDataBaseDAO;
+import com.epam.au.entity.Product;
+import com.epam.au.entity.ProductStatus;
 import com.epam.au.entity.Role;
 import com.epam.au.entity.User;
 import com.epam.au.entity.lot.Lot;
@@ -17,6 +20,7 @@ import java.util.Date;
 public class CancelLotHandler {
     private static final Logger LOG = Logger.getLogger(CancelLotHandler.class);
     private LotDataBaseDAO dao;
+    private ProductDataBaseDAO productDAO;
 
     public CancelLotHandler() {
         DataBaseDAOFactory factory;
@@ -24,6 +28,7 @@ public class CancelLotHandler {
         try {
             factory = (DataBaseDAOFactory) new AbstractFactory().create("DataBaseDAO");
             dao = (LotDataBaseDAO) factory.create("lot");
+            productDAO = (ProductDataBaseDAO) factory.create("product");
         } catch (DAOException e) {
             LOG.error("DAO error", e);
         }
@@ -53,6 +58,11 @@ public class CancelLotHandler {
             lot.setStatus(LotStatus.CLOSED);
             lot.setEndTime(new Timestamp(new Date().getTime()));
             dao.update(lot);
+
+            Product product = (Product) productDAO.find(lot.getProduct().getId());
+            product.setStatus(ProductStatus.AVAILABLE);
+
+            productDAO.update(product);
         } catch (DAOException e) {
             LOG.error("DAO error", e);
         }

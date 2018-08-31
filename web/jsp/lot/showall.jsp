@@ -17,7 +17,7 @@
     <div class="container-fluid">
         <form class="form-inline lot-search">
             <input type="search" class="form-control mr-lg-2" placeholder="<fmt:message key="summary.search" />">
-            <button type="submit" class="btn btn-primary"><fmt:message key="summary.search.button" /></button>
+            <a class="btn search-button btn-primary"><fmt:message key="summary.search.button" /></a>
             <c:import url="/jsp/lot/lot-filter.jsp"/>
         </form>
 

@@ -1,4 +1,4 @@
-.internet, .english {
+.blitz, .internet:not(.english) {
     display: none;
 }
 .lot-products .product {

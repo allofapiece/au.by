@@ -66,7 +66,7 @@
 
                 <c:when test="${lot.status == 'CLOSED'}">
                     <c:if test="${sessionScope.user.id == lot.sellerId}">
-                        <a class="btn btn-outline-danger lot-action lot-closed" href="<c:url value=""/> " ><fmt:message key="lot.inscription.action.take-back" /></a>
+                        <%--<a class="btn btn-outline-danger lot-action lot-closed" href="<c:url value=""/> " ><fmt:message key="lot.inscription.action.take-back" /></a>--%>
                     </c:if>
                 </c:when>
 

@@ -1,5 +1,6 @@
 package com.epam.au.controller.command.user;
 
+import com.epam.au.controller.Page;
 import com.epam.au.controller.ResponseInfo;
 import com.epam.au.controller.Router;
 import com.epam.au.controller.command.Command;
@@ -32,9 +33,10 @@ public class SignInUserCommand implements Command {
             wrapper.setPage("user.login");
         } else {
             if (formHandler.handle(wrapper)) {
-                //session.setAttribute("isRemembered", req.getParameter("rememberme"));
                 wrapper.setIsUpdated(true);
-                wrapper.setPage("other.main");
+                wrapper.setPage(new Page(
+                        "title.lot.show.all",
+                        "/fc?command=lot-show&scope=all"));
             } else {
                 wrapper.addRequestAttribute("errors", formHandler.getErrors().getAllErrors());
                 wrapper.setPage("user.login");

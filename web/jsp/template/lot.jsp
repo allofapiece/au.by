@@ -21,7 +21,7 @@
         <p class="card-text lot-description" data-label="<fmt:message key="lot.field.description.label" />"></p>
         <p class="card-text"><a class="lot-seller-name" data-label="<fmt:message key="lot.field.seller-name.label" />"></a></p>
 
-        <a class="btn btn-outline-danger action-take-back lot-action lot-closed" href="<c:url value="/fc?command=lot-take-back&id=#"/> " ><fmt:message key="lot.inscription.action.take-back" /></a>
+        <%--<a class="btn btn-outline-danger action-take-back lot-action lot-closed" href="<c:url value="/fc?command=lot-take-back&id=#"/> " ><fmt:message key="lot.inscription.action.take-back" /></a>--%>
         <a class="btn btn-outline-primary lot-action lot-started" href="<c:url value="/fc?command=lot-show-one&id=#"/> " ><fmt:message key="lot.inscription.action.watch" /></a>
         <a class="btn btn-outline-cyan lot-action lot-open" href="<c:url value="/fc?command=lot-show-one&id=#"/> " ><fmt:message key="lot.inscription.action.watch" /></a>
         <a class="btn btn-outline-cyan action-play lot-action lot-open" href="<c:url value="/fc?command=bieter-add&id=#"/> " ><fmt:message key="lot.inscription.action.play" /></a>
@@ -54,8 +54,8 @@
             <c:import url="/jsp/template/timer.jsp"/>
         </div>
         <div class="card-footer bg-transparent lot-proposed"
-             data-label-full="<fmt:message key="lot.show.inscription.timer.proposed.full" />"
-             data-label-short="<fmt:message key="lot.show.inscription.timer.proposed.short" />">
+             data-label-full="<fmt:message key="lot.show.inscription.timer.open.full" />"
+             data-label-short="<fmt:message key="lot.show.inscription.timer.open.short" />">
             <c:import url="/jsp/template/timer.jsp"/>
         </div>
 </div>

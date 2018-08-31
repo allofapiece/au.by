@@ -12,7 +12,7 @@
 <fmt:setBundle basename="localization.local" />
 
 <div id="content-title" style="margin-top: 15px;">
-    <h2><fmt:message key='${not empty title ? title : "title.default.home"}' /></h2>
+    <h2><fmt:message key='${title}'/></h2>
     <hr>
 </div>
 <div class="row">

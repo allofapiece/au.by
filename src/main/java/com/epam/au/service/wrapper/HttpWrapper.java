@@ -68,11 +68,8 @@ public class HttpWrapper {
 
     public void go(RequestDispatcher requestDispatcher)
             throws ServletException, IOException {
-        eject();
 
-        if (getHttpError() != 0) {
-            response.sendError(responseInfo.getHttpError());
-        }
+        eject();
 
         if (responseInfo.isUpdated()) {
             response.sendRedirect(responseInfo.getPage().getPath());
@@ -94,6 +91,11 @@ public class HttpWrapper {
         if (isAjax()) {
             goAjax();
         } else {
+            if (getHttpError() != 0) {
+                response.sendError(responseInfo.getHttpError());
+                return;
+            }
+
             RequestDispatcher requestDispatcher = request.getRequestDispatcher(responseInfo.getPage().getPath());
             go(requestDispatcher);
         }
@@ -406,6 +408,10 @@ public class HttpWrapper {
 
     public User getUser() {
         return (User) this.sessionAttrs.get("user");
+    }
+
+    public void setUser(User user) {
+        this.sessionAttrs.put("user", user);
     }
 
     public long getUserId() {
