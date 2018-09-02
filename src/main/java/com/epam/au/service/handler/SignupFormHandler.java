@@ -66,6 +66,8 @@ public class SignupFormHandler implements FormHandler {
 
             dao.create(user);
 
+            wrapper.addSessionAttribute("user", user);
+            
             if (wrapper.hasRequestAttribute("connect-account") && wrapper.getBoolean("connect-account")) {
                 try {
                     Command connectAccount = new CommandProvider().getCommand("account-connect");

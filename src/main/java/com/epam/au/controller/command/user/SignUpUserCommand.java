@@ -22,9 +22,7 @@ public class SignUpUserCommand implements Command {
             if (formHandler.handle(wrapper)) {
                 wrapper.setIsUpdated(true);
 
-                if (wrapper.getUser() == null) {
-                    wrapper.setUser(user);
-                }
+                wrapper.setUser(user);
 
                 if (wrapper.getErrors().hasErrors()) {
                     wrapper.setPage("account.connect");
