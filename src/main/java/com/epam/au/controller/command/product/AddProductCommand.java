@@ -1,5 +1,6 @@
 package com.epam.au.controller.command.product;
 
+import com.epam.au.controller.Page;
 import com.epam.au.controller.command.Command;
 import com.epam.au.controller.command.CommandProvider;
 import com.epam.au.entity.User;
@@ -33,7 +34,9 @@ public class AddProductCommand implements Command {
         } else {
             if (formHandler.handle(wrapper)) {
                 wrapper.setIsUpdated(true);
-                wrapper.setPage("product.show");
+                wrapper.setPage(new Page(
+                        "title.product.show",
+                        "/fc?command=product-show"));
                 wrapper.addRequestAttribute("products", loader.loadAll(wrapper));
             } else {
                 wrapper.setPage("product.add");
