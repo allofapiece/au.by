@@ -21,9 +21,6 @@ public class AbstractFactory implements Factory {
         switch (type) {
             case "DataBaseDAO":
                 return new DataBaseDAOFactory();
-
-            default:
-                throw new IllegalDAOTypeException();
         }
     }
 }
